@@ -1,0 +1,12 @@
+{
+  "id": "test_level_01",
+  "moveCount": 24,
+  "categories": [
+    {"id":"sky","name":"Sky","words":[{"text":"Cloud"},{"text":"Rainbow"},{"text":"Thunder"},{"text":"Lightning"}]},
+    {"id":"kitchen","name":"Kitchen","words":[{"text":"Whisk"},{"text":"Spatula"},{"text":"Ladle"},{"text":"Tongs"}]},
+    {"id":"music","name":"Music","words":[{"text":"Guitar"},{"text":"Piano"},{"text":"Violin"},{"text":"Drums"}]},
+    {"id":"space","name":"Space","words":[{"text":"Galaxy"},{"text":"Nebula"},{"text":"Comet"},{"text":"Asteroid"}]},
+    {"id":"fruits","name":"Fruits","words":[{"text":"Apple","hasSprite":true,"spriteKey":"fruits__apple"},{"text":"Banana"},{"text":"Orange"},{"text":"Grape"}]},
+    {"id":"travel","name":"Travel","words":[{"text":"Passport"},{"text":"Suitcase"},{"text":"Ticket"},{"text":"Hotel"}]}
+  ]
+}
