@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19dd80865c7a52247bea99912ce6b64d, type: 3}
+  m_Name: MainWordIconLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::WordIconLibrary
+  icons:
+  - key: pets__dog
+    sprite: {fileID: 0}
+  - key: clothes__hat
+    sprite: {fileID: 0}
+  - key: toys__ball
+    sprite: {fileID: 0}
+  - key: furniture__chair
+    sprite: {fileID: 0}
+  - key: school__book
+    sprite: {fileID: 0}
+  - key: meals__breakfast
+    sprite: {fileID: 0}
+  - key: vehicles__car
+    sprite: {fileID: 0}
+  - key: vehicles__ship
+    sprite: {fileID: 0}
+  - key: music__guitar
+    sprite: {fileID: 0}
+  - key: garden__flower
+    sprite: {fileID: 0}
+  - key: space__moon
+    sprite: {fileID: 0}
+  - key: smart_machines__robot
+    sprite: {fileID: 0}
+  - key: camping__tent
+    sprite: {fileID: 0}
+  - key: foods__pizza
+    sprite: {fileID: 0}
+  - key: desserts__cake
+    sprite: {fileID: 0}
+  - key: sweet_treats__ice_cream
+    sprite: {fileID: 0}
+  - key: reptiles__lizard
+    sprite: {fileID: 0}
+  - key: habitats__desert
+    sprite: {fileID: 0}
+  - key: flowers__rose
+    sprite: {fileID: 0}
+  - key: electronics__phone
+    sprite: {fileID: 0}
+  - key: breakfast_foods__cereal
+    sprite: {fileID: 0}
+  - key: breakfast_foods__egg
+    sprite: {fileID: 0}
+  - key: small_ride_vehicles__bicycle
+    sprite: {fileID: 0}
+  - key: sense_organs__eye
+    sprite: {fileID: 0}
+  - key: movie_making__sound
+    sprite: {fileID: 0}
+  - key: planets__earth
+    sprite: {fileID: 0}
+  - key: band_members__guitarist
+    sprite: {fileID: 0}
+  - key: farming__crop
+    sprite: {fileID: 0}
+  - key: farming__tractor
+    sprite: {fileID: 0}
+  - key: farming__farmer
+    sprite: {fileID: 0}
+  - key: celebration_traditions__wedding
+    sprite: {fileID: 0}
+  - key: weddings__ring
+    sprite: {fileID: 0}
+  - key: water_transport__ship
+    sprite: {fileID: 0}
+  - key: board_games__chess
+    sprite: {fileID: 0}
+  - key: jewelry__ring
+    sprite: {fileID: 0}
+  - key: phone_apps__calendar
+    sprite: {fileID: 0}
+  - key: calendar__month
+    sprite: {fileID: 0}
+  - key: school_life__teacher
+    sprite: {fileID: 0}
+  - key: desert_nature__camel
+    sprite: {fileID: 0}
+  - key: americas__south_america
+    sprite: {fileID: 0}
+  - key: volcano_parts__crater
+    sprite: {fileID: 0}
+  - key: industrial_age__textile
+    sprite: {fileID: 0}
+  - key: landscapes__desert
+    sprite: {fileID: 0}
+  - key: landscapes__mountain
+    sprite: {fileID: 0}
+  - key: landscapes__coastal
+    sprite: {fileID: 0}
+  - key: landscapes__grassland
+    sprite: {fileID: 0}
