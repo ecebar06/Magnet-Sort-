@@ -559,6 +559,7 @@ public class WordGameLevelEditor : EditorWindow
         {
             text = source.text,
             hasSprite = source.hasSprite,
+            useIcon = source.useIcon,
             spriteKey = source.spriteKey,
             syllablePartA = source.syllablePartA,
             syllablePartB = source.syllablePartB
@@ -584,7 +585,7 @@ public class WordGameLevelEditor : EditorWindow
     private void DrawDraggableWord(int index)
     {
         LevelWordEntry entry = level.orderedWords[index];
-        string label = entry.word == null ? "Missing" : entry.word.hasSprite ? $"{entry.word.text} [Icon]" : entry.word.text;
+        string label = entry.word == null ? "Missing" : entry.word.useIcon ? $"{entry.word.text} [Icon]" : entry.word.text;
         Rect rect = GUILayoutUtility.GetRect(new GUIContent(label), EditorStyles.miniButton,
             GUILayout.MinWidth(72), GUILayout.Height(24), GUILayout.ExpandWidth(true));
         GUI.Box(rect, label, EditorStyles.miniButton);
@@ -734,8 +735,11 @@ public class WordGameLevelEditor : EditorWindow
                 {
                     foreach (WordItem word in category.words)
                     {
-                        string label = word.hasSprite ? $"{word.text}  🖼" : word.text;
-                        GUILayout.Label(label, EditorStyles.miniButton, GUILayout.MinWidth(65));
+                        string label = word.useIcon ? $"◆ {word.text}" : word.text;
+                        bool nextUseIcon = GUILayout.Toggle(word.useIcon, label, EditorStyles.miniButton,
+                            GUILayout.MinWidth(65));
+                        if (nextUseIcon != word.useIcon)
+                            SetLevelWordIconUsage(category.id, word.text, nextUseIcon);
                     }
                 }
             }
@@ -949,6 +953,47 @@ public class WordGameLevelEditor : EditorWindow
         return changed;
     }
 
+    private void SetLevelWordIconUsage(string categoryId, string wordText, bool useIcon)
+    {
+        Undo.RecordObject(level, "Toggle Level Word Icon");
+        Category masterCategory = library?.categories?.FirstOrDefault(item => item != null && item.id == categoryId);
+        WordItem master = masterCategory?.words?.FirstOrDefault(item => item != null &&
+            string.Equals(item.text, wordText, StringComparison.OrdinalIgnoreCase));
+
+        if (useIcon && master != null)
+        {
+            master.hasSprite = true;
+            if (string.IsNullOrWhiteSpace(master.spriteKey))
+                master.spriteKey = BuildSpriteKey(categoryId, master.text);
+            SaveLibrary();
+        }
+
+        void Apply(WordItem item)
+        {
+            if (item == null || !string.Equals(item.text, wordText, StringComparison.OrdinalIgnoreCase)) return;
+            item.useIcon = useIcon;
+            if (master != null)
+            {
+                item.hasSprite = master.hasSprite;
+                item.spriteKey = master.spriteKey;
+            }
+        }
+
+        foreach (Category category in level.categories ?? new List<Category>())
+        {
+            if (category.id == categoryId)
+                foreach (WordItem item in category.words ?? new List<WordItem>()) Apply(item);
+            if (category.transformResultCategoryId == categoryId) Apply(category.transformResult);
+        }
+        foreach (LevelWordEntry entry in level.orderedWords ?? new List<LevelWordEntry>())
+            if (entry?.categoryId == categoryId) Apply(entry.word);
+
+        EditorUtility.SetDirty(level);
+        status = useIcon
+            ? $"{wordText} will use its icon in this level (text fallback remains enabled)."
+            : $"{wordText} will use text in this level.";
+    }
+
     private static string BuildSpriteKey(string categoryId, string word)
     {
         return $"{Slug(categoryId)}__{Slug(word)}";
@@ -1028,6 +1073,7 @@ public class WordGameLevelEditor : EditorWindow
             {
                 text = source.transformResult.text,
                 hasSprite = source.transformResult.hasSprite,
+                useIcon = source.transformResult.useIcon,
                 spriteKey = source.transformResult.spriteKey,
                 syllablePartA = source.transformResult.syllablePartA,
                 syllablePartB = source.transformResult.syllablePartB
@@ -1036,6 +1082,7 @@ public class WordGameLevelEditor : EditorWindow
             {
                 text = w.text,
                 hasSprite = w.hasSprite,
+                useIcon = w.useIcon,
                 spriteKey = w.spriteKey,
                 syllablePartA = w.syllablePartA,
                 syllablePartB = w.syllablePartB

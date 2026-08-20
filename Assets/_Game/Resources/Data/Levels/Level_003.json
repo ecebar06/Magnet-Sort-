@@ -13,28 +13,32 @@
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Nebula",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Comet",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Asteroid",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         }
       ],
       "transformsOnComplete": false,
@@ -43,7 +47,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       },
       "transformResultCategoryId": ""
     },
@@ -56,28 +61,32 @@
           "hasSprite": true,
           "spriteKey": "flowers__rose",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": true
         },
         {
           "text": "Tulip",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Daisy",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Orchid",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         }
       ],
       "transformsOnComplete": false,
@@ -86,7 +95,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       },
       "transformResultCategoryId": ""
     },
@@ -99,28 +109,32 @@
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Pants",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Jacket",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Socks",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         }
       ],
       "transformsOnComplete": false,
@@ -129,7 +143,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       },
       "transformResultCategoryId": ""
     },
@@ -142,28 +157,32 @@
           "hasSprite": true,
           "spriteKey": "vehicles__car",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": true
         },
         {
           "text": "Bus",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Train",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Bicycle",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         }
       ],
       "transformsOnComplete": false,
@@ -172,7 +191,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       },
       "transformResultCategoryId": ""
     },
@@ -185,28 +205,32 @@
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Ruler",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Eraser",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Notebook",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         }
       ],
       "transformsOnComplete": false,
@@ -215,7 +239,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       },
       "transformResultCategoryId": ""
     }

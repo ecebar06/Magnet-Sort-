@@ -249,10 +249,10 @@ public class TableController : MonoBehaviour
                 label.outlineWidth = 0.08f;
 
                 Sprite wordIcon = null;
-                if (word.hasSprite && iconLibrary != null)
+                if (word.useIcon && iconLibrary != null)
                     iconLibrary.TryGetIcon(word.spriteKey, out wordIcon);
 
-                if (word.hasSprite && wordIcon == null)
+                if (word.useIcon && wordIcon == null)
                     Debug.LogWarning($"Icon not found for key '{word.spriteKey}'. Falling back to text.", this);
 
                 WordButton wordButton = newButton.GetComponent<WordButton>();
@@ -564,7 +564,7 @@ public class TableController : MonoBehaviour
         }
 
         Sprite wordIcon = null;
-        if (word.hasSprite && iconLibrary != null)
+        if (word.useIcon && iconLibrary != null)
             iconLibrary.TryGetIcon(word.spriteKey, out wordIcon);
         newButton.GetComponent<WordButton>().Initialize(this, word.text, boardWord.categoryId,
             PastelButtonColor, wordIcon);

@@ -7,29 +7,29 @@
             "words": [
                 {
                     "text": "Red",
-                    "hasSprite": false,
-                    "spriteKey": "",
+                    "hasSprite": true,
+                    "spriteKey": "colors__red",
                     "syllablePartA": "",
                     "syllablePartB": ""
                 },
                 {
                     "text": "Blue",
-                    "hasSprite": false,
-                    "spriteKey": "",
+                    "hasSprite": true,
+                    "spriteKey": "colors__blue",
                     "syllablePartA": "",
                     "syllablePartB": ""
                 },
                 {
                     "text": "Green",
-                    "hasSprite": false,
-                    "spriteKey": "",
+                    "hasSprite": true,
+                    "spriteKey": "colors__green",
                     "syllablePartA": "",
                     "syllablePartB": ""
                 },
                 {
                     "text": "Yellow",
-                    "hasSprite": false,
-                    "spriteKey": "",
+                    "hasSprite": true,
+                    "spriteKey": "colors__yellow",
                     "syllablePartA": "",
                     "syllablePartB": ""
                 }
@@ -64,15 +64,15 @@
                 },
                 {
                     "text": "Triangle",
-                    "hasSprite": false,
-                    "spriteKey": "",
+                    "hasSprite": true,
+                    "spriteKey": "shapes__triangle",
                     "syllablePartA": "",
                     "syllablePartB": ""
                 },
                 {
                     "text": "Rectangle",
-                    "hasSprite": false,
-                    "spriteKey": "",
+                    "hasSprite": true,
+                    "spriteKey": "shapes__rectangle",
                     "syllablePartA": "",
                     "syllablePartB": ""
                 }

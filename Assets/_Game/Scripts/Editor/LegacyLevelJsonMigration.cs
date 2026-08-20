@@ -32,6 +32,7 @@ public static class LegacyLevelJsonMigration
         {
             LevelData legacy = AssetDatabase.LoadAssetAtPath<LevelData>(legacyPath);
             if (legacy == null) continue;
+            PreserveLegacyIconChoices(legacy);
             string jsonPath = $"{LevelsFolder}/Level_{legacy.levelNumber:000}.json";
             if (!File.Exists(Path.GetFullPath(jsonPath)))
                 File.WriteAllText(Path.GetFullPath(jsonPath), legacy.ToJson());
@@ -44,6 +45,22 @@ public static class LegacyLevelJsonMigration
 
         AssetDatabase.Refresh();
         Debug.Log($"Migrated {migrated} legacy level asset(s) to JSON. Runtime and editors now use Resources/Data/Levels/*.json.");
+    }
+
+    private static void PreserveLegacyIconChoices(LevelData level)
+    {
+        void Migrate(WordItem word)
+        {
+            if (word != null && word.hasSprite) word.useIcon = true;
+        }
+
+        foreach (Category category in level.categories ?? new System.Collections.Generic.List<Category>())
+        {
+            foreach (WordItem word in category.words ?? new System.Collections.Generic.List<WordItem>()) Migrate(word);
+            Migrate(category.transformResult);
+        }
+        foreach (LevelWordEntry entry in level.orderedWords ?? new System.Collections.Generic.List<LevelWordEntry>())
+            Migrate(entry?.word);
     }
 }
 #endif

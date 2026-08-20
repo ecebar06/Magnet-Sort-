@@ -72,6 +72,10 @@ h3 { color: var(--muted); font-size: 11px; letter-spacing: .11em; text-transform
 .selected-card h4 { margin: 0; font-size: 13px; }.selected-card .card-body { padding: 11px 12px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip { background: #fff2d9; border: 1px solid #f3d49d; padding: 5px 8px; border-radius: 8px; font-size: 11px; }
+.icon-choice { cursor: pointer; color: inherit; font-family: inherit; }
+.icon-choice:hover { border-color: var(--purple); }
+.icon-choice.selected { color: #4931a8; background: #eee8ff; border-color: #9c82ee; font-weight: 700; }
+.icon-choice-hint { margin: 7px 0 0; color: var(--muted); font-size: 10px; }
 .transform-toggle { display: flex; gap: 7px; align-items: center; margin-top: 10px; color: var(--muted); font-size: 12px; font-weight: 700; }
 .transform-row { margin-top: 9px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .transform-row input, .transform-row select { padding: 8px; font-size: 11px; }

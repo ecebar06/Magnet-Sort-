@@ -1,8 +1,8 @@
 {
   "levelNumber": 1,
-  "moveCount": 6,
-  "expectedCategoryCount": 2,
-  "visibleRowCount": 2,
+  "moveCount": 9,
+  "expectedCategoryCount": 3,
+  "visibleRowCount": 3,
   "categories": [
     {
       "id": "colors",
@@ -10,29 +10,33 @@
       "words": [
         {
           "text": "Red",
-          "hasSprite": false,
-          "spriteKey": "",
+          "hasSprite": true,
+          "useIcon": false,
+          "spriteKey": "colors__red",
           "syllablePartA": "",
           "syllablePartB": ""
         },
         {
           "text": "Blue",
-          "hasSprite": false,
-          "spriteKey": "",
+          "hasSprite": true,
+          "useIcon": false,
+          "spriteKey": "colors__blue",
           "syllablePartA": "",
           "syllablePartB": ""
         },
         {
           "text": "Green",
-          "hasSprite": false,
-          "spriteKey": "",
+          "hasSprite": true,
+          "useIcon": false,
+          "spriteKey": "colors__green",
           "syllablePartA": "",
           "syllablePartB": ""
         },
         {
           "text": "Yellow",
-          "hasSprite": false,
-          "spriteKey": "",
+          "hasSprite": true,
+          "useIcon": false,
+          "spriteKey": "colors__yellow",
           "syllablePartA": "",
           "syllablePartB": ""
         }
@@ -41,6 +45,7 @@
       "transformResult": {
         "text": "",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
         "syllablePartB": ""
@@ -54,6 +59,7 @@
         {
           "text": "Circle",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
           "syllablePartB": ""
@@ -61,20 +67,71 @@
         {
           "text": "Square",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
           "syllablePartB": ""
         },
         {
           "text": "Triangle",
-          "hasSprite": false,
-          "spriteKey": "",
+          "hasSprite": true,
+          "useIcon": true,
+          "spriteKey": "shapes__triangle",
           "syllablePartA": "",
           "syllablePartB": ""
         },
         {
           "text": "Rectangle",
+          "hasSprite": true,
+          "useIcon": true,
+          "spriteKey": "shapes__rectangle",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "fruits",
+      "name": "Fruits",
+      "words": [
+        {
+          "text": "Apple",
+          "hasSprite": true,
+          "useIcon": false,
+          "spriteKey": "fruits__apple",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Banana",
+          "hasSprite": true,
+          "useIcon": false,
+          "spriteKey": "fruits__banana",
+          "syllablePartA": "Ba",
+          "syllablePartB": "nana"
+        },
+        {
+          "text": "Orange",
           "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "Or",
+          "syllablePartB": "ange"
+        },
+        {
+          "text": "Grape",
+          "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
           "syllablePartB": ""
@@ -84,6 +141,7 @@
       "transformResult": {
         "text": "",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
         "syllablePartB": ""
@@ -96,8 +154,9 @@
       "categoryId": "colors",
       "word": {
         "text": "Red",
-        "hasSprite": false,
-        "spriteKey": "",
+        "hasSprite": true,
+        "useIcon": false,
+        "spriteKey": "colors__red",
         "syllablePartA": "",
         "syllablePartB": ""
       }
@@ -107,7 +166,19 @@
       "word": {
         "text": "Circle",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "fruits",
+      "word": {
+        "text": "Apple",
+        "hasSprite": true,
+        "useIcon": false,
+        "spriteKey": "fruits__apple",
         "syllablePartA": "",
         "syllablePartB": ""
       }
@@ -116,8 +187,9 @@
       "categoryId": "colors",
       "word": {
         "text": "Blue",
-        "hasSprite": false,
-        "spriteKey": "",
+        "hasSprite": true,
+        "useIcon": false,
+        "spriteKey": "colors__blue",
         "syllablePartA": "",
         "syllablePartB": ""
       }
@@ -127,17 +199,30 @@
       "word": {
         "text": "Square",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
         "syllablePartB": ""
       }
     },
     {
+      "categoryId": "fruits",
+      "word": {
+        "text": "Banana",
+        "hasSprite": true,
+        "useIcon": false,
+        "spriteKey": "fruits__banana",
+        "syllablePartA": "Ba",
+        "syllablePartB": "nana"
+      }
+    },
+    {
       "categoryId": "colors",
       "word": {
         "text": "Green",
-        "hasSprite": false,
-        "spriteKey": "",
+        "hasSprite": true,
+        "useIcon": false,
+        "spriteKey": "colors__green",
         "syllablePartA": "",
         "syllablePartB": ""
       }
@@ -146,18 +231,31 @@
       "categoryId": "shapes",
       "word": {
         "text": "Triangle",
-        "hasSprite": false,
-        "spriteKey": "",
+        "hasSprite": true,
+        "useIcon": true,
+        "spriteKey": "shapes__triangle",
         "syllablePartA": "",
         "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "fruits",
+      "word": {
+        "text": "Orange",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "Or",
+        "syllablePartB": "ange"
       }
     },
     {
       "categoryId": "colors",
       "word": {
         "text": "Yellow",
-        "hasSprite": false,
-        "spriteKey": "",
+        "hasSprite": true,
+        "useIcon": false,
+        "spriteKey": "colors__yellow",
         "syllablePartA": "",
         "syllablePartB": ""
       }
@@ -166,7 +264,19 @@
       "categoryId": "shapes",
       "word": {
         "text": "Rectangle",
+        "hasSprite": true,
+        "useIcon": true,
+        "spriteKey": "shapes__rectangle",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "fruits",
+      "word": {
+        "text": "Grape",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
         "syllablePartB": ""

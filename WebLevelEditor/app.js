@@ -1,11 +1,13 @@
-const blankWord = text => ({ text, hasSprite: false, spriteKey: "", syllablePartA: "", syllablePartB: "" });
+const blankWord = text => ({ text, hasSprite: false, useIcon: false, spriteKey: "", syllablePartA: "", syllablePartB: "" });
 const clone = value => JSON.parse(JSON.stringify(value));
 
 const state = {
   library: { id: "", categories: [] },
   level: { levelNumber: 1, moveCount: 35, expectedCategoryCount: 8, visibleRowCount: 4, categories: [], orderedWords: [] },
   dragIndex: -1,
+  dataDirectoryHandle: null,
   levelDirectoryHandle: null,
+  wordLibraryFileHandle: null,
   levelFiles: [],
   currentLevelFileHandle: null,
   currentLevelFileName: "",
@@ -16,7 +18,7 @@ const $ = id => document.getElementById(id);
 const controls = ["levelNumber", "moveCount", "categoryCount", "rowCount"];
 
 function normalizeWord(word) {
-  return { text: word?.text || "", hasSprite: !!word?.hasSprite, spriteKey: word?.spriteKey || "", syllablePartA: word?.syllablePartA || "", syllablePartB: word?.syllablePartB || "" };
+  return { text: word?.text || "", hasSprite: !!word?.hasSprite, useIcon: !!word?.useIcon, spriteKey: word?.spriteKey || "", syllablePartA: word?.syllablePartA || "", syllablePartB: word?.syllablePartB || "" };
 }
 
 function normalizeCategory(category) {
@@ -117,12 +119,21 @@ function syncLibraryWord(categoryId, wordIndex) {
   if (!source) return;
   const selectedCategory = state.level.categories.find(category => category.id === categoryId);
   const selectedWord = selectedCategory?.words.find(word => word.text === source.text);
-  if (selectedWord) Object.assign(selectedWord, clone(source));
+  if (selectedWord) syncWordMetadata(selectedWord, source);
   for (const entry of state.level.orderedWords)
-    if (entry.categoryId === categoryId && entry.word.text === source.text) Object.assign(entry.word, clone(source));
+    if (entry.categoryId === categoryId && entry.word.text === source.text) syncWordMetadata(entry.word, source);
   for (const category of state.level.categories)
     if (category.transformResultCategoryId === categoryId && category.transformResult?.text === source.text)
-      Object.assign(category.transformResult, clone(source));
+      syncWordMetadata(category.transformResult, source);
+}
+
+function syncWordMetadata(levelWord, libraryWord) {
+  const useIcon = !!levelWord.useIcon;
+  levelWord.hasSprite = !!libraryWord.hasSprite;
+  levelWord.spriteKey = libraryWord.spriteKey || "";
+  levelWord.syllablePartA = libraryWord.syllablePartA || "";
+  levelWord.syllablePartB = libraryWord.syllablePartB || "";
+  levelWord.useIcon = useIcon;
 }
 
 function renderSelected() {
@@ -139,7 +150,8 @@ function renderSelected() {
       ? `<div class="transform-row"><select data-target="${index}"><option value="">Target category…</option>${targetOptions}</select><select data-result="${index}" ${target ? "" : "disabled"}><option value="">Result word…</option>${wordOptions}</select></div>`
       : "";
     return `<article class="selected-card"><header><h4>${index + 1}. ${escapeHtml(category.name)}</h4><button class="mini-button remove" data-remove="${index}">Remove</button></header>
-      <div class="card-body"><div class="chips">${category.words.map(w => `<span class="chip">${w.hasSprite ? "◆ " : ""}${escapeHtml(w.text)}</span>`).join("")}</div>
+      <div class="card-body"><div class="chips">${category.words.map((word, wordIndex) => `<button type="button" class="chip icon-choice ${word.useIcon ? "selected" : ""}" data-level-icon-category="${escapeAttr(category.id)}" data-level-icon-word-index="${wordIndex}" title="${word.useIcon ? "Use text in this level" : "Use icon in this level"}">${word.useIcon ? "◆ " : ""}${escapeHtml(word.text)}</button>`).join("")}</div>
+        <p class="icon-choice-hint">Click a word to toggle icon use for this level.</p>
         <label class="transform-toggle"><input type="checkbox" data-transform="${index}" ${category.transformsOnComplete ? "checked" : ""}> Transform when completed</label>
         ${transformControls}
       </div></article>`;
@@ -154,7 +166,7 @@ function renderOrder() {
 }
 
 function drawWords(containerId, words, offset) {
-  $(containerId).innerHTML = words.length ? words.map((entry, i) => `<div class="word-card" draggable="true" data-word-index="${offset + i}" title="${escapeAttr(entry.categoryId)}">${entry.word.hasSprite ? "◆ " : ""}${escapeHtml(entry.word.text)}</div>`).join("") : `<div class="empty-state" style="grid-column:1/-1"><p>Nothing generated yet.</p></div>`;
+  $(containerId).innerHTML = words.length ? words.map((entry, i) => `<div class="word-card" draggable="true" data-word-index="${offset + i}" title="${escapeAttr(entry.categoryId)}">${entry.word.useIcon ? "◆ " : ""}${escapeHtml(entry.word.text)}</div>`).join("") : `<div class="empty-state" style="grid-column:1/-1"><p>Nothing generated yet.</p></div>`;
 }
 
 function validate() {
@@ -371,18 +383,50 @@ async function openLevelsFolder() {
     setFolderStatus("Direct folder access is not supported here. Open the editor in current Chrome or Edge.", "error");
     return;
   }
-  if (state.dirty && !confirm("Discard the unsaved changes and open another Levels folder?")) return;
+  if (state.dirty && !confirm("Discard the unsaved changes and open another Unity Data folder?")) return;
   try {
-    const handle = await window.showDirectoryPicker({ id: "word-sort-levels", mode: "readwrite" });
-    if (handle.name.toLowerCase() !== "levels" &&
-        !confirm(`You selected “${handle.name}”. The expected folder is Assets/_Game/Resources/Data/Levels. Use it anyway?`)) return;
-    state.levelDirectoryHandle = handle;
+    const handle = await window.showDirectoryPicker({ id: "word-sort-data", mode: "readwrite" });
+    const selectedName = handle.name.toLowerCase();
+    if (selectedName !== "data" && selectedName !== "levels" &&
+        !confirm(`You selected “${handle.name}”. The expected folder is Assets/_Game/Resources/Data. Use it anyway?`)) return;
+
+    state.dataDirectoryHandle = selectedName === "data" ? handle : null;
+    state.levelDirectoryHandle = selectedName === "levels"
+      ? handle
+      : await handle.getDirectoryHandle("Levels", { create: true });
+    state.wordLibraryFileHandle = null;
+    if (state.dataDirectoryHandle) {
+      try {
+        state.wordLibraryFileHandle = await state.dataDirectoryHandle.getFileHandle("WordLibrary.json");
+        await loadConnectedWordLibrary();
+      } catch {
+        setFolderStatus("Levels connected, but WordLibrary.json was not found in the selected Data folder.", "error");
+      }
+    }
     state.currentLevelFileHandle = null;
     state.currentLevelFileName = "";
     await refreshLevelFiles(true);
   } catch (error) {
     if (error?.name !== "AbortError") setFolderStatus(`Could not open folder: ${error.message || error}`, "error");
   }
+}
+
+async function loadConnectedWordLibrary() {
+  if (!state.wordLibraryFileHandle) return;
+  const file = await state.wordLibraryFileHandle.getFile();
+  const data = JSON.parse(await file.text());
+  state.library = {
+    id: data.id || "word_library",
+    categories: (data.categories || []).map(normalizeCategory)
+  };
+}
+
+async function saveConnectedWordLibrary() {
+  if (!state.wordLibraryFileHandle || !state.library.categories.length) return false;
+  const writable = await state.wordLibraryFileHandle.createWritable();
+  await writable.write(JSON.stringify(state.library, null, 2) + "\n");
+  await writable.close();
+  return true;
 }
 
 async function refreshLevelFiles(loadFirst = false, preferredName = "") {
@@ -404,7 +448,7 @@ async function refreshLevelFiles(loadFirst = false, preferredName = "") {
   state.levelFiles = records;
   renderLevelFileOptions();
   setFolderStatus(
-    `Connected to ${state.levelDirectoryHandle.name}: ${records.length} level${records.length === 1 ? "" : "s"}${skipped ? `, ${skipped} invalid JSON skipped` : ""}.`,
+    `Connected: ${records.length} level${records.length === 1 ? "" : "s"}${state.wordLibraryFileHandle ? " + WordLibrary.json" : " (WordLibrary not connected)"}${skipped ? `, ${skipped} invalid JSON skipped` : ""}.`,
     skipped ? "error" : "connected"
   );
 
@@ -450,7 +494,7 @@ function createNewLevel() {
 }
 
 async function saveLevelDirectly() {
-  if (!state.levelDirectoryHandle) return toast("Open the Unity Levels folder first.");
+  if (!state.levelDirectoryHandle) return toast("Open the Unity Data folder first.");
   const errors = validate();
   if ((errors.length || !state.level.orderedWords.length) &&
       !confirm("This level still has warnings or no generated order. Save the draft anyway?")) return;
@@ -467,11 +511,12 @@ async function saveLevelDirectly() {
     const writable = await handle.createWritable();
     await writable.write(JSON.stringify(state.level, null, 2) + "\n");
     await writable.close();
+    await saveConnectedWordLibrary();
     state.currentLevelFileHandle = handle;
     state.currentLevelFileName = fileName;
     markClean();
     await refreshLevelFiles(false, fileName);
-    toast(`${fileName} saved directly to the Unity project.`);
+    toast(`${fileName}${state.wordLibraryFileHandle ? " and WordLibrary.json" : ""} saved directly to Unity.`);
   } catch (error) {
     setFolderStatus(`Could not save level: ${error.message || error}`, "error");
     toast("Level could not be saved.");
@@ -539,7 +584,55 @@ controls.forEach(id => $(id).addEventListener("change", readInputs));
 document.addEventListener("click", event => {
   const add = event.target.closest("[data-add]"); if (add) addCategory(add.dataset.add);
   const remove = event.target.closest("[data-remove]"); if (remove) { state.level.categories.splice(+remove.dataset.remove, 1); state.level.orderedWords = []; markDirty(); render(); }
+  const iconChoice = event.target.closest("[data-level-icon-category]");
+  if (iconChoice) {
+    const categoryId = iconChoice.dataset.levelIconCategory;
+    const wordIndex = +iconChoice.dataset.levelIconWordIndex;
+    const category = state.level.categories.find(item => item.id === categoryId);
+    const word = category?.words[wordIndex];
+    if (word) {
+      setLevelWordIconUsage(categoryId, word.text, !word.useIcon);
+      markDirty();
+      render();
+    }
+  }
 });
+
+function setLevelWordIconUsage(categoryId, wordText, useIcon) {
+  const levelCategory = state.level.categories.find(category => category.id === categoryId);
+  let libraryCategory = state.library.categories.find(category => category.id === categoryId);
+  if (!libraryCategory && levelCategory) {
+    libraryCategory = normalizeCategory({
+      id: levelCategory.id,
+      name: levelCategory.name,
+      words: levelCategory.words.map(word => ({ ...clone(word), useIcon: false }))
+    });
+    state.library.categories.push(libraryCategory);
+  }
+  let libraryWord = libraryCategory?.words.find(word => word.text.toLowerCase() === wordText.toLowerCase());
+  if (!libraryWord && libraryCategory) {
+    libraryWord = normalizeWord({ text: wordText });
+    libraryCategory.words.push(libraryWord);
+  }
+  if (useIcon && libraryWord) {
+    libraryWord.hasSprite = true;
+    if (!libraryWord.spriteKey) libraryWord.spriteKey = `${categoryId}__${slug(libraryWord.text)}`;
+    if (state.wordLibraryFileHandle)
+      saveConnectedWordLibrary().catch(error => setFolderStatus(`Could not update WordLibrary.json: ${error.message || error}`, "error"));
+  }
+
+  const apply = word => {
+    if (!word || word.text.toLowerCase() !== wordText.toLowerCase()) return;
+    word.useIcon = useIcon;
+    if (libraryWord) syncWordMetadata(word, libraryWord);
+  };
+  for (const category of state.level.categories) {
+    if (category.id === categoryId) category.words.forEach(apply);
+    if (category.transformResultCategoryId === categoryId) apply(category.transformResult);
+  }
+  for (const entry of state.level.orderedWords)
+    if (entry.categoryId === categoryId) apply(entry.word);
+}
 
 document.addEventListener("change", event => {
   if (event.target.matches("[data-library-icon]")) {

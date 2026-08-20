@@ -5,7 +5,10 @@ using System.Collections.Generic;
 public class WordItem
 {
     public string text;
+    // Library capability: this word may have a sprite assigned.
     public bool hasSprite;
+    // Level-specific presentation: use the sprite for this occurrence when available.
+    public bool useIcon;
     public string spriteKey;
     public string syllablePartA;
     public string syllablePartB;

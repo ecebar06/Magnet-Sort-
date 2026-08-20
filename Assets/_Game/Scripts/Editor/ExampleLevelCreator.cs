@@ -140,6 +140,7 @@ public static class ExampleLevelCreator
         {
             text = word.text,
             hasSprite = word.hasSprite,
+            useIcon = word.useIcon,
             spriteKey = word.spriteKey,
             syllablePartA = word.syllablePartA,
             syllablePartB = word.syllablePartB
@@ -168,7 +169,7 @@ public static class ExampleLevelCreator
 
     private static WordItem IconWord(string text, string key)
     {
-        return new WordItem { text = text, hasSprite = true, spriteKey = key };
+        return new WordItem { text = text, hasSprite = true, useIcon = true, spriteKey = key };
     }
 
     private static void EnsureFolder(string parent, string child)

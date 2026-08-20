@@ -13,28 +13,32 @@
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Robot",
           "hasSprite": true,
           "spriteKey": "smart_machines__robot",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": true
         },
         {
           "text": "Android",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Automaton",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         }
       ],
       "transformsOnComplete": true,
@@ -43,7 +47,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       },
       "transformResultCategoryId": "future_tech"
     },
@@ -56,28 +61,32 @@
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Hologram",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Jetpack",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Smart Home",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         }
       ],
       "transformsOnComplete": true,
@@ -86,7 +95,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       },
       "transformResultCategoryId": "buildings"
     },
@@ -99,28 +109,32 @@
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Apartment",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "School",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Store",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         }
       ],
       "transformsOnComplete": true,
@@ -129,7 +143,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       },
       "transformResultCategoryId": "household_chores"
     },
@@ -142,28 +157,32 @@
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Mop",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Wash",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Wipe",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         }
       ],
       "transformsOnComplete": true,
@@ -172,7 +191,8 @@
         "hasSprite": true,
         "spriteKey": "camping__tent",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": true
       },
       "transformResultCategoryId": "camping"
     },
@@ -185,28 +205,32 @@
           "hasSprite": true,
           "spriteKey": "camping__tent",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": true
         },
         {
           "text": "Fire",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Map",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Trail",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         }
       ],
       "transformsOnComplete": false,
@@ -215,7 +239,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       },
       "transformResultCategoryId": ""
     },
@@ -228,28 +253,32 @@
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Lantern",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Sleeping Bag",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Flashlight",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         }
       ],
       "transformsOnComplete": false,
@@ -258,7 +287,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       },
       "transformResultCategoryId": ""
     },
@@ -271,28 +301,32 @@
           "hasSprite": true,
           "spriteKey": "foods__pizza",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": true
         },
         {
           "text": "Bread",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Cheese",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Rice",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         }
       ],
       "transformsOnComplete": false,
@@ -301,7 +335,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       },
       "transformResultCategoryId": ""
     },
@@ -314,28 +349,32 @@
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         },
         {
           "text": "Banana",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "Ba",
-          "syllablePartB": "nana"
+          "syllablePartB": "nana",
+          "useIcon": false
         },
         {
           "text": "Orange",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "Or",
-          "syllablePartB": "ange"
+          "syllablePartB": "ange",
+          "useIcon": false
         },
         {
           "text": "Grape",
           "hasSprite": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": ""
+          "syllablePartB": "",
+          "useIcon": false
         }
       ],
       "transformsOnComplete": false,
@@ -344,7 +383,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       },
       "transformResultCategoryId": ""
     }
@@ -357,7 +397,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -367,7 +408,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -377,7 +419,8 @@
         "hasSprite": true,
         "spriteKey": "foods__pizza",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": true
       }
     },
     {
@@ -387,7 +430,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -397,7 +441,8 @@
         "hasSprite": true,
         "spriteKey": "smart_machines__robot",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": true
       }
     },
     {
@@ -407,7 +452,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -417,7 +463,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -427,7 +474,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "Ba",
-        "syllablePartB": "nana"
+        "syllablePartB": "nana",
+        "useIcon": false
       }
     },
     {
@@ -437,7 +485,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -447,7 +496,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -457,7 +507,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -467,7 +518,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "Or",
-        "syllablePartB": "ange"
+        "syllablePartB": "ange",
+        "useIcon": false
       }
     },
     {
@@ -477,7 +529,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -487,7 +540,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -497,7 +551,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -507,7 +562,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -517,7 +573,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -527,7 +584,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -537,7 +595,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -547,7 +606,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -557,7 +617,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -567,7 +628,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -577,7 +639,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -587,7 +650,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -597,7 +661,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -607,7 +672,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -617,7 +683,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     },
     {
@@ -627,7 +694,8 @@
         "hasSprite": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": ""
+        "syllablePartB": "",
+        "useIcon": false
       }
     }
   ]
