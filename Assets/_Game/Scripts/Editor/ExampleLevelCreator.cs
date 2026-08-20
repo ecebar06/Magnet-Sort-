@@ -107,14 +107,12 @@ public static class ExampleLevelCreator
         List<Category> transforms = level.categories.Where(c => c.transformsOnComplete).ToList();
         HashSet<string> generated = transforms.Select(c => c.transformResult.text)
             .ToHashSet(System.StringComparer.OrdinalIgnoreCase);
-        List<Category> fixedCategories = level.categories
-            .Where(c => !c.transformsOnComplete && c.words.All(w => !generated.Contains(w.text))).ToList();
+        List<Category> fixedCategories = level.categories.Where(c => !c.transformsOnComplete).ToList();
         if (transforms.Count == 0)
             return Enumerable.Range(0, 4)
                 .SelectMany(wordIndex => fixedCategories.Select(c => Entry(c.id, c.words[wordIndex])))
                 .ToList();
 
-        int visibleCount = level.visibleRowCount * 4;
         List<LevelWordEntry> visible = transforms[0].words.Select(w => Entry(transforms[0].id, w)).ToList();
         List<LevelWordEntry> queue = new List<LevelWordEntry>();
         for (int i = 1; i < transforms.Count; i++)
@@ -122,11 +120,31 @@ public static class ExampleLevelCreator
             visible.Add(Entry(transforms[i].id, transforms[i].words[0]));
             queue.AddRange(transforms[i].words.Skip(1).Select(w => Entry(transforms[i].id, w)));
         }
-        List<LevelWordEntry> fixedWords = fixedCategories.SelectMany(c => c.words.Select(w => Entry(c.id, w))).ToList();
-        int takeFixed = Mathf.Clamp(visibleCount - visible.Count, 0, fixedWords.Count);
-        visible.AddRange(fixedWords.Take(takeFixed));
-        queue.AddRange(fixedWords.Skip(takeFixed));
+        List<(Category category, List<WordItem> words)> groups = fixedCategories
+            .Select(category => (category, category.words.Where(word => !generated.Contains(word.text)).ToList()))
+            .Where(group => group.Item2.Count > 0).ToList();
+        int finalIndex = groups.FindIndex(group => group.words.Count == 3);
+        if (finalIndex < 0) finalIndex = groups.FindLastIndex(group => group.words.Count == 4);
+        if (finalIndex < 0) return new List<LevelWordEntry>();
+        (Category category, List<WordItem> words) finalGroup = groups[finalIndex];
+        groups.RemoveAt(finalIndex);
+        if (finalGroup.words.Count == 4) visible.Add(Entry(finalGroup.category.id, finalGroup.words[0]));
+        queue.AddRange(finalGroup.words.Skip(Mathf.Max(0, finalGroup.words.Count - 3))
+            .Select(word => Entry(finalGroup.category.id, word)));
+        visible.AddRange(groups.SelectMany(group => group.words.Select(word => Entry(group.category.id, word))));
+        visible = InterleaveVisibleWords(visible);
         return visible.Concat(queue).ToList();
+    }
+
+    private static List<LevelWordEntry> InterleaveVisibleWords(IEnumerable<LevelWordEntry> source)
+    {
+        List<Queue<LevelWordEntry>> groups = source.GroupBy(entry => entry.categoryId)
+            .Select(group => new Queue<LevelWordEntry>(group)).ToList();
+        List<LevelWordEntry> result = new List<LevelWordEntry>();
+        while (groups.Any(group => group.Count > 0))
+            foreach (Queue<LevelWordEntry> group in groups)
+                if (group.Count > 0) result.Add(group.Dequeue());
+        return result;
     }
 
     private static LevelWordEntry Entry(string categoryId, WordItem word)

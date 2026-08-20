@@ -436,7 +436,6 @@ public class TableController : MonoBehaviour
         {
             bool transforms = categoryDefinitions.TryGetValue(categoryId, out Category category) &&
                               category.transformsOnComplete;
-            if (!transforms && pendingWords.Count > 0) return;
 
             categoriesCompleted++;
             if (transforms)

@@ -31,7 +31,7 @@ public class WordGameLevelEditor : EditorWindow
     private readonly string[] newWords = new string[4];
     private int newTransformSourceIndex;
     private int newTransformTargetIndex;
-    private string newTransformResult = "";
+    private int newTransformWordIndex;
 
     [MenuItem("Tools/Word Game/Level Editor")]
     public static void Open()
@@ -51,6 +51,14 @@ public class WordGameLevelEditor : EditorWindow
         LoadLibrary();
         iconLibrary = AssetDatabase.LoadAssetAtPath<WordIconLibrary>("Assets/_Game/Resources/Data/MainWordIconLibrary.asset");
         database = AssetDatabase.LoadAssetAtPath<LevelDatabase>(DatabasePath);
+        string migrationKey = $"WordSort.WordIconMigration.{Application.dataPath}";
+        if (!EditorPrefs.GetBool(migrationKey, false))
+        {
+            bool migrated = MigrateLevelIconsToWordLibrary();
+            EditorPrefs.SetBool(migrationKey, true);
+            if (migrated) SaveLibrary();
+        }
+        SynchronizeAllLevelIconsFromLibrary();
         if (database != null && database.levels != null && database.levels.Count > 0)
         {
             selectedLevelIndex = Mathf.Clamp(selectedLevelIndex, 0, database.levels.Count - 1);
@@ -184,7 +192,21 @@ public class WordGameLevelEditor : EditorWindow
                             GUI.enabled = true;
                         }
                     }
-                    if (EditorGUI.EndChangeCheck()) SaveLibrary();
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        foreach (WordItem word in category.words)
+                        {
+                            if (word.hasSprite && string.IsNullOrWhiteSpace(word.spriteKey))
+                                word.spriteKey = BuildSpriteKey(category.id, word.text);
+                            if (!word.hasSprite)
+                            {
+                                if (iconLibrary != null) iconLibrary.RemoveIcon(word.spriteKey);
+                                word.spriteKey = "";
+                            }
+                        }
+                        SynchronizeAllLevelIconsFromLibrary();
+                        SaveLibrary();
+                    }
                 }
                 EditorGUILayout.LabelField(category.id, EditorStyles.miniLabel);
             }
@@ -232,12 +254,29 @@ public class WordGameLevelEditor : EditorWindow
             EditorUtility.SetDirty(level);
         }
 
+        int recommendationCategoryCount = level.expectedCategoryCount > 0
+            ? level.expectedCategoryCount
+            : level.categories.Count;
+        int recommendedMoves = RecommendedMoveCount(recommendationCategoryCount, level.visibleRowCount);
+        using (new EditorGUILayout.HorizontalScope(EditorStyles.helpBox))
+        {
+            EditorGUILayout.LabelField($"Recommended Moves: {recommendedMoves} (estimate)");
+            if (GUILayout.Button($"Use {recommendedMoves}", GUILayout.Width(80)))
+            {
+                Undo.RecordObject(level, "Use Recommended Move Count");
+                level.moveCount = recommendedMoves;
+                EditorUtility.SetDirty(level);
+            }
+        }
+
         EditorGUILayout.Space(4);
         EditorGUILayout.LabelField($"LEVEL CATEGORIES ({level.categories.Count} rows)", EditorStyles.boldLabel);
         DrawValidation();
 
         using (new EditorGUILayout.HorizontalScope())
         {
+            if (GUILayout.Button("Auto Build Level", GUILayout.Height(28))) AutoBuildLevel();
+            if (GUILayout.Button("Auto Set Transformations", GUILayout.Height(28))) AutoSetTransformations();
             if (GUILayout.Button("Generate Solveable Order", GUILayout.Height(28))) GenerateSolveableOrder();
             GUI.enabled = level.orderedWords != null && level.orderedWords.Count > 0;
             if (GUILayout.Button("Clear Generated Order", GUILayout.Height(28)))
@@ -257,6 +296,117 @@ public class WordGameLevelEditor : EditorWindow
         EditorGUILayout.EndScrollView();
     }
 
+    private void AutoSetTransformations()
+    {
+        if (level.categories == null || level.categories.Count == 0)
+        {
+            status = "Add categories before creating transformations.";
+            return;
+        }
+
+        int effectiveRows = level.visibleRowCount > 0 ? level.visibleRowCount : level.categories.Count;
+        int required = level.categories.Count - effectiveRows;
+        if (required < 0)
+        {
+            status = "Visible row count cannot exceed category count.";
+            return;
+        }
+        if (level.categories.Any(category => category.words == null || category.words.Count != 4))
+        {
+            status = "Every category must contain exactly four words first.";
+            return;
+        }
+        if (level.categories.Any(category => category.transformsOnComplete) &&
+            !EditorUtility.DisplayDialog("Replace Transformations",
+                "Replace the current transformation setup with an automatic cycle-free chain?",
+                "Replace", "Cancel"))
+            return;
+
+        Undo.RecordObject(level, "Auto Set Level Transformations");
+        int applied = ApplyAutomaticTransformations();
+        EditorUtility.SetDirty(level);
+        status = applied > 0
+            ? $"Added {applied} cycle-free transformations. Review them, then generate the order."
+            : "This level does not need transformations.";
+    }
+
+    private int ApplyAutomaticTransformations()
+    {
+        int effectiveRows = level.visibleRowCount > 0 ? level.visibleRowCount : level.categories.Count;
+        int required = level.categories.Count - effectiveRows;
+        foreach (Category category in level.categories)
+        {
+            category.transformsOnComplete = false;
+            category.transformResult = new WordItem();
+            category.transformResultCategoryId = string.Empty;
+        }
+        for (int index = 0; index < required; index++)
+        {
+            Category source = level.categories[index];
+            Category target = level.categories[index + 1];
+            source.transformsOnComplete = true;
+            source.transformResultCategoryId = target.id;
+            source.transformResult = CloneWord(target.words[0]);
+        }
+
+        level.orderedWords?.Clear();
+        return required;
+    }
+
+    private void AutoBuildLevel()
+    {
+        if (library?.categories == null || library.categories.Count == 0)
+        {
+            status = "WordLibrary.json is empty.";
+            return;
+        }
+
+        int desiredCount = level.expectedCategoryCount;
+        int visibleRows = level.visibleRowCount;
+        if (desiredCount < 1)
+        {
+            status = "Set Category Count before building the level.";
+            return;
+        }
+        if (visibleRows < 1 || visibleRows > desiredCount)
+        {
+            status = "Visible Row Count must be between 1 and Category Count.";
+            return;
+        }
+        if (level.categories.Count > 0 && !EditorUtility.DisplayDialog("Replace Level Content",
+                "Replace the current categories, transformations and generated order?",
+                "Replace", "Cancel"))
+            return;
+
+        List<Category> candidates = library.categories
+            .Where(category => category?.words != null && category.words.Count == 4 &&
+                category.words.All(word => !string.IsNullOrWhiteSpace(word.text)) &&
+                category.words.Select(word => word.text.Trim()).Distinct(StringComparer.OrdinalIgnoreCase).Count() == 4)
+            .ToList();
+        List<Category> selected = new List<Category>();
+        HashSet<string> usedWords = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        int startIndex = candidates.Count > 0 ? ((level.levelNumber - 1) * desiredCount) % candidates.Count : 0;
+        for (int step = 0; step < candidates.Count && selected.Count < desiredCount; step++)
+        {
+            Category candidate = candidates[(startIndex + step) % candidates.Count];
+            List<string> words = candidate.words.Select(word => word.text.Trim()).ToList();
+            if (words.Any(usedWords.Contains)) continue;
+            selected.Add(candidate);
+            foreach (string word in words) usedWords.Add(word);
+        }
+        if (selected.Count != desiredCount)
+        {
+            status = $"Could only find {selected.Count}/{desiredCount} categories without repeated words.";
+            return;
+        }
+
+        Undo.RecordObject(level, "Auto Build Level");
+        level.categories = selected.Select(CloneCategory).ToList();
+        ApplyAutomaticTransformations();
+        EditorUtility.SetDirty(level);
+        GenerateSolveableOrder();
+    }
+
     private void GenerateSolveableOrder()
     {
         if (level.categories == null || level.categories.Count == 0 || level.visibleRowCount <= 0)
@@ -268,14 +418,13 @@ public class WordGameLevelEditor : EditorWindow
         List<Category> transforms = level.categories.Where(c => c.transformsOnComplete).ToList();
         HashSet<string> generatedWords = transforms.Where(c => c.transformResult != null)
             .Select(c => c.transformResult.text).ToHashSet(StringComparer.OrdinalIgnoreCase);
-        List<Category> fixedCategories = level.categories
-            .Where(c => !c.transformsOnComplete && c.words.All(w => !generatedWords.Contains(w.text)))
-            .ToList();
+        List<Category> fixedCategories = level.categories.Where(c => !c.transformsOnComplete).ToList();
         int visibleWordCount = level.visibleRowCount * 4;
-        int playableWordCount = transforms.Sum(c => c.words.Count) + fixedCategories.Sum(c => c.words.Count);
+        int playableWordCount = level.categories.Sum(category =>
+            category.words.Count(word => !generatedWords.Contains(word.text)));
         int queueWordCount = playableWordCount - visibleWordCount;
 
-        if (transforms.Count > 0 && queueWordCount != transforms.Count * 3)
+        if (queueWordCount != transforms.Count * 3)
         {
             status = $"Cannot generate without gaps: queue has {queueWordCount} words, but {transforms.Count * 3} are required.";
             return;
@@ -297,29 +446,66 @@ public class WordGameLevelEditor : EditorWindow
             return;
         }
 
-        List<LevelWordEntry> visible = new List<LevelWordEntry>();
-        List<LevelWordEntry> queue = new List<LevelWordEntry>();
-        if (transforms.Count > 0)
+        List<(Category category, List<WordItem> words)> transformGroups = transforms
+            .Select(category => (category, category.words
+                .Where(word => !generatedWords.Contains(word.text)).ToList()))
+            .ToList();
+        int rootTransformIndex = transformGroups.FindIndex(group => group.words.Count == 4);
+        if (rootTransformIndex < 0 || transformGroups.Any(group => group.words.Count < 3 || group.words.Count > 4))
         {
-            visible.AddRange(transforms[0].words.Select(w => Entry(transforms[0].id, w)));
-            for (int i = 1; i < transforms.Count; i++)
-            {
-                visible.Add(Entry(transforms[i].id, transforms[i].words[0]));
-                queue.AddRange(transforms[i].words.Skip(1).Select(w => Entry(transforms[i].id, w)));
-            }
-        }
-
-        List<LevelWordEntry> fixedWords = fixedCategories
-            .SelectMany(c => c.words.Select(w => Entry(c.id, w))).ToList();
-        int fixedVisibleCount = visibleWordCount - visible.Count;
-        if (fixedVisibleCount < 0 || fixedVisibleCount > fixedWords.Count)
-        {
-            status = "Too many transforming categories for the selected row count.";
+            status = "Cannot generate: transformations need one root category with four playable words and three or four playable words thereafter.";
             return;
         }
-        visible.AddRange(fixedWords.Take(fixedVisibleCount));
-        queue.AddRange(fixedWords.Skip(fixedVisibleCount));
 
+        (Category category, List<WordItem> words) rootTransform = transformGroups[rootTransformIndex];
+        transformGroups.RemoveAt(rootTransformIndex);
+        transformGroups.Insert(0, rootTransform);
+
+        List<LevelWordEntry> visible = transformGroups[0].words
+            .Select(w => Entry(transformGroups[0].category.id, w)).ToList();
+        List<LevelWordEntry> queue = new List<LevelWordEntry>();
+        for (int i = 1; i < transformGroups.Count; i++)
+        {
+            (Category category, List<WordItem> words) group = transformGroups[i];
+            if (group.words.Count == 4)
+                visible.Add(Entry(group.category.id, group.words[0]));
+            queue.AddRange(group.words.Skip(group.words.Count == 4 ? 1 : 0)
+                .Select(word => Entry(group.category.id, word)));
+        }
+
+        List<(Category category, List<WordItem> words)> fixedGroups = fixedCategories
+            .Select(category => (category, category.words.Where(word => !generatedWords.Contains(word.text)).ToList()))
+            .Where(group => group.Item2.Count > 0)
+            .ToList();
+
+        // Every transformation reveals three queued words. Later source categories use
+        // the first groups; the final group must also be a completeable set of three.
+        int finalGroupIndex = fixedGroups.FindIndex(group => group.words.Count == 3);
+        if (finalGroupIndex < 0)
+            finalGroupIndex = fixedGroups.FindLastIndex(group => group.words.Count == 4);
+        if (finalGroupIndex < 0)
+        {
+            status = "Cannot generate: no category can receive the final three queued words.";
+            return;
+        }
+
+        (Category category, List<WordItem> words) finalGroup = fixedGroups[finalGroupIndex];
+        fixedGroups.RemoveAt(finalGroupIndex);
+        if (finalGroup.words.Count == 4)
+            visible.Add(Entry(finalGroup.category.id, finalGroup.words[0]));
+        queue.AddRange(finalGroup.words.Skip(Mathf.Max(0, finalGroup.words.Count - 3))
+            .Select(word => Entry(finalGroup.category.id, word)));
+
+        visible.AddRange(fixedGroups.SelectMany(group =>
+            group.words.Select(word => Entry(group.category.id, word))));
+
+        if (visible.Count != visibleWordCount || queue.Count != queueWordCount)
+        {
+            status = $"Cannot generate a complete order: created {visible.Count}/{visibleWordCount} visible and {queue.Count}/{queueWordCount} queued words.";
+            return;
+        }
+
+        visible = InterleaveVisibleWords(visible);
         Undo.RecordObject(level, "Generate Solveable Level Order");
         level.orderedWords = visible.Concat(queue).ToList();
         EditorUtility.SetDirty(level);
@@ -329,6 +515,21 @@ public class WordGameLevelEditor : EditorWindow
     private static LevelWordEntry Entry(string categoryId, WordItem source)
     {
         return new LevelWordEntry { categoryId = categoryId, word = CloneWord(source) };
+    }
+
+    private static List<LevelWordEntry> InterleaveVisibleWords(IEnumerable<LevelWordEntry> source)
+    {
+        List<Queue<LevelWordEntry>> categoryQueues = source
+            .GroupBy(entry => entry.categoryId)
+            .Select(group => new Queue<LevelWordEntry>(group))
+            .ToList();
+        List<LevelWordEntry> result = new List<LevelWordEntry>();
+        while (categoryQueues.Any(queue => queue.Count > 0))
+        {
+            foreach (Queue<LevelWordEntry> queue in categoryQueues)
+                if (queue.Count > 0) result.Add(queue.Dequeue());
+        }
+        return result;
     }
 
     private static WordItem CloneWord(WordItem source)
@@ -433,15 +634,27 @@ public class WordGameLevelEditor : EditorWindow
         using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
         {
             newTransformSourceIndex = EditorGUILayout.Popup("Source Category", Mathf.Clamp(newTransformSourceIndex, 0, categoryNames.Length - 1), categoryNames);
-            newTransformResult = EditorGUILayout.TextField("Result Word", newTransformResult);
             newTransformTargetIndex = EditorGUILayout.Popup("Target Category", Mathf.Clamp(newTransformTargetIndex, 0, categoryNames.Length - 1), categoryNames);
+            Category selectedTarget = level.categories[newTransformTargetIndex];
+            List<WordItem> targetWords = selectedTarget.words ?? new List<WordItem>();
+            string[] targetWordNames = targetWords.Select(word => word == null || string.IsNullOrWhiteSpace(word.text) ? "Missing Word" : word.text).ToArray();
+            GUI.enabled = targetWordNames.Length > 0;
+            newTransformWordIndex = targetWordNames.Length == 0
+                ? 0
+                : EditorGUILayout.Popup("Result Word", Mathf.Clamp(newTransformWordIndex, 0, targetWordNames.Length - 1), targetWordNames);
+            GUI.enabled = true;
             if (GUILayout.Button("Add / Update Transformation"))
             {
                 Category source = level.categories[newTransformSourceIndex];
                 Category target = level.categories[newTransformTargetIndex];
+                if (target.words == null || target.words.Count == 0)
+                {
+                    status = "Target category has no words to select.";
+                    return;
+                }
                 Undo.RecordObject(level, "Add Transformation");
                 source.transformsOnComplete = true;
-                source.transformResult = new WordItem { text = newTransformResult.Trim() };
+                source.transformResult = CloneWord(target.words[Mathf.Clamp(newTransformWordIndex, 0, target.words.Count - 1)]);
                 source.transformResultCategoryId = target.id;
                 level.orderedWords?.Clear();
                 EditorUtility.SetDirty(level);
@@ -510,10 +723,28 @@ public class WordGameLevelEditor : EditorWindow
             bool transforms = EditorGUILayout.Toggle("Transforms On Complete", category.transformsOnComplete);
             string resultText = category.transformResult == null ? "" : category.transformResult.text;
             string targetCategory = category.transformResultCategoryId ?? "";
+            WordItem selectedResultWord = category.transformResult;
             if (transforms)
             {
-                resultText = EditorGUILayout.TextField("Result Word", resultText);
-                targetCategory = EditorGUILayout.TextField("Target Category ID", targetCategory);
+                string[] targetNames = level.categories.Select(item => item.name).ToArray();
+                int targetIndex = Mathf.Max(0, level.categories.FindIndex(item => item.id == targetCategory));
+                targetIndex = EditorGUILayout.Popup("Target Category", targetIndex, targetNames);
+                Category target = level.categories[targetIndex];
+                targetCategory = target.id;
+
+                List<WordItem> words = target.words ?? new List<WordItem>();
+                string[] wordNames = words.Select(word => word == null || string.IsNullOrWhiteSpace(word.text) ? "Missing Word" : word.text).ToArray();
+                int resultIndex = Mathf.Max(0, words.FindIndex(word => word != null &&
+                    string.Equals(word.text, resultText, StringComparison.OrdinalIgnoreCase)));
+                GUI.enabled = wordNames.Length > 0;
+                if (wordNames.Length > 0)
+                {
+                    resultIndex = EditorGUILayout.Popup("Result Word", resultIndex, wordNames);
+                    selectedResultWord = words[resultIndex];
+                    resultText = selectedResultWord.text;
+                }
+                else EditorGUILayout.LabelField("Result Word", "Target has no words");
+                GUI.enabled = true;
             }
             if (EditorGUI.EndChangeCheck())
             {
@@ -522,8 +753,7 @@ public class WordGameLevelEditor : EditorWindow
                 category.transformResultCategoryId = targetCategory.Trim();
                 if (transforms)
                 {
-                    if (category.transformResult == null) category.transformResult = new WordItem();
-                    category.transformResult.text = resultText.Trim();
+                    category.transformResult = CloneWord(selectedResultWord ?? new WordItem { text = resultText.Trim() });
                 }
                 EditorUtility.SetDirty(level);
             }
@@ -607,6 +837,97 @@ public class WordGameLevelEditor : EditorWindow
         AssetDatabase.SaveAssets();
     }
 
+    private bool MigrateLevelIconsToWordLibrary()
+    {
+        if (library?.categories == null || database?.levels == null) return false;
+        bool changed = false;
+        foreach (LevelData storedLevel in database.levels.Where(item => item != null && item.categories != null))
+        {
+            foreach (Category levelCategory in storedLevel.categories.Where(item => item != null))
+            {
+                changed |= MigrateWords(levelCategory.id, levelCategory.words);
+                if (levelCategory.transformsOnComplete && levelCategory.transformResult != null)
+                    changed |= MigrateWords(levelCategory.transformResultCategoryId,
+                        new[] { levelCategory.transformResult });
+            }
+
+            foreach (LevelWordEntry entry in storedLevel.orderedWords ?? new List<LevelWordEntry>())
+                if (entry?.word != null) changed |= MigrateWords(entry.categoryId, new[] { entry.word });
+        }
+        return changed;
+    }
+
+    private bool MigrateWords(string categoryId, IEnumerable<WordItem> levelWords)
+    {
+        Category masterCategory = library.categories.FirstOrDefault(item => item != null && item.id == categoryId);
+        if (masterCategory?.words == null || levelWords == null) return false;
+        bool changed = false;
+        foreach (WordItem levelWord in levelWords.Where(item => item != null && item.hasSprite))
+        {
+            WordItem master = masterCategory.words.FirstOrDefault(item => item != null &&
+                string.Equals(item.text, levelWord.text, StringComparison.OrdinalIgnoreCase));
+            if (master == null) continue;
+            if (!master.hasSprite)
+            {
+                master.hasSprite = true;
+                changed = true;
+            }
+            if (string.IsNullOrWhiteSpace(master.spriteKey))
+            {
+                master.spriteKey = string.IsNullOrWhiteSpace(levelWord.spriteKey)
+                    ? BuildSpriteKey(masterCategory.id, master.text)
+                    : levelWord.spriteKey;
+                changed = true;
+            }
+        }
+        return changed;
+    }
+
+    private void SynchronizeAllLevelIconsFromLibrary()
+    {
+        if (library?.categories == null || database?.levels == null) return;
+        foreach (LevelData storedLevel in database.levels.Where(item => item != null))
+        {
+            bool changed = false;
+            foreach (Category levelCategory in storedLevel.categories ?? new List<Category>())
+            {
+                changed |= SynchronizeWords(levelCategory.id, levelCategory.words);
+                if (levelCategory.transformsOnComplete && levelCategory.transformResult != null)
+                    changed |= SynchronizeWords(levelCategory.transformResultCategoryId,
+                        new[] { levelCategory.transformResult });
+            }
+            foreach (LevelWordEntry entry in storedLevel.orderedWords ?? new List<LevelWordEntry>())
+                if (entry?.word != null) changed |= SynchronizeWords(entry.categoryId, new[] { entry.word });
+            if (changed) EditorUtility.SetDirty(storedLevel);
+        }
+        EditorUtility.SetDirty(database);
+    }
+
+    private bool SynchronizeWords(string categoryId, IEnumerable<WordItem> levelWords)
+    {
+        Category masterCategory = library.categories.FirstOrDefault(item => item != null && item.id == categoryId);
+        if (masterCategory?.words == null || levelWords == null) return false;
+        bool changed = false;
+        foreach (WordItem levelWord in levelWords.Where(item => item != null))
+        {
+            WordItem master = masterCategory.words.FirstOrDefault(item => item != null &&
+                string.Equals(item.text, levelWord.text, StringComparison.OrdinalIgnoreCase));
+            if (master == null) continue;
+            if (levelWord.hasSprite != master.hasSprite || levelWord.spriteKey != master.spriteKey)
+            {
+                levelWord.hasSprite = master.hasSprite;
+                levelWord.spriteKey = master.spriteKey;
+                changed = true;
+            }
+        }
+        return changed;
+    }
+
+    private static string BuildSpriteKey(string categoryId, string word)
+    {
+        return $"{Slug(categoryId)}__{Slug(word)}";
+    }
+
     private void CreateNewLevel()
     {
         EnsureDatabase();
@@ -688,6 +1009,14 @@ public class WordGameLevelEditor : EditorWindow
         if (string.IsNullOrWhiteSpace(value)) return "";
         char[] chars = value.Trim().ToLowerInvariant().Select(c => char.IsLetterOrDigit(c) ? c : '_').ToArray();
         return string.Join("_", new string(chars).Split(new[] { '_' }, StringSplitOptions.RemoveEmptyEntries));
+    }
+
+    private static int RecommendedMoveCount(int categoryCount, int visibleRows)
+    {
+        categoryCount = Mathf.Max(1, categoryCount);
+        visibleRows = Mathf.Max(1, visibleRows);
+        int transformations = Mathf.Max(0, categoryCount - visibleRows);
+        return categoryCount * 3 + transformations;
     }
 }
 #endif

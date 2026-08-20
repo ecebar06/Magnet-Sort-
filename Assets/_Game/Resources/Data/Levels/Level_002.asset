@@ -13,97 +13,245 @@ MonoBehaviour:
   m_Name: Level_002
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelNumber: 2
-  moveCount: 13
+  moveCount: 12
+  expectedCategoryCount: 4
+  visibleRowCount: 4
   categories:
-  - id: music
-    name: Music
+  - id: fruits
+    name: Fruits
     words:
-    - text: Guitar
+    - text: Apple
+      hasSprite: 1
+      spriteKey: fruits__apple
+      syllablePartA: 
+      syllablePartB: 
+    - text: Banana
+      hasSprite: 1
+      spriteKey: fruits__banana
+      syllablePartA: 
+      syllablePartB: 
+    - text: Orange
       hasSprite: 0
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
-    - text: Piano
+    - text: Grape
       hasSprite: 0
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
-    - text: Violin
+    transformsOnComplete: 0
+    transformResult:
+      text: 
       hasSprite: 0
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
-    - text: Drums
-      hasSprite: 0
-      spriteKey: 
-      syllablePartA: 
-      syllablePartB: 
-  - id: weather
-    name: Weather
+    transformResultCategoryId: 
+  - id: pets
+    name: Pets
     words:
-    - text: Rain
+    - text: Cat
       hasSprite: 0
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
-    - text: Snow
+    - text: Dog
+      hasSprite: 1
+      spriteKey: pets__dog
+      syllablePartA: 
+      syllablePartB: 
+    - text: Bird
       hasSprite: 0
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
-    - text: Wind
+    - text: Fish
       hasSprite: 0
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
-    - text: Storm
+    transformsOnComplete: 0
+    transformResult:
+      text: 
       hasSprite: 0
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
-  - id: kitchen
-    name: Kitchen
+    transformResultCategoryId: 
+  - id: body_parts
+    name: Body Parts
     words:
-    - text: Whisk
+    - text: Hand
       hasSprite: 0
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
-    - text: Spatula
+    - text: Foot
       hasSprite: 0
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
-    - text: Ladle
+    - text: Eye
       hasSprite: 0
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
-    - text: Tongs
+    - text: Nose
       hasSprite: 0
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
-  - id: travel
-    name: Travel
+    transformsOnComplete: 0
+    transformResult:
+      text: 
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+    transformResultCategoryId: 
+  - id: ball_sports
+    name: Ball Sports
     words:
-    - text: Passport
+    - text: Soccer
       hasSprite: 0
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
-    - text: Ticket
+    - text: Tennis
       hasSprite: 0
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
-    - text: Suitcase
+    - text: Volleyball
       hasSprite: 0
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
-    - text: Hotel
+    - text: Basketball
       hasSprite: 0
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
+    transformsOnComplete: 0
+    transformResult:
+      text: 
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+    transformResultCategoryId: 
+  orderedWords:
+  - categoryId: fruits
+    word:
+      text: Apple
+      hasSprite: 1
+      spriteKey: fruits__apple
+      syllablePartA: 
+      syllablePartB: 
+  - categoryId: pets
+    word:
+      text: Cat
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+  - categoryId: body_parts
+    word:
+      text: Hand
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+  - categoryId: ball_sports
+    word:
+      text: Soccer
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+  - categoryId: fruits
+    word:
+      text: Banana
+      hasSprite: 1
+      spriteKey: fruits__banana
+      syllablePartA: 
+      syllablePartB: 
+  - categoryId: pets
+    word:
+      text: Dog
+      hasSprite: 1
+      spriteKey: pets__dog
+      syllablePartA: 
+      syllablePartB: 
+  - categoryId: body_parts
+    word:
+      text: Foot
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+  - categoryId: ball_sports
+    word:
+      text: Tennis
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+  - categoryId: fruits
+    word:
+      text: Orange
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+  - categoryId: pets
+    word:
+      text: Bird
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+  - categoryId: body_parts
+    word:
+      text: Eye
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+  - categoryId: ball_sports
+    word:
+      text: Volleyball
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+  - categoryId: fruits
+    word:
+      text: Grape
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+  - categoryId: pets
+    word:
+      text: Fish
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+  - categoryId: body_parts
+    word:
+      text: Nose
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+  - categoryId: ball_sports
+    word:
+      text: Basketball
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+

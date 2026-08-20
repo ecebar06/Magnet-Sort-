@@ -54,10 +54,41 @@ public class LevelData : ScriptableObject
             }
         }
 
-        List<string> words = categories.SelectMany(category => category.words).Select(word => word.text).ToList();
-        if (words.Count != words.Distinct(System.StringComparer.OrdinalIgnoreCase).Count())
+        Dictionary<string, Category> transformingById = categories
+            .Where(category => category.transformsOnComplete && !string.IsNullOrWhiteSpace(category.id))
+            .GroupBy(category => category.id, System.StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), System.StringComparer.OrdinalIgnoreCase);
+        foreach (Category start in transformingById.Values)
         {
-            error = "A word is repeated inside the level.";
+            List<Category> path = new List<Category>();
+            Category current = start;
+            while (current != null)
+            {
+                int cycleStart = path.FindIndex(category => string.Equals(category.id, current.id,
+                    System.StringComparison.OrdinalIgnoreCase));
+                if (cycleStart >= 0)
+                {
+                    List<string> cycleNames = path.Skip(cycleStart).Select(category => category.name).ToList();
+                    cycleNames.Add(current.name);
+                    error = $"Transformation cycle: {string.Join(" → ", cycleNames)}. These categories wait for each other and cannot be completed.";
+                    return false;
+                }
+
+                path.Add(current);
+                transformingById.TryGetValue(current.transformResultCategoryId ?? string.Empty, out current);
+            }
+        }
+
+        var repeatedWord = categories
+            .SelectMany(category => category.words.Select(word => new { Word = word.text?.Trim(), Category = category.name }))
+            .GroupBy(item => item.Word, System.StringComparer.OrdinalIgnoreCase)
+            .FirstOrDefault(group => group.Count() > 1);
+        if (repeatedWord != null)
+        {
+            List<string> categoryNames = repeatedWord.Select(item => item.Category).Distinct().ToList();
+            error = categoryNames.Count > 1
+                ? $"The word '{repeatedWord.Key}' exists in both '{categoryNames[0]}' and '{categoryNames[1]}' categories."
+                : $"The word '{repeatedWord.Key}' appears more than once in '{categoryNames[0]}'.";
             return false;
         }
 
@@ -67,10 +98,23 @@ public class LevelData : ScriptableObject
         int playableWords = categories.SelectMany(c => c.words).Count(word => !generatedWords.Contains(word.text));
         int transformationCount = categories.Count(c => c.transformsOnComplete);
         int effectiveRowCount = visibleRowCount > 0 ? visibleRowCount : categories.Count;
-        int queueWords = playableWords - effectiveRowCount * 4;
-        if (transformationCount > 0 && queueWords != transformationCount * 3)
+        int requiredTransformationCount = categories.Count - effectiveRowCount;
+        if (requiredTransformationCount < 0)
         {
-            error = $"Row/category counts create {queueWords} queued words; {transformationCount * 3} are required for transformations.";
+            error = $"Visible row count ({effectiveRowCount}) cannot exceed category count ({categories.Count}).";
+            return false;
+        }
+        if (transformationCount != requiredTransformationCount)
+        {
+            error = $"{categories.Count} categories with {effectiveRowCount} visible rows require exactly {requiredTransformationCount} transformations; {transformationCount} are currently set.";
+            return false;
+        }
+        int queueWords = playableWords - effectiveRowCount * 4;
+        if (queueWords != transformationCount * 3)
+        {
+            error = transformationCount == 0 && queueWords > 0
+                ? $"{queueWords} words would remain queued, but this level has no transformations to bring them onto the board."
+                : $"Row/category counts create {queueWords} queued words; {transformationCount * 3} are required for {transformationCount} transformations.";
             return false;
         }
 

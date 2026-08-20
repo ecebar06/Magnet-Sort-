@@ -105,3 +105,7 @@ MonoBehaviour:
     sprite: {fileID: 0}
   - key: landscapes__grassland
     sprite: {fileID: 0}
+  - key: fruits__apple
+    sprite: {fileID: -1600582579191142780, guid: 07f9c0abbfe3c3740b62d9d073ae0314, type: 2}
+  - key: fruits__banana
+    sprite: {fileID: 0}

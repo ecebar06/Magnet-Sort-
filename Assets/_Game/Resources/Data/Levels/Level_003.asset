@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelData
   levelNumber: 3
   moveCount: 18
+  expectedCategoryCount: 0
+  visibleRowCount: 0
   categories:
   - id: space
     name: Space
@@ -38,12 +40,20 @@ MonoBehaviour:
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
+    transformsOnComplete: 0
+    transformResult:
+      text: 
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+    transformResultCategoryId: 
   - id: flowers
     name: Flowers
     words:
     - text: Rose
-      hasSprite: 0
-      spriteKey: 
+      hasSprite: 1
+      spriteKey: flowers__rose
       syllablePartA: 
       syllablePartB: 
     - text: Tulip
@@ -61,6 +71,14 @@ MonoBehaviour:
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
+    transformsOnComplete: 0
+    transformResult:
+      text: 
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+    transformResultCategoryId: 
   - id: clothing
     name: Clothing
     words:
@@ -84,12 +102,20 @@ MonoBehaviour:
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
+    transformsOnComplete: 0
+    transformResult:
+      text: 
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+    transformResultCategoryId: 
   - id: vehicles
     name: Vehicles
     words:
     - text: Car
-      hasSprite: 0
-      spriteKey: 
+      hasSprite: 1
+      spriteKey: vehicles__car
       syllablePartA: 
       syllablePartB: 
     - text: Bus
@@ -107,6 +133,14 @@ MonoBehaviour:
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
+    transformsOnComplete: 0
+    transformResult:
+      text: 
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+    transformResultCategoryId: 
   - id: school
     name: School
     words:
@@ -130,3 +164,12 @@ MonoBehaviour:
       spriteKey: 
       syllablePartA: 
       syllablePartB: 
+    transformsOnComplete: 0
+    transformResult:
+      text: 
+      hasSprite: 0
+      spriteKey: 
+      syllablePartA: 
+      syllablePartB: 
+    transformResultCategoryId: 
+  orderedWords: []

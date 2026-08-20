@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Word Sort Level Studio</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <h1>Word Sort Level Studio</h1>
+    </div>
+    <div class="header-actions">
+      <label class="button secondary">Import Library<input id="libraryFile" type="file" accept=".json"></label>
+      <button id="exportLibrary" class="button secondary">Export Library JSON</button>
+      <label class="button secondary">Import Level<input id="levelFile" type="file" accept=".json"></label>
+      <button id="newLevel" class="button secondary">New Level</button>
+      <button id="exportLevel" class="button primary">Export Level JSON</button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <aside class="panel library-panel">
+      <div class="panel-title"><div><span>01</span><h2>Word Library</h2></div><div><button id="createCategory" class="mini-button">New</button><b id="libraryCount">0 categories</b></div></div>
+      <input id="librarySearch" class="search" type="search" placeholder="Search categories or words…">
+      <div id="libraryEmpty" class="empty-state">
+        <strong>Load WordLibrary.json</strong>
+        <p>Select the Unity word library to begin building a level.</p>
+      </div>
+      <div id="libraryList" class="category-list"></div>
+    </aside>
+
+    <section class="center-column">
+      <section class="panel settings-panel">
+        <div class="panel-title"><div><span>02</span><h2>Level Setup</h2></div><b id="validationBadge" class="status neutral">Waiting</b></div>
+        <div class="field-grid">
+          <label>Level Number<input id="levelNumber" type="number" min="1" value="1"></label>
+          <label>Move Count<input id="moveCount" type="number" min="1" value="35"></label>
+          <label>Category Count<input id="categoryCount" type="number" min="1" value="8"></label>
+          <label>Visible Rows<input id="rowCount" type="number" min="1" value="4"></label>
+        </div>
+        <div class="recommended-moves"><span id="recommendedMoves">Recommended Moves: —</span><button id="useRecommendedMoves" class="mini-button">Use Recommended</button></div>
+        <div id="validationMessage" class="validation-message">Add categories to validate this level.</div>
+        <div class="setup-actions">
+          <button id="autoBuildLevel" class="button primary">Auto Build Level</button>
+          <button id="autoTransformations" class="button secondary">Auto Set Transformations</button>
+        </div>
+      </section>
+
+      <section class="panel selected-panel">
+        <div class="panel-title">
+          <div><span>03</span><h2>Level Categories</h2></div>
+          <b id="selectedCount">0 / 8</b>
+        </div>
+        <div id="selectedCategories" class="selected-categories"></div>
+      </section>
+    </section>
+
+    <aside class="panel order-panel">
+      <div class="panel-title"><div><span>04</span><h2>Playable Order</h2></div><b id="orderCount">0 words</b></div>
+      <div class="order-actions">
+        <button id="generateOrder" class="button primary">Generate Solvable Order</button>
+        <button id="clearOrder" class="button secondary">Clear</button>
+      </div>
+      <p class="hint">Drag any word onto another to swap them. The first rows are visible; the rest form the queue.</p>
+      <h3>Visible Board</h3>
+      <div id="visibleOrder" class="word-grid"></div>
+      <h3>Queue</h3>
+      <div id="queueOrder" class="word-grid queue-grid"></div>
+    </aside>
+  </main>
+
+  <div id="toast" class="toast" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

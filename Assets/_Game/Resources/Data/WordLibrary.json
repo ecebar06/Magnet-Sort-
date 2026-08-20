@@ -93,15 +93,15 @@
             "words": [
                 {
                     "text": "Apple",
-                    "hasSprite": false,
-                    "spriteKey": "",
+                    "hasSprite": true,
+                    "spriteKey": "fruits__apple",
                     "syllablePartA": "",
                     "syllablePartB": ""
                 },
                 {
                     "text": "Banana",
-                    "hasSprite": false,
-                    "spriteKey": "",
+                    "hasSprite": true,
+                    "spriteKey": "fruits__banana",
                     "syllablePartA": "Ba",
                     "syllablePartB": "nana"
                 },

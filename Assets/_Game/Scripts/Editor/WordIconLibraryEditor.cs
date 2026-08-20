@@ -54,7 +54,6 @@ public class WordIconLibraryEditor : Editor
     public override void OnInspectorGUI()
     {
         WordIconLibrary library = (WordIconLibrary)target;
-
         EditorGUILayout.LabelField("WORD ICON LIBRARY", EditorStyles.boldLabel);
         EditorGUILayout.Space(3);
 
@@ -68,6 +67,11 @@ public class WordIconLibraryEditor : Editor
         if (!string.IsNullOrEmpty(loadError))
         {
             EditorGUILayout.HelpBox(loadError, MessageType.Error);
+            return;
+        }
+        if (library == null)
+        {
+            EditorGUILayout.HelpBox("MainWordIconLibrary.asset could not be found.", MessageType.Error);
             return;
         }
 
@@ -86,7 +90,8 @@ public class WordIconLibraryEditor : Editor
         List<IconWord> visible = results.ToList();
         EditorGUILayout.LabelField($"Showing {visible.Count} result(s)", EditorStyles.miniLabel);
 
-        scroll = EditorGUILayout.BeginScrollView(scroll, GUILayout.MinHeight(220));
+        float scrollHeight = Mathf.Max(220f, GetInspectorWindowHeight() - 292f);
+        scroll = EditorGUILayout.BeginScrollView(scroll, GUILayout.Height(scrollHeight));
         foreach (IconWord item in visible) DrawIconWord(library, item);
         EditorGUILayout.EndScrollView();
 
@@ -179,10 +184,10 @@ public class WordIconLibraryEditor : Editor
             }
         }
 
-        WordIconLibrary iconLibrary = (WordIconLibrary)target;
-        Undo.RecordObject(iconLibrary, "Synchronize Word Icon Library");
-        iconLibrary.SynchronizeKeys(iconWords.Select(item => item.word.spriteKey));
-        EditorUtility.SetDirty(iconLibrary);
+        WordIconLibrary library = (WordIconLibrary)target;
+        Undo.RecordObject(library, "Synchronize Word Icon Library");
+        library.SynchronizeKeys(iconWords.Select(item => item.word.spriteKey));
+        EditorUtility.SetDirty(library);
         SaveWordLibrary();
         AssetDatabase.SaveAssets();
         Repaint();
@@ -236,6 +241,21 @@ public class WordIconLibraryEditor : Editor
     {
         if (wordLibrary == null) return;
         File.WriteAllText(Path.GetFullPath(WordLibraryPath), JsonUtility.ToJson(wordLibrary, true));
+    }
+
+    private static float GetInspectorWindowHeight()
+    {
+        Type inspectorType = typeof(Editor).Assembly.GetType("UnityEditor.InspectorWindow");
+        if (inspectorType == null) return 560f;
+        if (EditorWindow.focusedWindow != null && inspectorType.IsInstanceOfType(EditorWindow.focusedWindow))
+            return EditorWindow.focusedWindow.position.height;
+        if (EditorWindow.mouseOverWindow != null && inspectorType.IsInstanceOfType(EditorWindow.mouseOverWindow))
+            return EditorWindow.mouseOverWindow.position.height;
+        EditorWindow inspector = Resources.FindObjectsOfTypeAll(inspectorType)
+            .OfType<EditorWindow>()
+            .OrderByDescending(window => window.position.height)
+            .FirstOrDefault();
+        return inspector == null ? 560f : inspector.position.height;
     }
 }
 #endif
