@@ -1,0 +1,267 @@
+{
+  "levelNumber": 6,
+  "moveCount": 20,
+  "expectedCategoryCount": 0,
+  "visibleRowCount": 0,
+  "categories": [
+    {
+      "id": "colors",
+      "name": "Colors",
+      "words": [
+        {
+          "text": "Red",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Blue",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Green",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Yellow",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "body_parts",
+      "name": "Body Parts",
+      "words": [
+        {
+          "text": "Hand",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Foot",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Eye",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Nose",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "ball_sports",
+      "name": "Ball Sports",
+      "words": [
+        {
+          "text": "Soccer",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Tennis",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Volleyball",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Basketball",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "meals",
+      "name": "Meals",
+      "words": [
+        {
+          "text": "Breakfast",
+          "hasSprite": true,
+          "spriteKey": "meals__breakfast",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Lunch",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Dinner",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Snack",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "jobs",
+      "name": "Jobs",
+      "words": [
+        {
+          "text": "Doctor",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Teacher",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Farmer",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Pilot",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "foods",
+      "name": "Foods",
+      "words": [
+        {
+          "text": "Pizza",
+          "hasSprite": true,
+          "spriteKey": "foods__pizza",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Bread",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Cheese",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Rice",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    }
+  ],
+  "orderedWords": []
+}

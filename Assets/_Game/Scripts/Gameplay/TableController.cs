@@ -110,7 +110,7 @@ public class TableController : MonoBehaviour
             return;
         }
 
-        levelDatabase = Resources.Load<LevelDatabase>("Data/LevelDatabase");
+        levelDatabase = LevelDatabase.LoadFromResources();
         iconLibrary = Resources.Load<WordIconLibrary>("Data/MainWordIconLibrary");
         if (gameFont == null)
             gameFont = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
@@ -120,7 +120,7 @@ public class TableController : MonoBehaviour
         LevelData level = levelDatabase == null ? null : levelDatabase.GetLevel(activeLevelIndex);
         if (level == null)
         {
-            Debug.LogError("LevelDatabase is missing or contains no levels. Use Tools > Word Game > Create Example Levels.", this);
+            Debug.LogError("No JSON levels were found in Resources/Data/Levels. Use the Level Editor or import a web level JSON.", this);
             return;
         }
 

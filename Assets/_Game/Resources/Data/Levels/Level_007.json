@@ -1,0 +1,634 @@
+{
+  "levelNumber": 7,
+  "moveCount": 35,
+  "expectedCategoryCount": 8,
+  "visibleRowCount": 4,
+  "categories": [
+    {
+      "id": "smart_machines",
+      "name": "Smart Machines",
+      "words": [
+        {
+          "text": "Cyborg",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Robot",
+          "hasSprite": true,
+          "spriteKey": "smart_machines__robot",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Android",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Automaton",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": true,
+      "transformResult": {
+        "text": "Hoverboard",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": "future_tech"
+    },
+    {
+      "id": "future_tech",
+      "name": "Future Tech",
+      "words": [
+        {
+          "text": "Hoverboard",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Hologram",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Jetpack",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Smart Home",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": true,
+      "transformResult": {
+        "text": "House",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": "buildings"
+    },
+    {
+      "id": "buildings",
+      "name": "Buildings",
+      "words": [
+        {
+          "text": "House",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Apartment",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "School",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Store",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": true,
+      "transformResult": {
+        "text": "Sweep",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": "household_chores"
+    },
+    {
+      "id": "household_chores",
+      "name": "Household Chores",
+      "words": [
+        {
+          "text": "Sweep",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Mop",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Wash",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Wipe",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": true,
+      "transformResult": {
+        "text": "Tent",
+        "hasSprite": true,
+        "spriteKey": "camping__tent",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": "camping"
+    },
+    {
+      "id": "camping",
+      "name": "Camping",
+      "words": [
+        {
+          "text": "Tent",
+          "hasSprite": true,
+          "spriteKey": "camping__tent",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Fire",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Map",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Trail",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "outdoor_gear",
+      "name": "Outdoor Gear",
+      "words": [
+        {
+          "text": "Backpack",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Lantern",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Sleeping Bag",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Flashlight",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "foods",
+      "name": "Foods",
+      "words": [
+        {
+          "text": "Pizza",
+          "hasSprite": true,
+          "spriteKey": "foods__pizza",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Bread",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Cheese",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Rice",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "fruits",
+      "name": "Fruits",
+      "words": [
+        {
+          "text": "Apple",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Banana",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "Ba",
+          "syllablePartB": "nana"
+        },
+        {
+          "text": "Orange",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "Or",
+          "syllablePartB": "ange"
+        },
+        {
+          "text": "Grape",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    }
+  ],
+  "orderedWords": [
+    {
+      "categoryId": "smart_machines",
+      "word": {
+        "text": "Cyborg",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "outdoor_gear",
+      "word": {
+        "text": "Backpack",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "foods",
+      "word": {
+        "text": "Pizza",
+        "hasSprite": true,
+        "spriteKey": "foods__pizza",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "fruits",
+      "word": {
+        "text": "Apple",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "smart_machines",
+      "word": {
+        "text": "Robot",
+        "hasSprite": true,
+        "spriteKey": "smart_machines__robot",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "outdoor_gear",
+      "word": {
+        "text": "Lantern",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "foods",
+      "word": {
+        "text": "Bread",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "fruits",
+      "word": {
+        "text": "Banana",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "Ba",
+        "syllablePartB": "nana"
+      }
+    },
+    {
+      "categoryId": "smart_machines",
+      "word": {
+        "text": "Android",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "outdoor_gear",
+      "word": {
+        "text": "Sleeping Bag",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "foods",
+      "word": {
+        "text": "Cheese",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "fruits",
+      "word": {
+        "text": "Orange",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "Or",
+        "syllablePartB": "ange"
+      }
+    },
+    {
+      "categoryId": "smart_machines",
+      "word": {
+        "text": "Automaton",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "outdoor_gear",
+      "word": {
+        "text": "Flashlight",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "foods",
+      "word": {
+        "text": "Rice",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "fruits",
+      "word": {
+        "text": "Grape",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "future_tech",
+      "word": {
+        "text": "Hologram",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "future_tech",
+      "word": {
+        "text": "Jetpack",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "future_tech",
+      "word": {
+        "text": "Smart Home",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "buildings",
+      "word": {
+        "text": "Apartment",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "buildings",
+      "word": {
+        "text": "School",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "buildings",
+      "word": {
+        "text": "Store",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "household_chores",
+      "word": {
+        "text": "Mop",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "household_chores",
+      "word": {
+        "text": "Wash",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "household_chores",
+      "word": {
+        "text": "Wipe",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "camping",
+      "word": {
+        "text": "Fire",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "camping",
+      "word": {
+        "text": "Map",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "camping",
+      "word": {
+        "text": "Trail",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    }
+  ]
+}

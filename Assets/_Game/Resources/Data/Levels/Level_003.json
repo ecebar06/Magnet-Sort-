@@ -1,0 +1,224 @@
+{
+  "levelNumber": 3,
+  "moveCount": 18,
+  "expectedCategoryCount": 0,
+  "visibleRowCount": 0,
+  "categories": [
+    {
+      "id": "space",
+      "name": "Space",
+      "words": [
+        {
+          "text": "Galaxy",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Nebula",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Comet",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Asteroid",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "flowers",
+      "name": "Flowers",
+      "words": [
+        {
+          "text": "Rose",
+          "hasSprite": true,
+          "spriteKey": "flowers__rose",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Tulip",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Daisy",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Orchid",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "clothing",
+      "name": "Clothing",
+      "words": [
+        {
+          "text": "Shirt",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Pants",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Jacket",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Socks",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "vehicles",
+      "name": "Vehicles",
+      "words": [
+        {
+          "text": "Car",
+          "hasSprite": true,
+          "spriteKey": "vehicles__car",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Bus",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Train",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Bicycle",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "school",
+      "name": "School",
+      "words": [
+        {
+          "text": "Pencil",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Ruler",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Eraser",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Notebook",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    }
+  ],
+  "orderedWords": []
+}

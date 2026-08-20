@@ -11,11 +11,11 @@ public class WordGameLevelEditor : EditorWindow
     private int pendingWordDragIndex = -1;
     private Vector2 pendingWordDragStart;
     private const string LibraryPath = "Assets/_Game/Resources/Data/WordLibrary.json";
-    private const string DatabasePath = "Assets/_Game/Resources/Data/LevelDatabase.asset";
     private const string LevelsFolder = "Assets/_Game/Resources/Data/Levels";
 
     private WordLibrary library;
     private LevelDatabase database;
+    private readonly Dictionary<LevelData, string> levelJsonPaths = new Dictionary<LevelData, string>();
     private WordIconLibrary iconLibrary;
     private LevelData level;
     private Vector2 libraryScroll;
@@ -50,7 +50,7 @@ public class WordGameLevelEditor : EditorWindow
     {
         LoadLibrary();
         iconLibrary = AssetDatabase.LoadAssetAtPath<WordIconLibrary>("Assets/_Game/Resources/Data/MainWordIconLibrary.asset");
-        database = AssetDatabase.LoadAssetAtPath<LevelDatabase>(DatabasePath);
+        LoadJsonLevels();
         string migrationKey = $"WordSort.WordIconMigration.{Application.dataPath}";
         if (!EditorPrefs.GetBool(migrationKey, false))
         {
@@ -69,6 +69,27 @@ public class WordGameLevelEditor : EditorWindow
             level = null;
         }
         Repaint();
+    }
+
+    private void LoadJsonLevels()
+    {
+        database = new LevelDatabase();
+        database.levels = new List<LevelData>();
+        levelJsonPaths.Clear();
+        if (!AssetDatabase.IsValidFolder(LevelsFolder)) return;
+
+        foreach (string guid in AssetDatabase.FindAssets("t:TextAsset", new[] { LevelsFolder }))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            if (!path.EndsWith(".json", StringComparison.OrdinalIgnoreCase)) continue;
+            TextAsset textAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(path);
+            LevelData loaded = textAsset == null ? null : LevelData.FromJson(textAsset.text);
+            if (loaded == null || loaded.levelNumber < 1) continue;
+            database.levels.Add(loaded);
+            levelJsonPaths[loaded] = path;
+        }
+
+        database.levels = database.levels.OrderBy(item => item.levelNumber).ToList();
     }
 
     private void LoadLibrary()
@@ -886,6 +907,7 @@ public class WordGameLevelEditor : EditorWindow
     private void SynchronizeAllLevelIconsFromLibrary()
     {
         if (library?.categories == null || database?.levels == null) return;
+        bool anyChanged = false;
         foreach (LevelData storedLevel in database.levels.Where(item => item != null))
         {
             bool changed = false;
@@ -898,9 +920,13 @@ public class WordGameLevelEditor : EditorWindow
             }
             foreach (LevelWordEntry entry in storedLevel.orderedWords ?? new List<LevelWordEntry>())
                 if (entry?.word != null) changed |= SynchronizeWords(entry.categoryId, new[] { entry.word });
-            if (changed) EditorUtility.SetDirty(storedLevel);
+            if (changed)
+            {
+                WriteLevelJson(storedLevel, false);
+                anyChanged = true;
+            }
         }
-        EditorUtility.SetDirty(database);
+        if (anyChanged) AssetDatabase.Refresh();
     }
 
     private bool SynchronizeWords(string categoryId, IEnumerable<WordItem> levelWords)
@@ -932,39 +958,53 @@ public class WordGameLevelEditor : EditorWindow
     {
         EnsureDatabase();
         int number = database.levels.Where(l => l != null).Select(l => l.levelNumber).DefaultIfEmpty(0).Max() + 1;
-        string path = AssetDatabase.GenerateUniqueAssetPath($"{LevelsFolder}/Level_{number:000}.asset");
         LevelData created = CreateInstance<LevelData>();
         created.levelNumber = number;
         created.moveCount = 12;
         created.categories = new List<Category>();
-        AssetDatabase.CreateAsset(created, path);
-        Undo.RecordObject(database, "Add Level");
         database.levels.Add(created);
-        EditorUtility.SetDirty(database);
-        AssetDatabase.SaveAssets();
         selectedLevelIndex = database.levels.Count - 1;
         level = created;
+        WriteLevelJson(created);
         status = $"Created Level {number}";
     }
 
     private void DeleteCurrentLevel()
     {
-        string path = AssetDatabase.GetAssetPath(level);
-        Undo.RecordObject(database, "Delete Level");
+        levelJsonPaths.TryGetValue(level, out string path);
         database.levels.Remove(level);
-        EditorUtility.SetDirty(database);
-        AssetDatabase.DeleteAsset(path);
-        AssetDatabase.SaveAssets();
+        levelJsonPaths.Remove(level);
+        if (!string.IsNullOrEmpty(path)) AssetDatabase.DeleteAsset(path);
+        DestroyImmediate(level);
         selectedLevelIndex = Mathf.Clamp(selectedLevelIndex, 0, Mathf.Max(0, database.levels.Count - 1));
         level = database.levels.Count == 0 ? null : database.levels[selectedLevelIndex];
     }
 
     private void SaveCurrentLevel()
     {
-        EditorUtility.SetDirty(level);
-        EditorUtility.SetDirty(database);
-        AssetDatabase.SaveAssets();
+        WriteLevelJson(level);
         status = level.IsValid(out string error) ? $"Level {level.levelNumber} saved." : $"Saved with warning: {error}";
+    }
+
+    private void WriteLevelJson(LevelData storedLevel, bool refresh = true)
+    {
+        if (storedLevel == null) return;
+        EnsureDatabase();
+        string desiredPath = $"{LevelsFolder}/Level_{storedLevel.levelNumber:000}.json";
+        if (levelJsonPaths.TryGetValue(storedLevel, out string previousPath) &&
+            !string.Equals(previousPath, desiredPath, StringComparison.OrdinalIgnoreCase) &&
+            AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(previousPath) != null)
+        {
+            AssetDatabase.DeleteAsset(previousPath);
+        }
+
+        File.WriteAllText(Path.GetFullPath(desiredPath), storedLevel.ToJson());
+        levelJsonPaths[storedLevel] = desiredPath;
+        if (refresh)
+        {
+            AssetDatabase.ImportAsset(desiredPath, ImportAssetOptions.ForceUpdate);
+            AssetDatabase.Refresh();
+        }
     }
 
     private void EnsureDatabase()
@@ -972,9 +1012,8 @@ public class WordGameLevelEditor : EditorWindow
         if (!AssetDatabase.IsValidFolder(LevelsFolder))
             AssetDatabase.CreateFolder("Assets/_Game/Resources/Data", "Levels");
         if (database != null) return;
-        database = CreateInstance<LevelDatabase>();
+        database = new LevelDatabase();
         database.levels = new List<LevelData>();
-        AssetDatabase.CreateAsset(database, DatabasePath);
     }
 
     private static Category CloneCategory(Category source)

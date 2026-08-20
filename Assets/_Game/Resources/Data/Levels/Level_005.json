@@ -1,0 +1,267 @@
+{
+  "levelNumber": 5,
+  "moveCount": 22,
+  "expectedCategoryCount": 0,
+  "visibleRowCount": 0,
+  "categories": [
+    {
+      "id": "mythology",
+      "name": "Mythology",
+      "words": [
+        {
+          "text": "Zeus",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Odin",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Thor",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Anubis",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "cities",
+      "name": "Famous Cities",
+      "words": [
+        {
+          "text": "Paris",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "London",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Rome",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Tokyo",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "medical",
+      "name": "Medical",
+      "words": [
+        {
+          "text": "Bandage",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Syringe",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Stethoscope",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Thermometer",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "film",
+      "name": "Film Genres",
+      "words": [
+        {
+          "text": "Comedy",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Horror",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Drama",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Western",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "desserts",
+      "name": "Desserts",
+      "words": [
+        {
+          "text": "Brownie",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Pudding",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Donut",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Gelato",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "navigation",
+      "name": "Navigation",
+      "words": [
+        {
+          "text": "Compass",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Map",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Route",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Landmark",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    }
+  ],
+  "orderedWords": []
+}

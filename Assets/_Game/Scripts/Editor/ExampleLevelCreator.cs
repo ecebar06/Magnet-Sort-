@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -7,7 +8,6 @@ using UnityEngine;
 public static class ExampleLevelCreator
 {
     private const string LevelsFolder = "Assets/_Game/Resources/Data/Levels";
-    private const string DatabasePath = "Assets/_Game/Resources/Data/LevelDatabase.asset";
 
     [InitializeOnLoadMethod]
     private static void ScheduleCreation()
@@ -17,11 +17,12 @@ public static class ExampleLevelCreator
 
     private static void CreateExampleLevelsIfMissing()
     {
-        LevelDatabase database = AssetDatabase.LoadAssetAtPath<LevelDatabase>(DatabasePath);
-        if (database == null || database.levels == null || database.levels.Count == 0)
-        {
-            CreateExampleLevels();
-        }
+        if (AssetDatabase.FindAssets("t:TextAsset", new[] { LevelsFolder })
+            .Select(AssetDatabase.GUIDToAssetPath)
+            .Any(path => path.EndsWith(".json", System.StringComparison.OrdinalIgnoreCase))) return;
+
+        if (AssetDatabase.FindAssets("t:LevelData", new[] { LevelsFolder }).Length > 0) return;
+        CreateExampleLevels();
     }
 
     [MenuItem("Tools/Word Game/Create Example Levels")]
@@ -70,27 +71,14 @@ public static class ExampleLevelCreator
                 Category("navigation", "Navigation", Word("Compass"), Word("Map"), Word("Route"), Word("Landmark")))
         };
 
-        LevelDatabase database = AssetDatabase.LoadAssetAtPath<LevelDatabase>(DatabasePath);
-        if (database == null)
-        {
-            database = ScriptableObject.CreateInstance<LevelDatabase>();
-            AssetDatabase.CreateAsset(database, DatabasePath);
-        }
-
-        database.levels = levels;
-        EditorUtility.SetDirty(database);
-        AssetDatabase.SaveAssets();
+        foreach (LevelData level in levels)
+            File.WriteAllText(Path.GetFullPath($"{LevelsFolder}/Level_{level.levelNumber:000}.json"), level.ToJson());
+        AssetDatabase.Refresh();
     }
 
     private static LevelData CreateLevel(int number, int moves, params Category[] categories)
     {
-        string path = $"{LevelsFolder}/Level_{number:000}.asset";
-        LevelData level = AssetDatabase.LoadAssetAtPath<LevelData>(path);
-        if (level == null)
-        {
-            level = ScriptableObject.CreateInstance<LevelData>();
-            AssetDatabase.CreateAsset(level, path);
-        }
+        LevelData level = ScriptableObject.CreateInstance<LevelData>();
 
         level.levelNumber = number;
         level.moveCount = moves;
@@ -98,7 +86,6 @@ public static class ExampleLevelCreator
         level.expectedCategoryCount = categories.Length;
         level.categories = new List<Category>(categories);
         level.orderedWords = BuildOrderedWords(level);
-        EditorUtility.SetDirty(level);
         return level;
     }
 

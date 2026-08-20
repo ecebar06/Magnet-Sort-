@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Level_001", menuName = "Word Game/Level Data")]
+[System.Serializable]
 public class LevelData : ScriptableObject
 {
     [Min(1)] public int levelNumber = 1;
@@ -13,6 +13,21 @@ public class LevelData : ScriptableObject
     public List<Category> categories = new List<Category>();
     [Tooltip("Exact initial board and queue order. First rowCount * 4 entries are visible.")]
     public List<LevelWordEntry> orderedWords = new List<LevelWordEntry>();
+
+    public static LevelData FromJson(string json)
+    {
+        if (string.IsNullOrWhiteSpace(json)) return null;
+        LevelData level = CreateInstance<LevelData>();
+        JsonUtility.FromJsonOverwrite(json, level);
+        level.categories ??= new List<Category>();
+        level.orderedWords ??= new List<LevelWordEntry>();
+        return level;
+    }
+
+    public string ToJson(bool prettyPrint = true)
+    {
+        return JsonUtility.ToJson(this, prettyPrint);
+    }
 
     public bool IsValid(out string error)
     {

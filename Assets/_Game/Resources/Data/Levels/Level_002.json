@@ -1,0 +1,342 @@
+{
+  "levelNumber": 2,
+  "moveCount": 12,
+  "expectedCategoryCount": 4,
+  "visibleRowCount": 4,
+  "categories": [
+    {
+      "id": "fruits",
+      "name": "Fruits",
+      "words": [
+        {
+          "text": "Apple",
+          "hasSprite": true,
+          "spriteKey": "fruits__apple",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Banana",
+          "hasSprite": true,
+          "spriteKey": "fruits__banana",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Orange",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Grape",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "pets",
+      "name": "Pets",
+      "words": [
+        {
+          "text": "Cat",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Dog",
+          "hasSprite": true,
+          "spriteKey": "pets__dog",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Bird",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Fish",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "body_parts",
+      "name": "Body Parts",
+      "words": [
+        {
+          "text": "Hand",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Foot",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Eye",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Nose",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "ball_sports",
+      "name": "Ball Sports",
+      "words": [
+        {
+          "text": "Soccer",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Tennis",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Volleyball",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Basketball",
+          "hasSprite": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    }
+  ],
+  "orderedWords": [
+    {
+      "categoryId": "fruits",
+      "word": {
+        "text": "Apple",
+        "hasSprite": true,
+        "spriteKey": "fruits__apple",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "pets",
+      "word": {
+        "text": "Cat",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "body_parts",
+      "word": {
+        "text": "Hand",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "ball_sports",
+      "word": {
+        "text": "Soccer",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "fruits",
+      "word": {
+        "text": "Banana",
+        "hasSprite": true,
+        "spriteKey": "fruits__banana",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "pets",
+      "word": {
+        "text": "Dog",
+        "hasSprite": true,
+        "spriteKey": "pets__dog",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "body_parts",
+      "word": {
+        "text": "Foot",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "ball_sports",
+      "word": {
+        "text": "Tennis",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "fruits",
+      "word": {
+        "text": "Orange",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "pets",
+      "word": {
+        "text": "Bird",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "body_parts",
+      "word": {
+        "text": "Eye",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "ball_sports",
+      "word": {
+        "text": "Volleyball",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "fruits",
+      "word": {
+        "text": "Grape",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "pets",
+      "word": {
+        "text": "Fish",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "body_parts",
+      "word": {
+        "text": "Nose",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "ball_sports",
+      "word": {
+        "text": "Basketball",
+        "hasSprite": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    }
+  ]
+}

@@ -12,13 +12,20 @@
       <h1>Word Sort Level Studio</h1>
     </div>
     <div class="header-actions">
+      <button id="openLevelsFolder" class="button primary">Open Unity Levels Folder</button>
+      <select id="levelSelector" class="level-selector" aria-label="Level in selected folder" disabled>
+        <option value="">No folder selected</option>
+      </select>
+      <button id="saveLevel" class="button save" disabled>Save Level</button>
       <label class="button secondary">Import Library<input id="libraryFile" type="file" accept=".json"></label>
       <button id="exportLibrary" class="button secondary">Export Library JSON</button>
-      <label class="button secondary">Import Level<input id="levelFile" type="file" accept=".json"></label>
       <button id="newLevel" class="button secondary">New Level</button>
-      <button id="exportLevel" class="button primary">Export Level JSON</button>
     </div>
   </header>
+
+  <div id="folderStatus" class="folder-status">
+    Select <code>Assets/_Game/Resources/Data/Levels</code> to edit Unity levels directly.
+  </div>
 
   <main class="workspace">
     <aside class="panel library-panel">

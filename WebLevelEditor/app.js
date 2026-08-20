@@ -4,7 +4,12 @@ const clone = value => JSON.parse(JSON.stringify(value));
 const state = {
   library: { id: "", categories: [] },
   level: { levelNumber: 1, moveCount: 35, expectedCategoryCount: 8, visibleRowCount: 4, categories: [], orderedWords: [] },
-  dragIndex: -1
+  dragIndex: -1,
+  levelDirectoryHandle: null,
+  levelFiles: [],
+  currentLevelFileHandle: null,
+  currentLevelFileName: "",
+  dirty: false
 };
 
 const $ = id => document.getElementById(id);
@@ -22,6 +27,17 @@ function normalizeCategory(category) {
   };
 }
 
+function normalizeLevel(data) {
+  return {
+    levelNumber: Math.max(1, +data?.levelNumber || 1),
+    moveCount: Math.max(1, +data?.moveCount || 12),
+    expectedCategoryCount: Math.max(1, +data?.expectedCategoryCount || data?.categories?.length || 1),
+    visibleRowCount: Math.max(1, +data?.visibleRowCount || data?.categories?.length || 1),
+    categories: (data?.categories || []).map(normalizeCategory),
+    orderedWords: (data?.orderedWords || []).map(entry => ({ categoryId: entry.categoryId || "", word: normalizeWord(entry.word) }))
+  };
+}
+
 function slug(value) { return String(value || "category").trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, ""); }
 
 function syncInputs() {
@@ -36,7 +52,25 @@ function readInputs() {
   state.level.moveCount = Math.max(1, +$("moveCount").value || 1);
   state.level.expectedCategoryCount = Math.max(1, +$("categoryCount").value || 1);
   state.level.visibleRowCount = Math.max(1, +$("rowCount").value || 1);
+  markDirty();
   render();
+}
+
+function markDirty() {
+  state.dirty = true;
+  updateFolderControls();
+}
+
+function markClean() {
+  state.dirty = false;
+  updateFolderControls();
+}
+
+function updateFolderControls() {
+  const connected = !!state.levelDirectoryHandle;
+  $("levelSelector").disabled = !connected || !state.levelFiles.length;
+  $("saveLevel").disabled = !connected;
+  $("saveLevel").textContent = state.dirty ? "Save Level *" : "Save Level";
 }
 
 function recommendedMoveCount() {
@@ -238,6 +272,7 @@ function generateOrder() {
   if (visible.length !== expectedVisible || queue.length !== expectedQueue)
     return toast(`Could not create a complete order (${visible.length}/${expectedVisible} visible, ${queue.length}/${expectedQueue} queued).`);
   state.level.orderedWords = [...visible, ...queue];
+  markDirty();
   render(); toast(`Generated ${state.level.orderedWords.length} ordered words.`);
 }
 
@@ -256,7 +291,7 @@ function interleaveByCategory(entries) {
 function addCategory(id) {
   const source = state.library.categories.find(c => c.id === id);
   if (!source || state.level.categories.some(c => c.id === id)) return;
-  state.level.categories.push(clone(source)); state.level.orderedWords = []; render();
+  state.level.categories.push(clone(source)); state.level.orderedWords = []; markDirty(); render();
 }
 
 function autoSetTransformations() {
@@ -268,6 +303,7 @@ function autoSetTransformations() {
       !confirm("Replace the current transformation setup with an automatic cycle-free chain?")) return;
 
   const requiredCount = applyAutomaticTransformations();
+  markDirty();
   render();
   toast(requiredCount
     ? `Added ${requiredCount} cycle-free transformations. Review them, then generate the order.`
@@ -324,17 +360,128 @@ function autoBuildLevel() {
 
   state.level.categories = selected;
   applyAutomaticTransformations();
+  markDirty();
   syncInputs();
   render();
   generateOrder();
 }
 
-function exportLevel() {
-  if (validate().length || !state.level.orderedWords.length) return toast("Generate a valid playable order before exporting.");
-  const json = JSON.stringify(state.level, null, 2);
-  const blob = new Blob([json], { type: "application/json" });
-  const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `Level_${String(state.level.levelNumber).padStart(3, "0")}.json`; link.click(); URL.revokeObjectURL(link.href);
-  toast("Unity-compatible level JSON downloaded.");
+async function openLevelsFolder() {
+  if (!("showDirectoryPicker" in window)) {
+    setFolderStatus("Direct folder access is not supported here. Open the editor in current Chrome or Edge.", "error");
+    return;
+  }
+  if (state.dirty && !confirm("Discard the unsaved changes and open another Levels folder?")) return;
+  try {
+    const handle = await window.showDirectoryPicker({ id: "word-sort-levels", mode: "readwrite" });
+    if (handle.name.toLowerCase() !== "levels" &&
+        !confirm(`You selected “${handle.name}”. The expected folder is Assets/_Game/Resources/Data/Levels. Use it anyway?`)) return;
+    state.levelDirectoryHandle = handle;
+    state.currentLevelFileHandle = null;
+    state.currentLevelFileName = "";
+    await refreshLevelFiles(true);
+  } catch (error) {
+    if (error?.name !== "AbortError") setFolderStatus(`Could not open folder: ${error.message || error}`, "error");
+  }
+}
+
+async function refreshLevelFiles(loadFirst = false, preferredName = "") {
+  if (!state.levelDirectoryHandle) return;
+  const records = [];
+  let skipped = 0;
+  for await (const [name, handle] of state.levelDirectoryHandle.entries()) {
+    if (handle.kind !== "file" || !/^Level_.*\.json$/i.test(name)) continue;
+    try {
+      const file = await handle.getFile();
+      const data = JSON.parse(await file.text());
+      if (!data || !Array.isArray(data.categories) || (+data.levelNumber || 0) < 1) throw new Error("Invalid level structure");
+      records.push({ name, handle, data, levelNumber: +data.levelNumber });
+    } catch {
+      skipped++;
+    }
+  }
+  records.sort((a, b) => a.levelNumber - b.levelNumber || a.name.localeCompare(b.name));
+  state.levelFiles = records;
+  renderLevelFileOptions();
+  setFolderStatus(
+    `Connected to ${state.levelDirectoryHandle.name}: ${records.length} level${records.length === 1 ? "" : "s"}${skipped ? `, ${skipped} invalid JSON skipped` : ""}.`,
+    skipped ? "error" : "connected"
+  );
+
+  const wanted = records.find(record => record.name === preferredName) ||
+    records.find(record => record.name === state.currentLevelFileName);
+  if (wanted) loadLevelRecord(wanted);
+  else if (loadFirst && records.length) loadLevelRecord(records[0]);
+  else updateFolderControls();
+}
+
+function renderLevelFileOptions() {
+  const selector = $("levelSelector");
+  selector.innerHTML = state.levelFiles.length
+    ? state.levelFiles.map(record => `<option value="${escapeAttr(record.name)}">Level ${record.levelNumber} · ${escapeHtml(record.name)}</option>`).join("")
+    : `<option value="">No JSON levels in folder</option>`;
+  if (state.currentLevelFileName && state.levelFiles.some(record => record.name === state.currentLevelFileName))
+    selector.value = state.currentLevelFileName;
+  updateFolderControls();
+}
+
+function loadLevelRecord(record) {
+  state.level = normalizeLevel(record.data);
+  state.currentLevelFileHandle = record.handle;
+  state.currentLevelFileName = record.name;
+  $("levelSelector").value = record.name;
+  syncInputs();
+  render();
+  markClean();
+  toast(`Level ${state.level.levelNumber} loaded from Unity folder.`);
+}
+
+function createNewLevel() {
+  if (state.dirty && !confirm("Discard the unsaved changes and create a new level?")) return;
+  const nextNumber = state.levelFiles.reduce((maximum, record) => Math.max(maximum, record.levelNumber), 0) + 1;
+  state.level = normalizeLevel({ levelNumber: nextNumber || 1, moveCount: 35, expectedCategoryCount: 8, visibleRowCount: 4, categories: [], orderedWords: [] });
+  state.currentLevelFileHandle = null;
+  state.currentLevelFileName = "";
+  syncInputs();
+  render();
+  markDirty();
+  $("levelSelector").value = "";
+  toast(`New Level ${state.level.levelNumber} prepared. Save it to add it to the Unity folder.`);
+}
+
+async function saveLevelDirectly() {
+  if (!state.levelDirectoryHandle) return toast("Open the Unity Levels folder first.");
+  const errors = validate();
+  if ((errors.length || !state.level.orderedWords.length) &&
+      !confirm("This level still has warnings or no generated order. Save the draft anyway?")) return;
+
+  try {
+    let handle = state.currentLevelFileHandle;
+    let fileName = state.currentLevelFileName;
+    if (!handle) {
+      fileName = `Level_${String(state.level.levelNumber).padStart(3, "0")}.json`;
+      const existing = state.levelFiles.find(record => record.name.toLowerCase() === fileName.toLowerCase());
+      if (existing && !confirm(`${fileName} already exists. Replace it?`)) return;
+      handle = await state.levelDirectoryHandle.getFileHandle(fileName, { create: true });
+    }
+    const writable = await handle.createWritable();
+    await writable.write(JSON.stringify(state.level, null, 2) + "\n");
+    await writable.close();
+    state.currentLevelFileHandle = handle;
+    state.currentLevelFileName = fileName;
+    markClean();
+    await refreshLevelFiles(false, fileName);
+    toast(`${fileName} saved directly to the Unity project.`);
+  } catch (error) {
+    setFolderStatus(`Could not save level: ${error.message || error}`, "error");
+    toast("Level could not be saved.");
+  }
+}
+
+function setFolderStatus(message, kind = "") {
+  const status = $("folderStatus");
+  status.textContent = message;
+  status.className = `folder-status ${kind}`.trim();
 }
 
 function exportLibrary() {
@@ -351,8 +498,18 @@ function escapeHtml(value) { return String(value ?? "").replace(/[&<>"']/g, c =>
 function escapeAttr(value) { return escapeHtml(value); }
 
 $("libraryFile").addEventListener("change", event => readJsonFile(event.target.files[0], data => { state.library = { id: data.id || "word_library", categories: (data.categories || []).map(normalizeCategory) }; render(); toast("Word library loaded."); }));
-$("levelFile").addEventListener("change", event => readJsonFile(event.target.files[0], data => { state.level = { levelNumber: data.levelNumber || 1, moveCount: data.moveCount || 12, expectedCategoryCount: data.expectedCategoryCount || data.categories?.length || 1, visibleRowCount: data.visibleRowCount || data.categories?.length || 1, categories: (data.categories || []).map(normalizeCategory), orderedWords: (data.orderedWords || []).map(e => ({ categoryId: e.categoryId, word: normalizeWord(e.word) })) }; syncInputs(); render(); toast("Level loaded."); }));
-$("newLevel").addEventListener("click", () => { state.level = { levelNumber: 1, moveCount: 35, expectedCategoryCount: 8, visibleRowCount: 4, categories: [], orderedWords: [] }; syncInputs(); render(); });
+$("openLevelsFolder").addEventListener("click", openLevelsFolder);
+$("saveLevel").addEventListener("click", saveLevelDirectly);
+$("levelSelector").addEventListener("change", event => {
+  const record = state.levelFiles.find(item => item.name === event.target.value);
+  if (!record) return;
+  if (state.dirty && !confirm("Discard unsaved changes and open the selected level?")) {
+    event.target.value = state.currentLevelFileName;
+    return;
+  }
+  loadLevelRecord(record);
+});
+$("newLevel").addEventListener("click", createNewLevel);
 $("createCategory").addEventListener("click", () => {
   const name = prompt("Category name:"); if (!name?.trim()) return;
   const words = prompt("Enter exactly 4 words, separated by commas:");
@@ -361,9 +518,8 @@ $("createCategory").addEventListener("click", () => {
   let id = slug(name), suffix = 2;
   while (state.library.categories.some(category => category.id === id)) id = `${slug(name)}_${suffix++}`;
   const category = normalizeCategory({ id, name: name.trim(), words: values.map(blankWord) });
-  state.library.categories.push(category); state.level.categories.push(clone(category)); render(); toast(`${name.trim()} added to this level.`);
+  state.library.categories.push(category); state.level.categories.push(clone(category)); markDirty(); render(); toast(`${name.trim()} added to this level.`);
 });
-$("exportLevel").addEventListener("click", exportLevel);
 $("exportLibrary").addEventListener("click", exportLibrary);
 $("autoBuildLevel").addEventListener("click", autoBuildLevel);
 $("autoTransformations").addEventListener("click", autoSetTransformations);
@@ -371,17 +527,18 @@ $("useRecommendedMoves").addEventListener("click", () => {
   const recommended = recommendedMoveCount();
   state.level.moveCount = recommended;
   $("moveCount").value = recommended;
+  markDirty();
   render();
   toast(`Move Count set to the recommended value: ${recommended}.`);
 });
 $("generateOrder").addEventListener("click", generateOrder);
-$("clearOrder").addEventListener("click", () => { state.level.orderedWords = []; render(); });
+$("clearOrder").addEventListener("click", () => { state.level.orderedWords = []; markDirty(); render(); });
 $("librarySearch").addEventListener("input", renderLibrary);
 controls.forEach(id => $(id).addEventListener("change", readInputs));
 
 document.addEventListener("click", event => {
   const add = event.target.closest("[data-add]"); if (add) addCategory(add.dataset.add);
-  const remove = event.target.closest("[data-remove]"); if (remove) { state.level.categories.splice(+remove.dataset.remove, 1); state.level.orderedWords = []; render(); }
+  const remove = event.target.closest("[data-remove]"); if (remove) { state.level.categories.splice(+remove.dataset.remove, 1); state.level.orderedWords = []; markDirty(); render(); }
 });
 
 document.addEventListener("change", event => {
@@ -394,6 +551,7 @@ document.addEventListener("change", event => {
       word.hasSprite = event.target.checked;
       if (word.hasSprite && !word.spriteKey) word.spriteKey = `${category.id}__${slug(word.text)}`;
       syncLibraryWord(categoryId, wordIndex);
+      markDirty();
       render();
     }
   }
@@ -405,28 +563,29 @@ document.addEventListener("change", event => {
     if (word) {
       word.spriteKey = event.target.value.trim();
       syncLibraryWord(categoryId, wordIndex);
+      markDirty();
       render();
     }
   }
-  if (event.target.matches("[data-transform]")) { const c = state.level.categories[+event.target.dataset.transform]; c.transformsOnComplete = event.target.checked; if (!c.transformsOnComplete) { c.transformResult = normalizeWord(); c.transformResultCategoryId = ""; } state.level.orderedWords = []; render(); }
+  if (event.target.matches("[data-transform]")) { const c = state.level.categories[+event.target.dataset.transform]; c.transformsOnComplete = event.target.checked; if (!c.transformsOnComplete) { c.transformResult = normalizeWord(); c.transformResultCategoryId = ""; } state.level.orderedWords = []; markDirty(); render(); }
   if (event.target.matches("[data-result]")) {
     const c = state.level.categories[+event.target.dataset.result];
     const target = state.level.categories.find(item => item.id === c.transformResultCategoryId);
     c.transformResult = clone(target?.words.find(word => word.text === event.target.value) || normalizeWord());
-    state.level.orderedWords = []; render();
+    state.level.orderedWords = []; markDirty(); render();
   }
   if (event.target.matches("[data-target]")) {
     const c = state.level.categories[+event.target.dataset.target];
     c.transformResultCategoryId = event.target.value;
     const target = state.level.categories.find(item => item.id === event.target.value);
     c.transformResult = clone(target?.words[0] || normalizeWord());
-    state.level.orderedWords = []; render();
+    state.level.orderedWords = []; markDirty(); render();
   }
 });
 
 document.addEventListener("dragstart", event => { const card = event.target.closest("[data-word-index]"); if (!card) return; state.dragIndex = +card.dataset.wordIndex; card.classList.add("dragging"); event.dataTransfer.effectAllowed = "move"; });
 document.addEventListener("dragend", event => { event.target.closest("[data-word-index]")?.classList.remove("dragging"); document.querySelectorAll(".drag-over").forEach(x => x.classList.remove("drag-over")); });
 document.addEventListener("dragover", event => { const card = event.target.closest("[data-word-index]"); if (!card) return; event.preventDefault(); document.querySelectorAll(".drag-over").forEach(x => x.classList.remove("drag-over")); card.classList.add("drag-over"); });
-document.addEventListener("drop", event => { const card = event.target.closest("[data-word-index]"); if (!card) return; event.preventDefault(); const target = +card.dataset.wordIndex; if (state.dragIndex >= 0 && target !== state.dragIndex) [state.level.orderedWords[state.dragIndex], state.level.orderedWords[target]] = [state.level.orderedWords[target], state.level.orderedWords[state.dragIndex]]; state.dragIndex = -1; render(); });
+document.addEventListener("drop", event => { const card = event.target.closest("[data-word-index]"); if (!card) return; event.preventDefault(); const target = +card.dataset.wordIndex; if (state.dragIndex >= 0 && target !== state.dragIndex) { [state.level.orderedWords[state.dragIndex], state.level.orderedWords[target]] = [state.level.orderedWords[target], state.level.orderedWords[state.dragIndex]]; markDirty(); } state.dragIndex = -1; render(); });
 
 syncInputs(); render();
