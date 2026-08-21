@@ -1,297 +1,713 @@
 {
   "levelNumber": 6,
-  "moveCount": 20,
-  "expectedCategoryCount": 0,
-  "visibleRowCount": 0,
+  "moveCount": 27,
+  "expectedCategoryCount": 8,
+  "visibleRowCount": 5,
   "categories": [
     {
-      "id": "colors",
-      "name": "Colors",
+      "id": "car_types",
+      "name": "Car Types",
       "words": [
         {
-          "text": "Red",
+          "text": "Sedan",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
-          "text": "Blue",
+          "text": "Taxi",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
-          "text": "Green",
+          "text": "Van",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
-          "text": "Yellow",
+          "text": "Truck",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         }
       ],
-      "transformsOnComplete": false,
+      "transformsOnComplete": true,
       "transformResult": {
-        "text": "",
-        "hasSprite": false,
-        "spriteKey": "",
+        "text": "Car",
+        "hasSprite": true,
+        "useIcon": false,
+        "spriteKey": "vehicles__car",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
       },
-      "transformResultCategoryId": ""
+      "transformResultCategoryId": "vehicles"
     },
     {
-      "id": "body_parts",
-      "name": "Body Parts",
+      "id": "vehicles",
+      "name": "Vehicles",
       "words": [
         {
-          "text": "Hand",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        },
-        {
-          "text": "Foot",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        },
-        {
-          "text": "Eye",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        },
-        {
-          "text": "Nose",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        }
-      ],
-      "transformsOnComplete": false,
-      "transformResult": {
-        "text": "",
-        "hasSprite": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
-      },
-      "transformResultCategoryId": ""
-    },
-    {
-      "id": "ball_sports",
-      "name": "Ball Sports",
-      "words": [
-        {
-          "text": "Soccer",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        },
-        {
-          "text": "Tennis",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        },
-        {
-          "text": "Volleyball",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        },
-        {
-          "text": "Basketball",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        }
-      ],
-      "transformsOnComplete": false,
-      "transformResult": {
-        "text": "",
-        "hasSprite": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
-      },
-      "transformResultCategoryId": ""
-    },
-    {
-      "id": "meals",
-      "name": "Meals",
-      "words": [
-        {
-          "text": "Breakfast",
+          "text": "Car",
           "hasSprite": true,
-          "spriteKey": "meals__breakfast",
+          "useIcon": false,
+          "spriteKey": "vehicles__car",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": true
+          "syllablePartB": ""
         },
         {
-          "text": "Lunch",
+          "text": "Bus",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
-          "text": "Dinner",
+          "text": "Train",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
-          "text": "Snack",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        }
-      ],
-      "transformsOnComplete": false,
-      "transformResult": {
-        "text": "",
-        "hasSprite": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
-      },
-      "transformResultCategoryId": ""
-    },
-    {
-      "id": "jobs",
-      "name": "Jobs",
-      "words": [
-        {
-          "text": "Doctor",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        },
-        {
-          "text": "Teacher",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        },
-        {
-          "text": "Farmer",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        },
-        {
-          "text": "Pilot",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        }
-      ],
-      "transformsOnComplete": false,
-      "transformResult": {
-        "text": "",
-        "hasSprite": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
-      },
-      "transformResultCategoryId": ""
-    },
-    {
-      "id": "foods",
-      "name": "Foods",
-      "words": [
-        {
-          "text": "Pizza",
+          "text": "Ship",
           "hasSprite": true,
-          "spriteKey": "foods__pizza",
+          "useIcon": false,
+          "spriteKey": "vehicles__ship",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": true
-        },
-        {
-          "text": "Bread",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        },
-        {
-          "text": "Cheese",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        },
-        {
-          "text": "Rice",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         }
       ],
       "transformsOnComplete": false,
       "transformResult": {
         "text": "",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "birds",
+      "name": "Birds",
+      "words": [
+        {
+          "text": "Eagle",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Robin",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Crow",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Swan",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": true,
+      "transformResult": {
+        "text": "Bird",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": "things_that_fly"
+    },
+    {
+      "id": "things_that_fly",
+      "name": "Things That Fly",
+      "words": [
+        {
+          "text": "Bird",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Plane",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Kite",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Butterfly",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "directions",
+      "name": "Directions",
+      "words": [
+        {
+          "text": "Up",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Down",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Left",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Right",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "tastes",
+      "name": "Tastes",
+      "words": [
+        {
+          "text": "Sweet",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Sour",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Salty",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Bitter",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "ocean",
+      "name": "Ocean",
+      "words": [
+        {
+          "text": "Wave",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Shell",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Coral",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Reef",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": true,
+      "transformResult": {
+        "text": "Ocean",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": "water_bodies"
+    },
+    {
+      "id": "water_bodies",
+      "name": "Bodies of Water",
+      "words": [
+        {
+          "text": "River",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Lake",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Ocean",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Pond",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
       },
       "transformResultCategoryId": ""
     }
   ],
-  "orderedWords": []
+  "orderedWords": [
+    {
+      "categoryId": "car_types",
+      "word": {
+        "text": "Sedan",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "birds",
+      "word": {
+        "text": "Eagle",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "ocean",
+      "word": {
+        "text": "Wave",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "things_that_fly",
+      "word": {
+        "text": "Plane",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "directions",
+      "word": {
+        "text": "Up",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "tastes",
+      "word": {
+        "text": "Sweet",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "water_bodies",
+      "word": {
+        "text": "River",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "car_types",
+      "word": {
+        "text": "Taxi",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "things_that_fly",
+      "word": {
+        "text": "Kite",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "directions",
+      "word": {
+        "text": "Down",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "tastes",
+      "word": {
+        "text": "Sour",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "water_bodies",
+      "word": {
+        "text": "Lake",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "car_types",
+      "word": {
+        "text": "Van",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "things_that_fly",
+      "word": {
+        "text": "Butterfly",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "directions",
+      "word": {
+        "text": "Left",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "tastes",
+      "word": {
+        "text": "Salty",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "water_bodies",
+      "word": {
+        "text": "Pond",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "car_types",
+      "word": {
+        "text": "Truck",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "directions",
+      "word": {
+        "text": "Right",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "tastes",
+      "word": {
+        "text": "Bitter",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "birds",
+      "word": {
+        "text": "Robin",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "birds",
+      "word": {
+        "text": "Crow",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "birds",
+      "word": {
+        "text": "Swan",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "ocean",
+      "word": {
+        "text": "Shell",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "ocean",
+      "word": {
+        "text": "Coral",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "ocean",
+      "word": {
+        "text": "Reef",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "vehicles",
+      "word": {
+        "text": "Bus",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "vehicles",
+      "word": {
+        "text": "Train",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "vehicles",
+      "word": {
+        "text": "Ship",
+        "hasSprite": true,
+        "useIcon": false,
+        "spriteKey": "vehicles__ship",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    }
+  ]
 }

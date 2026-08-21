@@ -1,39 +1,39 @@
 {
-  "levelNumber": 7,
-  "moveCount": 31,
+  "levelNumber": 8,
+  "moveCount": 30,
   "expectedCategoryCount": 9,
-  "visibleRowCount": 5,
+  "visibleRowCount": 6,
   "categories": [
     {
-      "id": "foods",
-      "name": "Foods",
+      "id": "planets",
+      "name": "Planets",
       "words": [
         {
-          "text": "Pizza",
+          "text": "Mercury",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "mer",
+          "syllablePartB": "cury"
+        },
+        {
+          "text": "Venus",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Earth",
           "hasSprite": true,
           "useIcon": true,
-          "spriteKey": "foods__pizza",
+          "spriteKey": "planets__earth",
           "syllablePartA": "",
           "syllablePartB": ""
         },
         {
-          "text": "Bread",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        },
-        {
-          "text": "Cheese",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        },
-        {
-          "text": "Rice",
+          "text": "Mars",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -43,21 +43,21 @@
       ],
       "transformsOnComplete": true,
       "transformResult": {
-        "text": "Pasta",
+        "text": "Planet",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
         "syllablePartB": ""
       },
-      "transformResultCategoryId": "italian_foods"
+      "transformResultCategoryId": "space"
     },
     {
-      "id": "italian_foods",
-      "name": "Italian Foods",
+      "id": "space",
+      "name": "Space",
       "words": [
         {
-          "text": "Pasta",
+          "text": "Stars",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -65,207 +65,15 @@
           "syllablePartB": ""
         },
         {
-          "text": "Lasagna",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        },
-        {
-          "text": "Ravioli",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        },
-        {
-          "text": "Risotto",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        }
-      ],
-      "transformsOnComplete": false,
-      "transformResult": {
-        "text": "",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      },
-      "transformResultCategoryId": ""
-    },
-    {
-      "id": "vegetables",
-      "name": "Vegetables",
-      "words": [
-        {
-          "text": "Carrot",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        },
-        {
-          "text": "Potato",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        },
-        {
-          "text": "Onion",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        },
-        {
-          "text": "Tomato",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        }
-      ],
-      "transformsOnComplete": true,
-      "transformResult": {
-        "text": "Vegetables",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      },
-      "transformResultCategoryId": "food_groups"
-    },
-    {
-      "id": "food_groups",
-      "name": "Food Groups",
-      "words": [
-        {
-          "text": "Grains",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        },
-        {
-          "text": "Meat",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        },
-        {
-          "text": "Fruit",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        },
-        {
-          "text": "Vegetables",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        }
-      ],
-      "transformsOnComplete": false,
-      "transformResult": {
-        "text": "",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      },
-      "transformResultCategoryId": ""
-    },
-    {
-      "id": "reading_materials",
-      "name": "Reading Materials",
-      "words": [
-        {
-          "text": "Magazine",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        },
-        {
-          "text": "Comic",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        },
-        {
-          "text": "Newspaper",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        },
-        {
-          "text": "Novel",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        }
-      ],
-      "transformsOnComplete": true,
-      "transformResult": {
-        "text": "Book",
-        "hasSprite": true,
-        "useIcon": true,
-        "spriteKey": "school__book",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      },
-      "transformResultCategoryId": "school_supplies"
-    },
-    {
-      "id": "school_supplies",
-      "name": "School Supplies",
-      "words": [
-        {
-          "text": "Pencil",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        },
-        {
-          "text": "Book",
+          "text": "Moon",
           "hasSprite": true,
           "useIcon": true,
-          "spriteKey": "school__book",
+          "spriteKey": "space__moon",
           "syllablePartA": "",
           "syllablePartB": ""
         },
         {
-          "text": "Ruler",
+          "text": "Comets",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -273,7 +81,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Eraser",
+          "text": "Planet",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -293,11 +101,11 @@
       "transformResultCategoryId": ""
     },
     {
-      "id": "watercraft",
-      "name": "Watercraft",
+      "id": "snacks",
+      "name": "Snacks",
       "words": [
         {
-          "text": "Boat",
+          "text": "Chips",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -305,7 +113,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Raft",
+          "text": "Popcorn",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -313,15 +121,15 @@
           "syllablePartB": ""
         },
         {
-          "text": "Barge",
+          "text": "Pretzel",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
-          "syllablePartA": "Bar",
-          "syllablePartB": "ge"
+          "syllablePartA": "",
+          "syllablePartB": ""
         },
         {
-          "text": "Canoe",
+          "text": "Crackers",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -331,21 +139,29 @@
       ],
       "transformsOnComplete": true,
       "transformResult": {
-        "text": "Ship",
+        "text": "Snack",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
         "syllablePartB": ""
       },
-      "transformResultCategoryId": "sea_travel"
+      "transformResultCategoryId": "meals"
     },
     {
-      "id": "sea_travel",
-      "name": "Sea Travel",
+      "id": "meals",
+      "name": "Meals",
       "words": [
         {
-          "text": "Ship",
+          "text": "Breakfast",
+          "hasSprite": true,
+          "useIcon": true,
+          "spriteKey": "meals__breakfast",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Lunch",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -353,7 +169,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Ferry",
+          "text": "Dinner",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -361,15 +177,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Harbor",
-          "hasSprite": false,
-          "useIcon": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        },
-        {
-          "text": "Cabin",
+          "text": "Snack",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -389,11 +197,11 @@
       "transformResultCategoryId": ""
     },
     {
-      "id": "insects",
-      "name": "Insects",
+      "id": "doctors",
+      "name": "Doctors",
       "words": [
         {
-          "text": "Ant",
+          "text": "Surgeon",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -401,7 +209,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Bee",
+          "text": "Pediatrician",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -409,7 +217,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Fly",
+          "text": "Nurse",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -417,7 +225,199 @@
           "syllablePartB": ""
         },
         {
-          "text": "Moth",
+          "text": "Clinic",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": true,
+      "transformResult": {
+        "text": "Doctor",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": "jobs"
+    },
+    {
+      "id": "jobs",
+      "name": "Jobs",
+      "words": [
+        {
+          "text": "Doctor",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Teacher",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Farmer",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Pilot",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "furniture",
+      "name": "Furniture",
+      "words": [
+        {
+          "text": "Chair",
+          "hasSprite": true,
+          "useIcon": false,
+          "spriteKey": "furniture__chair",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Table",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Sofa",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Bed",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "kitchen_tools",
+      "name": "Kitchen Tools",
+      "words": [
+        {
+          "text": "Whisk",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Spatula",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Ladle",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Tongs",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "reptiles",
+      "name": "Reptiles",
+      "words": [
+        {
+          "text": "Snake",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Lizard",
+          "hasSprite": true,
+          "useIcon": true,
+          "spriteKey": "reptiles__lizard",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Turtle",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Gecko",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -439,20 +439,53 @@
   ],
   "orderedWords": [
     {
-      "categoryId": "foods",
+      "categoryId": "planets",
       "word": {
-        "text": "Pizza",
+        "text": "Mercury",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "mer",
+        "syllablePartB": "cury"
+      }
+    },
+    {
+      "categoryId": "snacks",
+      "word": {
+        "text": "Chips",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "doctors",
+      "word": {
+        "text": "Surgeon",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "meals",
+      "word": {
+        "text": "Breakfast",
         "hasSprite": true,
         "useIcon": true,
-        "spriteKey": "foods__pizza",
+        "spriteKey": "meals__breakfast",
         "syllablePartA": "",
         "syllablePartB": ""
       }
     },
     {
-      "categoryId": "vegetables",
+      "categoryId": "jobs",
       "word": {
-        "text": "Carrot",
+        "text": "Teacher",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -461,9 +494,20 @@
       }
     },
     {
-      "categoryId": "reading_materials",
+      "categoryId": "furniture",
       "word": {
-        "text": "Magazine",
+        "text": "Chair",
+        "hasSprite": true,
+        "useIcon": false,
+        "spriteKey": "furniture__chair",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "kitchen_tools",
+      "word": {
+        "text": "Whisk",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -472,9 +516,9 @@
       }
     },
     {
-      "categoryId": "watercraft",
+      "categoryId": "reptiles",
       "word": {
-        "text": "Boat",
+        "text": "Snake",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -483,9 +527,9 @@
       }
     },
     {
-      "categoryId": "food_groups",
+      "categoryId": "planets",
       "word": {
-        "text": "Grains",
+        "text": "Venus",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -494,9 +538,9 @@
       }
     },
     {
-      "categoryId": "school_supplies",
+      "categoryId": "meals",
       "word": {
-        "text": "Pencil",
+        "text": "Lunch",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -505,9 +549,9 @@
       }
     },
     {
-      "categoryId": "sea_travel",
+      "categoryId": "jobs",
       "word": {
-        "text": "Ferry",
+        "text": "Farmer",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -516,9 +560,9 @@
       }
     },
     {
-      "categoryId": "insects",
+      "categoryId": "furniture",
       "word": {
-        "text": "Ant",
+        "text": "Table",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -527,9 +571,9 @@
       }
     },
     {
-      "categoryId": "foods",
+      "categoryId": "kitchen_tools",
       "word": {
-        "text": "Bread",
+        "text": "Spatula",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -538,9 +582,31 @@
       }
     },
     {
-      "categoryId": "food_groups",
+      "categoryId": "reptiles",
       "word": {
-        "text": "Meat",
+        "text": "Lizard",
+        "hasSprite": true,
+        "useIcon": true,
+        "spriteKey": "reptiles__lizard",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "planets",
+      "word": {
+        "text": "Earth",
+        "hasSprite": true,
+        "useIcon": true,
+        "spriteKey": "planets__earth",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "meals",
+      "word": {
+        "text": "Dinner",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -549,9 +615,9 @@
       }
     },
     {
-      "categoryId": "school_supplies",
+      "categoryId": "jobs",
       "word": {
-        "text": "Ruler",
+        "text": "Pilot",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -560,9 +626,9 @@
       }
     },
     {
-      "categoryId": "sea_travel",
+      "categoryId": "furniture",
       "word": {
-        "text": "Harbor",
+        "text": "Sofa",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -571,9 +637,9 @@
       }
     },
     {
-      "categoryId": "insects",
+      "categoryId": "kitchen_tools",
       "word": {
-        "text": "Bee",
+        "text": "Ladle",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -582,9 +648,9 @@
       }
     },
     {
-      "categoryId": "foods",
+      "categoryId": "reptiles",
       "word": {
-        "text": "Cheese",
+        "text": "Turtle",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -593,9 +659,9 @@
       }
     },
     {
-      "categoryId": "food_groups",
+      "categoryId": "planets",
       "word": {
-        "text": "Fruit",
+        "text": "Mars",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -604,9 +670,9 @@
       }
     },
     {
-      "categoryId": "school_supplies",
+      "categoryId": "furniture",
       "word": {
-        "text": "Eraser",
+        "text": "Bed",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -615,9 +681,9 @@
       }
     },
     {
-      "categoryId": "sea_travel",
+      "categoryId": "kitchen_tools",
       "word": {
-        "text": "Cabin",
+        "text": "Tongs",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -626,9 +692,9 @@
       }
     },
     {
-      "categoryId": "insects",
+      "categoryId": "reptiles",
       "word": {
-        "text": "Fly",
+        "text": "Gecko",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -637,9 +703,9 @@
       }
     },
     {
-      "categoryId": "foods",
+      "categoryId": "snacks",
       "word": {
-        "text": "Rice",
+        "text": "Popcorn",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -648,9 +714,9 @@
       }
     },
     {
-      "categoryId": "insects",
+      "categoryId": "snacks",
       "word": {
-        "text": "Moth",
+        "text": "Pretzel",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -659,9 +725,9 @@
       }
     },
     {
-      "categoryId": "vegetables",
+      "categoryId": "snacks",
       "word": {
-        "text": "Potato",
+        "text": "Crackers",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -670,9 +736,9 @@
       }
     },
     {
-      "categoryId": "vegetables",
+      "categoryId": "doctors",
       "word": {
-        "text": "Onion",
+        "text": "Pediatrician",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -681,9 +747,9 @@
       }
     },
     {
-      "categoryId": "vegetables",
+      "categoryId": "doctors",
       "word": {
-        "text": "Tomato",
+        "text": "Nurse",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -692,9 +758,9 @@
       }
     },
     {
-      "categoryId": "reading_materials",
+      "categoryId": "doctors",
       "word": {
-        "text": "Comic",
+        "text": "Clinic",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -703,9 +769,9 @@
       }
     },
     {
-      "categoryId": "reading_materials",
+      "categoryId": "space",
       "word": {
-        "text": "Newspaper",
+        "text": "Stars",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -714,75 +780,20 @@
       }
     },
     {
-      "categoryId": "reading_materials",
+      "categoryId": "space",
       "word": {
-        "text": "Novel",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
+        "text": "Moon",
+        "hasSprite": true,
+        "useIcon": true,
+        "spriteKey": "space__moon",
         "syllablePartA": "",
         "syllablePartB": ""
       }
     },
     {
-      "categoryId": "watercraft",
+      "categoryId": "space",
       "word": {
-        "text": "Raft",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "watercraft",
-      "word": {
-        "text": "Barge",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "Bar",
-        "syllablePartB": "ge"
-      }
-    },
-    {
-      "categoryId": "watercraft",
-      "word": {
-        "text": "Canoe",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "italian_foods",
-      "word": {
-        "text": "Lasagna",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "italian_foods",
-      "word": {
-        "text": "Ravioli",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "italian_foods",
-      "word": {
-        "text": "Risotto",
+        "text": "Comets",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",

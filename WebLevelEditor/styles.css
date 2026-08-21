@@ -55,6 +55,9 @@ h3 { color: var(--muted); font-size: 11px; letter-spacing: .11em; text-transform
 .library-category header { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .library-category strong { font-size: 13px; }.library-category small { color: var(--muted); }
 .word-preview { color: var(--muted); font-size: 11px; line-height: 1.5; margin: 7px 0 0; }
+.word-preview-list { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 9px; color: var(--muted); font-size: 11px; }
+.word-preview-list > span { display: inline-flex; flex-direction: column; gap: 2px; padding-right: 5px; }
+.used-before { display: block; color: #b14b65; font-size: 8px; font-weight: 800; line-height: 1.1; white-space: nowrap; }
 .icon-settings { margin-top: 9px; border-top: 1px solid var(--line); padding-top: 7px; }
 .icon-settings summary { color: var(--purple-dark); cursor: pointer; font-size: 11px; font-weight: 800; }
 .icon-word-row { display: grid; grid-template-columns: minmax(75px,1fr) auto minmax(105px,1.25fr); gap: 7px; align-items: center; margin-top: 7px; font-size: 11px; }

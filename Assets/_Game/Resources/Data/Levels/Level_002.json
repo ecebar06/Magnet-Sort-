@@ -5,263 +5,241 @@
   "visibleRowCount": 4,
   "categories": [
     {
-      "id": "fruits",
-      "name": "Fruits",
-      "words": [
-        {
-          "text": "Apple",
-          "hasSprite": true,
-          "spriteKey": "fruits__apple",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": true
-        },
-        {
-          "text": "Banana",
-          "hasSprite": true,
-          "spriteKey": "fruits__banana",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": true
-        },
-        {
-          "text": "Orange",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        },
-        {
-          "text": "Grape",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        }
-      ],
-      "transformsOnComplete": false,
-      "transformResult": {
-        "text": "",
-        "hasSprite": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
-      },
-      "transformResultCategoryId": ""
-    },
-    {
-      "id": "pets",
-      "name": "Pets",
-      "words": [
-        {
-          "text": "Cat",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        },
-        {
-          "text": "Dog",
-          "hasSprite": true,
-          "spriteKey": "pets__dog",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": true
-        },
-        {
-          "text": "Bird",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        },
-        {
-          "text": "Fish",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        }
-      ],
-      "transformsOnComplete": false,
-      "transformResult": {
-        "text": "",
-        "hasSprite": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
-      },
-      "transformResultCategoryId": ""
-    },
-    {
       "id": "body_parts",
       "name": "Body Parts",
       "words": [
         {
           "text": "Hand",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
           "text": "Foot",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
           "text": "Eye",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
           "text": "Nose",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         }
       ],
       "transformsOnComplete": false,
       "transformResult": {
         "text": "",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
       },
       "transformResultCategoryId": ""
     },
     {
-      "id": "ball_sports",
-      "name": "Ball Sports",
+      "id": "weather",
+      "name": "Weather",
       "words": [
         {
-          "text": "Soccer",
+          "text": "Rain",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
-          "text": "Tennis",
+          "text": "Snow",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
-          "text": "Volleyball",
+          "text": "Wind",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
-          "text": "Basketball",
+          "text": "Fog",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         }
       ],
       "transformsOnComplete": false,
       "transformResult": {
         "text": "",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "seasons",
+      "name": "Seasons",
+      "words": [
+        {
+          "text": "Spring",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Summer",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Autumn",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Winter",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "emotions",
+      "name": "Emotions",
+      "words": [
+        {
+          "text": "Joy",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Fear",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Pride",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Shame",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
       },
       "transformResultCategoryId": ""
     }
   ],
   "orderedWords": [
     {
-      "categoryId": "fruits",
-      "word": {
-        "text": "Apple",
-        "hasSprite": true,
-        "spriteKey": "fruits__apple",
-        "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": true
-      }
-    },
-    {
-      "categoryId": "pets",
-      "word": {
-        "text": "Cat",
-        "hasSprite": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
-      }
-    },
-    {
       "categoryId": "body_parts",
       "word": {
         "text": "Hand",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
       }
     },
     {
-      "categoryId": "ball_sports",
+      "categoryId": "weather",
       "word": {
-        "text": "Soccer",
+        "text": "Rain",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
       }
     },
     {
-      "categoryId": "fruits",
+      "categoryId": "seasons",
       "word": {
-        "text": "Banana",
-        "hasSprite": true,
-        "spriteKey": "fruits__banana",
+        "text": "Spring",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": true
+        "syllablePartB": ""
       }
     },
     {
-      "categoryId": "pets",
+      "categoryId": "emotions",
       "word": {
-        "text": "Dog",
-        "hasSprite": true,
-        "spriteKey": "pets__dog",
+        "text": "Joy",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": true
+        "syllablePartB": ""
       }
     },
     {
@@ -269,43 +247,43 @@
       "word": {
         "text": "Foot",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
       }
     },
     {
-      "categoryId": "ball_sports",
+      "categoryId": "weather",
       "word": {
-        "text": "Tennis",
+        "text": "Snow",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
       }
     },
     {
-      "categoryId": "fruits",
+      "categoryId": "seasons",
       "word": {
-        "text": "Orange",
+        "text": "Summer",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
       }
     },
     {
-      "categoryId": "pets",
+      "categoryId": "emotions",
       "word": {
-        "text": "Bird",
+        "text": "Fear",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
       }
     },
     {
@@ -313,43 +291,43 @@
       "word": {
         "text": "Eye",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
       }
     },
     {
-      "categoryId": "ball_sports",
+      "categoryId": "weather",
       "word": {
-        "text": "Volleyball",
+        "text": "Wind",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
       }
     },
     {
-      "categoryId": "fruits",
+      "categoryId": "seasons",
       "word": {
-        "text": "Grape",
+        "text": "Autumn",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
       }
     },
     {
-      "categoryId": "pets",
+      "categoryId": "emotions",
       "word": {
-        "text": "Fish",
+        "text": "Pride",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
       }
     },
     {
@@ -357,21 +335,43 @@
       "word": {
         "text": "Nose",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
       }
     },
     {
-      "categoryId": "ball_sports",
+      "categoryId": "weather",
       "word": {
-        "text": "Basketball",
+        "text": "Fog",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "seasons",
+      "word": {
+        "text": "Winter",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "emotions",
+      "word": {
+        "text": "Shame",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
       }
     }
   ]

@@ -73,6 +73,9 @@ function updateFolderControls() {
   $("levelSelector").disabled = !connected || !state.levelFiles.length;
   $("saveLevel").disabled = !connected;
   $("saveLevel").textContent = state.dirty ? "Save Level *" : "Save Level";
+  const swapTargets = state.levelFiles.filter(record => record.name !== state.currentLevelFileName);
+  $("swapLevelSelector").disabled = !connected || !state.currentLevelFileName || !swapTargets.length;
+  $("swapLevels").disabled = $("swapLevelSelector").disabled;
 }
 
 function recommendedMoveCount() {
@@ -105,12 +108,30 @@ function renderLibrary() {
   $("libraryList").innerHTML = (matches.length > 200 ? `<p class="word-preview">Showing the first 200 of ${matches.length} results. Search to narrow the list.</p>` : "") + categories.map(category => {
     const added = state.level.categories.some(c => c.id === category.id);
     const iconRows = category.words.map((word, wordIndex) => `<div class="icon-word-row">
-      <span>${word.hasSprite ? "◆ " : ""}${escapeHtml(word.text)}</span>
+      <span>${word.hasSprite ? "◆ " : ""}${escapeHtml(word.text)}${renderUsedBefore(word.text)}</span>
       <label><input type="checkbox" data-library-icon="${escapeAttr(category.id)}" data-library-word-index="${wordIndex}" ${word.hasSprite ? "checked" : ""}> Has Sprite</label>
       <input type="text" data-library-sprite-key="${escapeAttr(category.id)}" data-library-word-index="${wordIndex}" value="${escapeAttr(word.spriteKey)}" placeholder="sprite key" ${word.hasSprite ? "" : "disabled"}>
     </div>`).join("");
-    return `<article class="library-category"><header><div><strong>${escapeHtml(category.name)}</strong><br><small>${escapeHtml(category.id)}</small></div><button class="mini-button" data-add="${escapeAttr(category.id)}" ${added ? "disabled" : ""}>${added ? "Added" : "Add"}</button></header><p class="word-preview">${category.words.map(w => `${w.hasSprite ? "◆ " : ""}${escapeHtml(w.text)}`).join(" · ")}</p><details class="icon-settings"><summary>Icon word settings</summary>${iconRows}</details></article>`;
+    return `<article class="library-category"><header><div><strong>${escapeHtml(category.name)}</strong><br><small>${escapeHtml(category.id)}</small></div><button class="mini-button" data-add="${escapeAttr(category.id)}" ${added ? "disabled" : ""}>${added ? "Added" : "Add"}</button></header><div class="word-preview-list">${category.words.map(word => `<span>${word.hasSprite ? "◆ " : ""}${escapeHtml(word.text)}${renderUsedBefore(word.text)}</span>`).join("")}</div><details class="icon-settings"><summary>Icon word settings</summary>${iconRows}</details></article>`;
   }).join("");
+}
+
+function previousLevelNumbersForWord(wordText) {
+  const currentNumber = Math.max(1, +state.level.levelNumber || 1);
+  const wanted = wordText.toLowerCase();
+  return state.levelFiles
+    .filter(record => record.levelNumber < currentNumber)
+    .filter(record => (record.data.categories || []).some(category =>
+      (category.words || []).some(word => (word.text || "").toLowerCase() === wanted) ||
+      (category.transformsOnComplete && (category.transformResult?.text || "").toLowerCase() === wanted)))
+    .map(record => record.levelNumber)
+    .filter((number, index, numbers) => numbers.indexOf(number) === index)
+    .sort((a, b) => a - b);
+}
+
+function renderUsedBefore(wordText) {
+  const levels = previousLevelNumbersForWord(wordText);
+  return levels.length ? `<small class="used-before">Used before: L${levels.join(", L")}</small>` : "";
 }
 
 function syncLibraryWord(categoryId, wordIndex) {
@@ -424,9 +445,18 @@ async function loadConnectedWordLibrary() {
 async function saveConnectedWordLibrary() {
   if (!state.wordLibraryFileHandle || !state.library.categories.length) return false;
   const writable = await state.wordLibraryFileHandle.createWritable();
-  await writable.write(JSON.stringify(state.library, null, 2) + "\n");
+  await writable.write(serializeWordLibrary());
   await writable.close();
   return true;
+}
+
+function serializeWordLibrary() {
+  const stored = clone(state.library);
+  for (const category of stored.categories || []) {
+    for (const word of category.words || []) delete word.useIcon;
+    if (category.transformResult) delete category.transformResult.useIcon;
+  }
+  return JSON.stringify(stored, null, 4) + "\n";
 }
 
 async function refreshLevelFiles(loadFirst = false, preferredName = "") {
@@ -466,6 +496,10 @@ function renderLevelFileOptions() {
     : `<option value="">No JSON levels in folder</option>`;
   if (state.currentLevelFileName && state.levelFiles.some(record => record.name === state.currentLevelFileName))
     selector.value = state.currentLevelFileName;
+  const swapSelector = $("swapLevelSelector");
+  const swapTargets = state.levelFiles.filter(record => record.name !== state.currentLevelFileName);
+  swapSelector.innerHTML = `<option value="">Swap with…</option>` + swapTargets
+    .map(record => `<option value="${escapeAttr(record.name)}">Level ${record.levelNumber}</option>`).join("");
   updateFolderControls();
 }
 
@@ -523,6 +557,41 @@ async function saveLevelDirectly() {
   }
 }
 
+async function writeJsonFile(handle, data) {
+  const writable = await handle.createWritable();
+  await writable.write(JSON.stringify(data, null, 2) + "\n");
+  await writable.close();
+}
+
+async function swapLevelsDirectly() {
+  if (state.dirty) return toast("Save the current level before swapping levels.");
+  const current = state.levelFiles.find(record => record.name === state.currentLevelFileName);
+  const target = state.levelFiles.find(record => record.name === $("swapLevelSelector").value);
+  if (!current || !target) return toast("Select another level to swap with.");
+  if (!confirm(`Swap the complete contents of Level ${current.levelNumber} and Level ${target.levelNumber}?`)) return;
+
+  const currentOriginal = clone(current.data);
+  const targetOriginal = clone(target.data);
+  const currentReplacement = normalizeLevel(targetOriginal);
+  const targetReplacement = normalizeLevel(currentOriginal);
+  currentReplacement.levelNumber = current.levelNumber;
+  targetReplacement.levelNumber = target.levelNumber;
+
+  try {
+    await writeJsonFile(current.handle, currentReplacement);
+    await writeJsonFile(target.handle, targetReplacement);
+    await refreshLevelFiles(false, current.name);
+    toast(`Level ${current.levelNumber} and Level ${target.levelNumber} swapped.`);
+  } catch (error) {
+    try {
+      await writeJsonFile(current.handle, currentOriginal);
+      await writeJsonFile(target.handle, targetOriginal);
+    } catch { /* Best-effort rollback; the original error is shown below. */ }
+    setFolderStatus(`Could not swap levels: ${error.message || error}`, "error");
+    toast("Levels could not be swapped.");
+  }
+}
+
 function setFolderStatus(message, kind = "") {
   const status = $("folderStatus");
   status.textContent = message;
@@ -531,7 +600,7 @@ function setFolderStatus(message, kind = "") {
 
 function exportLibrary() {
   if (!state.library.categories.length) return toast("Import a WordLibrary.json file first.");
-  const json = JSON.stringify(state.library, null, 2);
+  const json = serializeWordLibrary();
   const blob = new Blob([json], { type: "application/json" });
   const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "WordLibrary.json"; link.click(); URL.revokeObjectURL(link.href);
   toast("Updated WordLibrary.json downloaded.");
@@ -545,6 +614,7 @@ function escapeAttr(value) { return escapeHtml(value); }
 $("libraryFile").addEventListener("change", event => readJsonFile(event.target.files[0], data => { state.library = { id: data.id || "word_library", categories: (data.categories || []).map(normalizeCategory) }; render(); toast("Word library loaded."); }));
 $("openLevelsFolder").addEventListener("click", openLevelsFolder);
 $("saveLevel").addEventListener("click", saveLevelDirectly);
+$("swapLevels").addEventListener("click", swapLevelsDirectly);
 $("levelSelector").addEventListener("change", event => {
   const record = state.levelFiles.find(item => item.name === event.target.value);
   if (!record) return;

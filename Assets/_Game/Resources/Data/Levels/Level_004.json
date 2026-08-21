@@ -1,249 +1,540 @@
 {
   "levelNumber": 4,
   "moveCount": 17,
-  "expectedCategoryCount": 0,
-  "visibleRowCount": 0,
+  "expectedCategoryCount": 6,
+  "visibleRowCount": 4,
   "categories": [
     {
-      "id": "water",
-      "name": "Water Bodies",
+      "id": "fruits",
+      "name": "Fruits",
       "words": [
         {
-          "text": "River",
-          "hasSprite": false,
-          "spriteKey": "",
+          "text": "Apple",
+          "hasSprite": true,
+          "useIcon": true,
+          "spriteKey": "fruits__apple",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
-          "text": "Lake",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "text": "Banana",
+          "hasSprite": true,
+          "useIcon": false,
+          "spriteKey": "fruits__banana",
+          "syllablePartA": "Ba",
+          "syllablePartB": "nana"
         },
         {
-          "text": "Ocean",
+          "text": "Orange",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartA": "Or",
+          "syllablePartB": "ange"
         },
         {
-          "text": "Pond",
+          "text": "Grape",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": true,
+      "transformResult": {
+        "text": "Fruits",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": "healthy_eating"
+    },
+    {
+      "id": "healthy_eating",
+      "name": "Healthy Eating",
+      "words": [
+        {
+          "text": "Supplement",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Fruits",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Water",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Nuts",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
         }
       ],
       "transformsOnComplete": false,
       "transformResult": {
         "text": "",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
       },
       "transformResultCategoryId": ""
     },
     {
-      "id": "computer",
-      "name": "Computer",
+      "id": "ball_sports",
+      "name": "Ball Sports",
       "words": [
         {
-          "text": "Mouse",
+          "text": "Soccer",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
-        {
-          "text": "Keyboard",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        },
-        {
-          "text": "Monitor",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        },
-        {
-          "text": "Printer",
-          "hasSprite": false,
-          "spriteKey": "",
-          "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
-        }
-      ],
-      "transformsOnComplete": false,
-      "transformResult": {
-        "text": "",
-        "hasSprite": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
-      },
-      "transformResultCategoryId": ""
-    },
-    {
-      "id": "sports",
-      "name": "Sports",
-      "words": [
         {
           "text": "Tennis",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
-          "text": "Golf",
+          "text": "Volleyball",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
-          "text": "Boxing",
+          "text": "Basketball",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": true,
+      "transformResult": {
+        "text": "Ball",
+        "hasSprite": true,
+        "useIcon": false,
+        "spriteKey": "toys__ball",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": "toys"
+    },
+    {
+      "id": "toys",
+      "name": "Toys",
+      "words": [
+        {
+          "text": "Ball",
+          "hasSprite": true,
+          "useIcon": false,
+          "spriteKey": "toys__ball",
+          "syllablePartA": "",
+          "syllablePartB": ""
         },
         {
-          "text": "Rugby",
+          "text": "Doll",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
+        },
+        {
+          "text": "Blocks",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Kite",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
         }
       ],
       "transformsOnComplete": false,
       "transformResult": {
         "text": "",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
       },
       "transformResultCategoryId": ""
     },
     {
-      "id": "materials",
-      "name": "Materials",
+      "id": "farm_animals",
+      "name": "Farm Animals",
       "words": [
         {
-          "text": "Wood",
+          "text": "Cow",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
-          "text": "Glass",
+          "text": "Pig",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
-          "text": "Steel",
+          "text": "Horse",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
-          "text": "Cotton",
+          "text": "Sheep",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         }
       ],
       "transformsOnComplete": false,
       "transformResult": {
         "text": "",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
       },
       "transformResultCategoryId": ""
     },
     {
-      "id": "emotions",
-      "name": "Emotions",
+      "id": "days",
+      "name": "Days",
       "words": [
         {
-          "text": "Joy",
+          "text": "Monday",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
-          "text": "Anger",
+          "text": "Tuesday",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
-          "text": "Fear",
+          "text": "Friday",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         },
         {
-          "text": "Surprise",
+          "text": "Sunday",
           "hasSprite": false,
+          "useIcon": false,
           "spriteKey": "",
           "syllablePartA": "",
-          "syllablePartB": "",
-          "useIcon": false
+          "syllablePartB": ""
         }
       ],
       "transformsOnComplete": false,
       "transformResult": {
         "text": "",
         "hasSprite": false,
+        "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
-        "syllablePartB": "",
-        "useIcon": false
+        "syllablePartB": ""
       },
       "transformResultCategoryId": ""
     }
   ],
-  "orderedWords": []
+  "orderedWords": [
+    {
+      "categoryId": "fruits",
+      "word": {
+        "text": "Apple",
+        "hasSprite": true,
+        "useIcon": true,
+        "spriteKey": "fruits__apple",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "ball_sports",
+      "word": {
+        "text": "Soccer",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "toys",
+      "word": {
+        "text": "Doll",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "farm_animals",
+      "word": {
+        "text": "Cow",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "days",
+      "word": {
+        "text": "Monday",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "fruits",
+      "word": {
+        "text": "Banana",
+        "hasSprite": true,
+        "useIcon": false,
+        "spriteKey": "fruits__banana",
+        "syllablePartA": "Ba",
+        "syllablePartB": "nana"
+      }
+    },
+    {
+      "categoryId": "toys",
+      "word": {
+        "text": "Blocks",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "farm_animals",
+      "word": {
+        "text": "Pig",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "days",
+      "word": {
+        "text": "Tuesday",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "fruits",
+      "word": {
+        "text": "Orange",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "Or",
+        "syllablePartB": "ange"
+      }
+    },
+    {
+      "categoryId": "toys",
+      "word": {
+        "text": "Kite",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "farm_animals",
+      "word": {
+        "text": "Horse",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "days",
+      "word": {
+        "text": "Friday",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "fruits",
+      "word": {
+        "text": "Grape",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "farm_animals",
+      "word": {
+        "text": "Sheep",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "days",
+      "word": {
+        "text": "Sunday",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "ball_sports",
+      "word": {
+        "text": "Tennis",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "ball_sports",
+      "word": {
+        "text": "Volleyball",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "ball_sports",
+      "word": {
+        "text": "Basketball",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "healthy_eating",
+      "word": {
+        "text": "Supplement",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "healthy_eating",
+      "word": {
+        "text": "Water",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "healthy_eating",
+      "word": {
+        "text": "Nuts",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    }
+  ]
 }

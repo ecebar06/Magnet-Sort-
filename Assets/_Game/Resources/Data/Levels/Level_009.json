@@ -1,23 +1,15 @@
 {
-  "levelNumber": 7,
-  "moveCount": 31,
-  "expectedCategoryCount": 9,
-  "visibleRowCount": 5,
+  "levelNumber": 9,
+  "moveCount": 34,
+  "expectedCategoryCount": 10,
+  "visibleRowCount": 6,
   "categories": [
     {
-      "id": "foods",
-      "name": "Foods",
+      "id": "paintings",
+      "name": "Paintings",
       "words": [
         {
-          "text": "Pizza",
-          "hasSprite": true,
-          "useIcon": true,
-          "spriteKey": "foods__pizza",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        },
-        {
-          "text": "Bread",
+          "text": "Portrait",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -25,7 +17,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Cheese",
+          "text": "Landscape",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -33,7 +25,15 @@
           "syllablePartB": ""
         },
         {
-          "text": "Rice",
+          "text": "Still Life",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Mural",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -43,21 +43,21 @@
       ],
       "transformsOnComplete": true,
       "transformResult": {
-        "text": "Pasta",
+        "text": "Painting",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
         "syllablePartB": ""
       },
-      "transformResultCategoryId": "italian_foods"
+      "transformResultCategoryId": "art_forms"
     },
     {
-      "id": "italian_foods",
-      "name": "Italian Foods",
+      "id": "art_forms",
+      "name": "Art Forms",
       "words": [
         {
-          "text": "Pasta",
+          "text": "Painting",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -65,7 +65,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Lasagna",
+          "text": "Sculpture",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -73,7 +73,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Ravioli",
+          "text": "Photography",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -81,7 +81,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Risotto",
+          "text": "Dance",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -101,11 +101,11 @@
       "transformResultCategoryId": ""
     },
     {
-      "id": "vegetables",
-      "name": "Vegetables",
+      "id": "coins",
+      "name": "Coins",
       "words": [
         {
-          "text": "Carrot",
+          "text": "Penny",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -113,7 +113,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Potato",
+          "text": "Nickel",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -121,7 +121,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Onion",
+          "text": "Dime",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -129,7 +129,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Tomato",
+          "text": "Quarter",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -139,21 +139,21 @@
       ],
       "transformsOnComplete": true,
       "transformResult": {
-        "text": "Vegetables",
+        "text": "Coins",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
         "syllablePartB": ""
       },
-      "transformResultCategoryId": "food_groups"
+      "transformResultCategoryId": "money"
     },
     {
-      "id": "food_groups",
-      "name": "Food Groups",
+      "id": "money",
+      "name": "Money",
       "words": [
         {
-          "text": "Grains",
+          "text": "Currency",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -161,7 +161,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Meat",
+          "text": "Cash",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -169,7 +169,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Fruit",
+          "text": "Cent",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -177,7 +177,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Vegetables",
+          "text": "Coins",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -197,11 +197,11 @@
       "transformResultCategoryId": ""
     },
     {
-      "id": "reading_materials",
-      "name": "Reading Materials",
+      "id": "fridge",
+      "name": "Fridge",
       "words": [
         {
-          "text": "Magazine",
+          "text": "Freezer",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -209,7 +209,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Comic",
+          "text": "Door",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -217,7 +217,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Newspaper",
+          "text": "Shelves",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -225,7 +225,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Novel",
+          "text": "Deepfrost",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -235,21 +235,21 @@
       ],
       "transformsOnComplete": true,
       "transformResult": {
-        "text": "Book",
-        "hasSprite": true,
-        "useIcon": true,
-        "spriteKey": "school__book",
+        "text": "Fridge",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
         "syllablePartA": "",
         "syllablePartB": ""
       },
-      "transformResultCategoryId": "school_supplies"
+      "transformResultCategoryId": "appliances"
     },
     {
-      "id": "school_supplies",
-      "name": "School Supplies",
+      "id": "appliances",
+      "name": "Appliances",
       "words": [
         {
-          "text": "Pencil",
+          "text": "Oven",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -257,15 +257,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Book",
-          "hasSprite": true,
-          "useIcon": true,
-          "spriteKey": "school__book",
-          "syllablePartA": "",
-          "syllablePartB": ""
-        },
-        {
-          "text": "Ruler",
+          "text": "Fridge",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -273,7 +265,15 @@
           "syllablePartB": ""
         },
         {
-          "text": "Eraser",
+          "text": "Mixer",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Toaster",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -293,11 +293,11 @@
       "transformResultCategoryId": ""
     },
     {
-      "id": "watercraft",
-      "name": "Watercraft",
+      "id": "airport",
+      "name": "Airport",
       "words": [
         {
-          "text": "Boat",
+          "text": "Gate",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -305,7 +305,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Raft",
+          "text": "Runway",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -313,15 +313,15 @@
           "syllablePartB": ""
         },
         {
-          "text": "Barge",
+          "text": "Terminal",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
-          "syllablePartA": "Bar",
-          "syllablePartB": "ge"
+          "syllablePartA": "",
+          "syllablePartB": ""
         },
         {
-          "text": "Canoe",
+          "text": "Baggage Claim",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -331,21 +331,21 @@
       ],
       "transformsOnComplete": true,
       "transformResult": {
-        "text": "Ship",
+        "text": "Airport",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
         "syllablePartB": ""
       },
-      "transformResultCategoryId": "sea_travel"
+      "transformResultCategoryId": "travel_stops"
     },
     {
-      "id": "sea_travel",
-      "name": "Sea Travel",
+      "id": "travel_stops",
+      "name": "Travel Stops",
       "words": [
         {
-          "text": "Ship",
+          "text": "Airport",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -353,7 +353,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Ferry",
+          "text": "Train Station",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -369,7 +369,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Cabin",
+          "text": "Hotel",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -389,11 +389,11 @@
       "transformResultCategoryId": ""
     },
     {
-      "id": "insects",
-      "name": "Insects",
+      "id": "trees",
+      "name": "Trees",
       "words": [
         {
-          "text": "Ant",
+          "text": "Oak",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -401,7 +401,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Bee",
+          "text": "Pine",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -409,7 +409,7 @@
           "syllablePartB": ""
         },
         {
-          "text": "Fly",
+          "text": "Maple",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -417,7 +417,55 @@
           "syllablePartB": ""
         },
         {
-          "text": "Moth",
+          "text": "Willow",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        }
+      ],
+      "transformsOnComplete": false,
+      "transformResult": {
+        "text": "",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      },
+      "transformResultCategoryId": ""
+    },
+    {
+      "id": "materials",
+      "name": "Materials",
+      "words": [
+        {
+          "text": "Wood",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Metal",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Glass",
+          "hasSprite": false,
+          "useIcon": false,
+          "spriteKey": "",
+          "syllablePartA": "",
+          "syllablePartB": ""
+        },
+        {
+          "text": "Paper",
           "hasSprite": false,
           "useIcon": false,
           "spriteKey": "",
@@ -439,20 +487,9 @@
   ],
   "orderedWords": [
     {
-      "categoryId": "foods",
+      "categoryId": "paintings",
       "word": {
-        "text": "Pizza",
-        "hasSprite": true,
-        "useIcon": true,
-        "spriteKey": "foods__pizza",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "vegetables",
-      "word": {
-        "text": "Carrot",
+        "text": "Portrait",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -461,9 +498,9 @@
       }
     },
     {
-      "categoryId": "reading_materials",
+      "categoryId": "coins",
       "word": {
-        "text": "Magazine",
+        "text": "Penny",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -472,9 +509,9 @@
       }
     },
     {
-      "categoryId": "watercraft",
+      "categoryId": "fridge",
       "word": {
-        "text": "Boat",
+        "text": "Freezer",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -483,9 +520,9 @@
       }
     },
     {
-      "categoryId": "food_groups",
+      "categoryId": "airport",
       "word": {
-        "text": "Grains",
+        "text": "Gate",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -494,9 +531,9 @@
       }
     },
     {
-      "categoryId": "school_supplies",
+      "categoryId": "money",
       "word": {
-        "text": "Pencil",
+        "text": "Currency",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -505,9 +542,9 @@
       }
     },
     {
-      "categoryId": "sea_travel",
+      "categoryId": "appliances",
       "word": {
-        "text": "Ferry",
+        "text": "Oven",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -516,9 +553,9 @@
       }
     },
     {
-      "categoryId": "insects",
+      "categoryId": "travel_stops",
       "word": {
-        "text": "Ant",
+        "text": "Train Station",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -527,9 +564,9 @@
       }
     },
     {
-      "categoryId": "foods",
+      "categoryId": "trees",
       "word": {
-        "text": "Bread",
+        "text": "Oak",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -538,9 +575,9 @@
       }
     },
     {
-      "categoryId": "food_groups",
+      "categoryId": "materials",
       "word": {
-        "text": "Meat",
+        "text": "Wood",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -549,9 +586,9 @@
       }
     },
     {
-      "categoryId": "school_supplies",
+      "categoryId": "paintings",
       "word": {
-        "text": "Ruler",
+        "text": "Landscape",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -560,7 +597,29 @@
       }
     },
     {
-      "categoryId": "sea_travel",
+      "categoryId": "money",
+      "word": {
+        "text": "Cash",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "appliances",
+      "word": {
+        "text": "Mixer",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "travel_stops",
       "word": {
         "text": "Harbor",
         "hasSprite": false,
@@ -571,9 +630,9 @@
       }
     },
     {
-      "categoryId": "insects",
+      "categoryId": "trees",
       "word": {
-        "text": "Bee",
+        "text": "Pine",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -582,9 +641,9 @@
       }
     },
     {
-      "categoryId": "foods",
+      "categoryId": "materials",
       "word": {
-        "text": "Cheese",
+        "text": "Metal",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -593,9 +652,9 @@
       }
     },
     {
-      "categoryId": "food_groups",
+      "categoryId": "paintings",
       "word": {
-        "text": "Fruit",
+        "text": "Still Life",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -604,9 +663,9 @@
       }
     },
     {
-      "categoryId": "school_supplies",
+      "categoryId": "money",
       "word": {
-        "text": "Eraser",
+        "text": "Cent",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -615,9 +674,9 @@
       }
     },
     {
-      "categoryId": "sea_travel",
+      "categoryId": "appliances",
       "word": {
-        "text": "Cabin",
+        "text": "Toaster",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -626,9 +685,9 @@
       }
     },
     {
-      "categoryId": "insects",
+      "categoryId": "travel_stops",
       "word": {
-        "text": "Fly",
+        "text": "Hotel",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -637,9 +696,9 @@
       }
     },
     {
-      "categoryId": "foods",
+      "categoryId": "trees",
       "word": {
-        "text": "Rice",
+        "text": "Maple",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -648,9 +707,9 @@
       }
     },
     {
-      "categoryId": "insects",
+      "categoryId": "materials",
       "word": {
-        "text": "Moth",
+        "text": "Glass",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -659,9 +718,9 @@
       }
     },
     {
-      "categoryId": "vegetables",
+      "categoryId": "paintings",
       "word": {
-        "text": "Potato",
+        "text": "Mural",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -670,9 +729,9 @@
       }
     },
     {
-      "categoryId": "vegetables",
+      "categoryId": "trees",
       "word": {
-        "text": "Onion",
+        "text": "Willow",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -681,9 +740,9 @@
       }
     },
     {
-      "categoryId": "vegetables",
+      "categoryId": "materials",
       "word": {
-        "text": "Tomato",
+        "text": "Paper",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -692,9 +751,9 @@
       }
     },
     {
-      "categoryId": "reading_materials",
+      "categoryId": "coins",
       "word": {
-        "text": "Comic",
+        "text": "Nickel",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -703,9 +762,9 @@
       }
     },
     {
-      "categoryId": "reading_materials",
+      "categoryId": "coins",
       "word": {
-        "text": "Newspaper",
+        "text": "Dime",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -714,9 +773,9 @@
       }
     },
     {
-      "categoryId": "reading_materials",
+      "categoryId": "coins",
       "word": {
-        "text": "Novel",
+        "text": "Quarter",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -725,9 +784,9 @@
       }
     },
     {
-      "categoryId": "watercraft",
+      "categoryId": "fridge",
       "word": {
-        "text": "Raft",
+        "text": "Door",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -736,20 +795,9 @@
       }
     },
     {
-      "categoryId": "watercraft",
+      "categoryId": "fridge",
       "word": {
-        "text": "Barge",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "Bar",
-        "syllablePartB": "ge"
-      }
-    },
-    {
-      "categoryId": "watercraft",
-      "word": {
-        "text": "Canoe",
+        "text": "Shelves",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -758,9 +806,9 @@
       }
     },
     {
-      "categoryId": "italian_foods",
+      "categoryId": "fridge",
       "word": {
-        "text": "Lasagna",
+        "text": "Deepfrost",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -769,9 +817,9 @@
       }
     },
     {
-      "categoryId": "italian_foods",
+      "categoryId": "airport",
       "word": {
-        "text": "Ravioli",
+        "text": "Runway",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -780,9 +828,53 @@
       }
     },
     {
-      "categoryId": "italian_foods",
+      "categoryId": "airport",
       "word": {
-        "text": "Risotto",
+        "text": "Terminal",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "airport",
+      "word": {
+        "text": "Baggage Claim",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "art_forms",
+      "word": {
+        "text": "Sculpture",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "art_forms",
+      "word": {
+        "text": "Photography",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "art_forms",
+      "word": {
+        "text": "Dance",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",

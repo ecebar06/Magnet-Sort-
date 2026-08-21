@@ -109,3 +109,15 @@ MonoBehaviour:
     sprite: {fileID: -1600582579191142780, guid: 07f9c0abbfe3c3740b62d9d073ae0314, type: 2}
   - key: fruits__banana
     sprite: {fileID: 0}
+  - key: colors__red
+    sprite: {fileID: 0}
+  - key: colors__blue
+    sprite: {fileID: 0}
+  - key: colors__green
+    sprite: {fileID: 0}
+  - key: colors__yellow
+    sprite: {fileID: 0}
+  - key: shapes__triangle
+    sprite: {fileID: 0}
+  - key: shapes__rectangle
+    sprite: {fileID: 0}
