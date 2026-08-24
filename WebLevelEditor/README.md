@@ -14,5 +14,7 @@ The Word Library marks words used in lower-numbered levels with a **Used before*
 
 Selecting an icon automatically enables `hasSprite` and creates a sprite key in `WordLibrary.json` when needed. If no sprite is assigned in Unity, the game safely falls back to text.
 
+Generated orders keep every three-word transformation refill mixed: a refill contains at most one word from each category. The editor simulates the transformation sequence before accepting the order, so this extra mixing does not create a dead end.
+
 The browser asks for folder permission because websites cannot access local project files without explicit approval. Export/import is not required after the Data folder is connected.
 

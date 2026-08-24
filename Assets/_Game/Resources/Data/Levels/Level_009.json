@@ -498,31 +498,20 @@
       }
     },
     {
+      "categoryId": "art_forms",
+      "word": {
+        "text": "Sculpture",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
       "categoryId": "coins",
       "word": {
         "text": "Penny",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "fridge",
-      "word": {
-        "text": "Freezer",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "airport",
-      "word": {
-        "text": "Gate",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -542,9 +531,31 @@
       }
     },
     {
+      "categoryId": "fridge",
+      "word": {
+        "text": "Freezer",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
       "categoryId": "appliances",
       "word": {
         "text": "Oven",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "airport",
+      "word": {
+        "text": "Gate",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -597,6 +608,28 @@
       }
     },
     {
+      "categoryId": "art_forms",
+      "word": {
+        "text": "Photography",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "coins",
+      "word": {
+        "text": "Nickel",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
       "categoryId": "money",
       "word": {
         "text": "Cash",
@@ -608,9 +641,31 @@
       }
     },
     {
+      "categoryId": "fridge",
+      "word": {
+        "text": "Door",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
       "categoryId": "appliances",
       "word": {
         "text": "Mixer",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "airport",
+      "word": {
+        "text": "Runway",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -641,17 +696,6 @@
       }
     },
     {
-      "categoryId": "materials",
-      "word": {
-        "text": "Metal",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
       "categoryId": "paintings",
       "word": {
         "text": "Still Life",
@@ -663,9 +707,9 @@
       }
     },
     {
-      "categoryId": "money",
+      "categoryId": "coins",
       "word": {
-        "text": "Cent",
+        "text": "Dime",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -674,9 +718,9 @@
       }
     },
     {
-      "categoryId": "appliances",
+      "categoryId": "fridge",
       "word": {
-        "text": "Toaster",
+        "text": "Shelves",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -685,9 +729,31 @@
       }
     },
     {
-      "categoryId": "travel_stops",
+      "categoryId": "airport",
       "word": {
-        "text": "Hotel",
+        "text": "Terminal",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "paintings",
+      "word": {
+        "text": "Mural",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "materials",
+      "word": {
+        "text": "Metal",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -707,6 +773,17 @@
       }
     },
     {
+      "categoryId": "coins",
+      "word": {
+        "text": "Quarter",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
       "categoryId": "materials",
       "word": {
         "text": "Glass",
@@ -718,9 +795,64 @@
       }
     },
     {
-      "categoryId": "paintings",
+      "categoryId": "art_forms",
       "word": {
-        "text": "Mural",
+        "text": "Dance",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "fridge",
+      "word": {
+        "text": "Deepfrost",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "money",
+      "word": {
+        "text": "Cent",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "airport",
+      "word": {
+        "text": "Baggage Claim",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "travel_stops",
+      "word": {
+        "text": "Hotel",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "appliances",
+      "word": {
+        "text": "Toaster",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -743,138 +875,6 @@
       "categoryId": "materials",
       "word": {
         "text": "Paper",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "coins",
-      "word": {
-        "text": "Nickel",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "coins",
-      "word": {
-        "text": "Dime",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "coins",
-      "word": {
-        "text": "Quarter",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "fridge",
-      "word": {
-        "text": "Door",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "fridge",
-      "word": {
-        "text": "Shelves",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "fridge",
-      "word": {
-        "text": "Deepfrost",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "airport",
-      "word": {
-        "text": "Runway",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "airport",
-      "word": {
-        "text": "Terminal",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "airport",
-      "word": {
-        "text": "Baggage Claim",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "art_forms",
-      "word": {
-        "text": "Sculpture",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "art_forms",
-      "word": {
-        "text": "Photography",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "art_forms",
-      "word": {
-        "text": "Dance",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",

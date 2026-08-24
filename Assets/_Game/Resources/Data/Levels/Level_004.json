@@ -306,6 +306,17 @@
       }
     },
     {
+      "categoryId": "healthy_eating",
+      "word": {
+        "text": "Supplement",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
       "categoryId": "ball_sports",
       "word": {
         "text": "Soccer",
@@ -361,6 +372,28 @@
       }
     },
     {
+      "categoryId": "healthy_eating",
+      "word": {
+        "text": "Water",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "ball_sports",
+      "word": {
+        "text": "Tennis",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
       "categoryId": "toys",
       "word": {
         "text": "Blocks",
@@ -405,9 +438,9 @@
       }
     },
     {
-      "categoryId": "toys",
+      "categoryId": "ball_sports",
       "word": {
-        "text": "Kite",
+        "text": "Volleyball",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -427,6 +460,17 @@
       }
     },
     {
+      "categoryId": "fruits",
+      "word": {
+        "text": "Grape",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
       "categoryId": "days",
       "word": {
         "text": "Friday",
@@ -438,9 +482,31 @@
       }
     },
     {
-      "categoryId": "fruits",
+      "categoryId": "ball_sports",
       "word": {
-        "text": "Grape",
+        "text": "Basketball",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "toys",
+      "word": {
+        "text": "Kite",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "healthy_eating",
+      "word": {
+        "text": "Nuts",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -463,72 +529,6 @@
       "categoryId": "days",
       "word": {
         "text": "Sunday",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "ball_sports",
-      "word": {
-        "text": "Tennis",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "ball_sports",
-      "word": {
-        "text": "Volleyball",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "ball_sports",
-      "word": {
-        "text": "Basketball",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "healthy_eating",
-      "word": {
-        "text": "Supplement",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "healthy_eating",
-      "word": {
-        "text": "Water",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "healthy_eating",
-      "word": {
-        "text": "Nuts",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",

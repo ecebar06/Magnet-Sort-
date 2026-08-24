@@ -450,9 +450,9 @@
       }
     },
     {
-      "categoryId": "snacks",
+      "categoryId": "space",
       "word": {
-        "text": "Chips",
+        "text": "Stars",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -461,9 +461,9 @@
       }
     },
     {
-      "categoryId": "doctors",
+      "categoryId": "snacks",
       "word": {
-        "text": "Surgeon",
+        "text": "Chips",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -478,6 +478,17 @@
         "hasSprite": true,
         "useIcon": true,
         "spriteKey": "meals__breakfast",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "doctors",
+      "word": {
+        "text": "Surgeon",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
         "syllablePartA": "",
         "syllablePartB": ""
       }
@@ -538,9 +549,42 @@
       }
     },
     {
+      "categoryId": "space",
+      "word": {
+        "text": "Moon",
+        "hasSprite": true,
+        "useIcon": true,
+        "spriteKey": "space__moon",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "snacks",
+      "word": {
+        "text": "Popcorn",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
       "categoryId": "meals",
       "word": {
         "text": "Lunch",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "doctors",
+      "word": {
+        "text": "Pediatrician",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -604,9 +648,9 @@
       }
     },
     {
-      "categoryId": "meals",
+      "categoryId": "snacks",
       "word": {
-        "text": "Dinner",
+        "text": "Pretzel",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -615,9 +659,9 @@
       }
     },
     {
-      "categoryId": "jobs",
+      "categoryId": "doctors",
       "word": {
-        "text": "Pilot",
+        "text": "Nurse",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -648,6 +692,17 @@
       }
     },
     {
+      "categoryId": "planets",
+      "word": {
+        "text": "Mars",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
       "categoryId": "reptiles",
       "word": {
         "text": "Turtle",
@@ -659,9 +714,53 @@
       }
     },
     {
-      "categoryId": "planets",
+      "categoryId": "snacks",
       "word": {
-        "text": "Mars",
+        "text": "Crackers",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "meals",
+      "word": {
+        "text": "Dinner",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "space",
+      "word": {
+        "text": "Comets",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "doctors",
+      "word": {
+        "text": "Clinic",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "jobs",
+      "word": {
+        "text": "Pilot",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -695,105 +794,6 @@
       "categoryId": "reptiles",
       "word": {
         "text": "Gecko",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "snacks",
-      "word": {
-        "text": "Popcorn",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "snacks",
-      "word": {
-        "text": "Pretzel",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "snacks",
-      "word": {
-        "text": "Crackers",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "doctors",
-      "word": {
-        "text": "Pediatrician",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "doctors",
-      "word": {
-        "text": "Nurse",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "doctors",
-      "word": {
-        "text": "Clinic",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "space",
-      "word": {
-        "text": "Stars",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "space",
-      "word": {
-        "text": "Moon",
-        "hasSprite": true,
-        "useIcon": true,
-        "spriteKey": "space__moon",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "space",
-      "word": {
-        "text": "Comets",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",

@@ -354,6 +354,17 @@
       }
     },
     {
+      "categoryId": "garden",
+      "word": {
+        "text": "Grass",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
       "categoryId": "music",
       "word": {
         "text": "Song",
@@ -365,9 +376,9 @@
       }
     },
     {
-      "categoryId": "headwear",
+      "categoryId": "festivals",
       "word": {
-        "text": "Cap",
+        "text": "Parade",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -376,9 +387,9 @@
       }
     },
     {
-      "categoryId": "festivals",
+      "categoryId": "headwear",
       "word": {
-        "text": "Parade",
+        "text": "Cap",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -420,6 +431,28 @@
       }
     },
     {
+      "categoryId": "garden",
+      "word": {
+        "text": "Leaf",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "music",
+      "word": {
+        "text": "Drum",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
       "categoryId": "festivals",
       "word": {
         "text": "Food",
@@ -431,20 +464,9 @@
       }
     },
     {
-      "categoryId": "clothes",
+      "categoryId": "headwear",
       "word": {
-        "text": "Pants",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "numbers",
-      "word": {
-        "text": "Two",
+        "text": "Beanie",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -464,9 +486,9 @@
       }
     },
     {
-      "categoryId": "festivals",
+      "categoryId": "music",
       "word": {
-        "text": "Lantern",
+        "text": "Piano",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -475,20 +497,9 @@
       }
     },
     {
-      "categoryId": "clothes",
+      "categoryId": "headwear",
       "word": {
-        "text": "Shoes",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "numbers",
-      "word": {
-        "text": "Three",
+        "text": "Helmet",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -510,7 +521,7 @@
     {
       "categoryId": "numbers",
       "word": {
-        "text": "Four",
+        "text": "Two",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -519,20 +530,9 @@
       }
     },
     {
-      "categoryId": "music",
+      "categoryId": "clothes",
       "word": {
-        "text": "Drum",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "music",
-      "word": {
-        "text": "Piano",
+        "text": "Pants",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -552,20 +552,9 @@
       }
     },
     {
-      "categoryId": "headwear",
+      "categoryId": "numbers",
       "word": {
-        "text": "Beanie",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "headwear",
-      "word": {
-        "text": "Helmet",
+        "text": "Three",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -585,20 +574,9 @@
       }
     },
     {
-      "categoryId": "garden",
+      "categoryId": "clothes",
       "word": {
-        "text": "Grass",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "garden",
-      "word": {
-        "text": "Leaf",
+        "text": "Shoes",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -610,6 +588,28 @@
       "categoryId": "garden",
       "word": {
         "text": "Seed",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "festivals",
+      "word": {
+        "text": "Lantern",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "numbers",
+      "word": {
+        "text": "Four",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",

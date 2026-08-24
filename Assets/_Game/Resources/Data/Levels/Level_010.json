@@ -583,6 +583,17 @@
   ],
   "orderedWords": [
     {
+      "categoryId": "landforms",
+      "word": {
+        "text": "Hill",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
       "categoryId": "mountains",
       "word": {
         "text": "Everest",
@@ -605,39 +616,6 @@
       }
     },
     {
-      "categoryId": "south_america",
-      "word": {
-        "text": "Brazil",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "hot_things",
-      "word": {
-        "text": "Geyser",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "ice",
-      "word": {
-        "text": "Glacier",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
       "categoryId": "coastal_landforms",
       "word": {
         "text": "Peninsula",
@@ -649,9 +627,42 @@
       }
     },
     {
+      "categoryId": "south_america",
+      "word": {
+        "text": "Brazil",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "americas",
+      "word": {
+        "text": "North America",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
       "categoryId": "continents",
       "word": {
         "text": "Asia",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "hot_things",
+      "word": {
+        "text": "Geyser",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -693,6 +704,17 @@
       }
     },
     {
+      "categoryId": "ice",
+      "word": {
+        "text": "Glacier",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
       "categoryId": "mountains",
       "word": {
         "text": "Alps",
@@ -704,9 +726,9 @@
       }
     },
     {
-      "categoryId": "coastal_landforms",
+      "categoryId": "islands",
       "word": {
-        "text": "Bay",
+        "text": "Cyprus",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -715,9 +737,9 @@
       }
     },
     {
-      "categoryId": "continents",
+      "categoryId": "south_america",
       "word": {
-        "text": "Europe",
+        "text": "Argentina",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -726,9 +748,97 @@
       }
     },
     {
-      "categoryId": "temperature",
+      "categoryId": "americas",
       "word": {
-        "text": "Cool",
+        "text": "Carribbean",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "hot_things",
+      "word": {
+        "text": "Steam",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "ice",
+      "word": {
+        "text": "Igloo",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "mountains",
+      "word": {
+        "text": "Rockies",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "islands",
+      "word": {
+        "text": "Iceland",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "south_america",
+      "word": {
+        "text": "Peru",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "hot_things",
+      "word": {
+        "text": "Volcano",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "ice",
+      "word": {
+        "text": "Icicle",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "mountains",
+      "word": {
+        "text": "Summit",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -759,9 +869,9 @@
       }
     },
     {
-      "categoryId": "mountains",
+      "categoryId": "islands",
       "word": {
-        "text": "Rockies",
+        "text": "Bali",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -770,9 +880,9 @@
       }
     },
     {
-      "categoryId": "coastal_landforms",
+      "categoryId": "landforms",
       "word": {
-        "text": "Cape",
+        "text": "Valley",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -783,18 +893,51 @@
     {
       "categoryId": "continents",
       "word": {
-        "text": "Africa",
+        "text": "Europe",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
-        "syllablePartA": "af",
-        "syllablePartB": "rica"
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "south_america",
+      "word": {
+        "text": "Colombia",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "coastal_landforms",
+      "word": {
+        "text": "Bay",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
       }
     },
     {
       "categoryId": "holidays",
       "word": {
         "text": "Christmas",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "americas",
+      "word": {
+        "text": "Central America",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
@@ -814,14 +957,69 @@
       }
     },
     {
-      "categoryId": "mountains",
+      "categoryId": "hot_things",
       "word": {
-        "text": "Summit",
+        "text": "Furnace",
         "hasSprite": false,
         "useIcon": false,
         "spriteKey": "",
         "syllablePartA": "",
         "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "temperature",
+      "word": {
+        "text": "Cool",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "landforms",
+      "word": {
+        "text": "Canyon",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "can",
+        "syllablePartB": "yon"
+      }
+    },
+    {
+      "categoryId": "coastal_landforms",
+      "word": {
+        "text": "Cape",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "ice",
+      "word": {
+        "text": "Hockey",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "",
+        "syllablePartB": ""
+      }
+    },
+    {
+      "categoryId": "continents",
+      "word": {
+        "text": "Africa",
+        "hasSprite": false,
+        "useIcon": false,
+        "spriteKey": "",
+        "syllablePartA": "af",
+        "syllablePartB": "rica"
       }
     },
     {
@@ -844,204 +1042,6 @@
         "spriteKey": "",
         "syllablePartA": "",
         "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "islands",
-      "word": {
-        "text": "Cyprus",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "islands",
-      "word": {
-        "text": "Iceland",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "islands",
-      "word": {
-        "text": "Bali",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "south_america",
-      "word": {
-        "text": "Argentina",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "south_america",
-      "word": {
-        "text": "Peru",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "south_america",
-      "word": {
-        "text": "Colombia",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "americas",
-      "word": {
-        "text": "North America",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "americas",
-      "word": {
-        "text": "Carribbean",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "americas",
-      "word": {
-        "text": "Central America",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "hot_things",
-      "word": {
-        "text": "Steam",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "hot_things",
-      "word": {
-        "text": "Volcano",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "hot_things",
-      "word": {
-        "text": "Furnace",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "ice",
-      "word": {
-        "text": "Igloo",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "ice",
-      "word": {
-        "text": "Icicle",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "ice",
-      "word": {
-        "text": "Hockey",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "landforms",
-      "word": {
-        "text": "Hill",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "landforms",
-      "word": {
-        "text": "Valley",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "",
-        "syllablePartB": ""
-      }
-    },
-    {
-      "categoryId": "landforms",
-      "word": {
-        "text": "Canyon",
-        "hasSprite": false,
-        "useIcon": false,
-        "spriteKey": "",
-        "syllablePartA": "can",
-        "syllablePartB": "yon"
       }
     }
   ]

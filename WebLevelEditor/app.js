@@ -263,50 +263,212 @@ function validate() {
 
 function generateOrder() {
   if (validate().length) return toast("Fix the level warnings before generating an order.");
-  const transforms = state.level.categories.filter(c => c.transformsOnComplete);
-  const generated = new Set(transforms.map(c => c.transformResult.text.toLowerCase()));
-  const fixed = state.level.categories.filter(c => !c.transformsOnComplete);
-  let visible = [], queue = [];
-  const entry = (category, word) => ({ categoryId: category.id, word: clone(word) });
-  if (!transforms.length) {
-    for (let wordIndex = 0; wordIndex < 4; wordIndex++) for (const category of fixed) visible.push(entry(category, category.words[wordIndex]));
-  } else {
-    const transformGroups = transforms.map(category => ({
-      category,
-      words: category.words.filter(word => !generated.has(word.text.toLowerCase()))
-    }));
-    const rootIndex = transformGroups.findIndex(group => group.words.length === 4);
-    if (rootIndex < 0 || transformGroups.some(group => group.words.length < 3 || group.words.length > 4))
-      return toast("Transformations need one root category with four playable words and three or four playable words thereafter.");
-    const [root] = transformGroups.splice(rootIndex, 1);
-    transformGroups.unshift(root);
-
-    visible.push(...transformGroups[0].words.map(word => entry(transformGroups[0].category, word)));
-    for (const group of transformGroups.slice(1)) {
-      if (group.words.length === 4) visible.push(entry(group.category, group.words[0]));
-      queue.push(...group.words.slice(group.words.length === 4 ? 1 : 0).map(word => entry(group.category, word)));
-    }
-
-    const groups = fixed.map(category => ({ category, words: category.words.filter(word => !generated.has(word.text.toLowerCase())) }))
-      .filter(group => group.words.length > 0);
-    let finalIndex = groups.findIndex(group => group.words.length === 3);
-    if (finalIndex < 0) {
-      for (let index = groups.length - 1; index >= 0; index--) if (groups[index].words.length === 4) { finalIndex = index; break; }
-    }
-    if (finalIndex < 0) return toast("No category can receive the final three queued words.");
-    const [finalGroup] = groups.splice(finalIndex, 1);
-    if (finalGroup.words.length === 4) visible.push(entry(finalGroup.category, finalGroup.words[0]));
-    queue.push(...finalGroup.words.slice(-3).map(word => entry(finalGroup.category, word)));
-    visible.push(...groups.flatMap(group => group.words.map(word => entry(group.category, word))));
-    visible = interleaveByCategory(visible);
-  }
+  // A one-transform tutorial can legitimately need all three companion words
+  // in its only refill (Dog Breeds -> Dog + Cat/Bird/Fish, for example).
+  // Try the mixed generator first, then use that safe special case.
+  const order = buildBalancedSolvableOrder() || buildSingleTransformTutorialOrder();
+  if (!order) return toast("Could not build a mixed, solvable order. Check the transformation links and try again.");
+  const { visible, queue } = order;
   const expectedVisible = state.level.visibleRowCount * 4;
-  const expectedQueue = transforms.length * 3;
+  const expectedQueue = state.level.categories.filter(category => category.transformsOnComplete).length * 3;
   if (visible.length !== expectedVisible || queue.length !== expectedQueue)
     return toast(`Could not create a complete order (${visible.length}/${expectedVisible} visible, ${queue.length}/${expectedQueue} queued).`);
   state.level.orderedWords = [...visible, ...queue];
   markDirty();
-  render(); toast(`Generated ${state.level.orderedWords.length} ordered words.`);
+  render(); toast(`Generated ${state.level.orderedWords.length} mixed, solvable words.`);
+}
+
+function buildSingleTransformTutorialOrder() {
+  const transforms = state.level.categories.filter(category => category.transformsOnComplete);
+  if (transforms.length !== 1) return null;
+
+  const source = transforms[0];
+  const targetId = source.transformResultCategoryId;
+  const target = state.level.categories.find(category => category.id === targetId);
+  if (!target) return null;
+
+  const resultText = source.transformResult.text.toLowerCase();
+  const sourceWords = source.words.filter(word => word.text.toLowerCase() !== resultText);
+  const companionWords = target.words.filter(word => word.text.toLowerCase() !== resultText);
+  if (sourceWords.length !== 4 || companionWords.length !== 3) return null;
+
+  const entry = (category, word) => ({ categoryId: category.id, word: clone(word) });
+  const visible = state.level.categories
+    .filter(category => category.id !== targetId)
+    .flatMap(category => category.words
+      .filter(word => word.text.toLowerCase() !== resultText)
+      .map(word => entry(category, word)));
+  const queue = companionWords.map(word => entry(target, word));
+
+  if (visible.length !== state.level.visibleRowCount * 4 || queue.length !== 3) return null;
+  const mixedVisible = interleaveByCategory(visible);
+  return isOrderSolvable(mixedVisible, queue, transforms) ? { visible: mixedVisible, queue } : null;
+}
+
+// A transform replaces four words with one result and exactly three queued words.
+// Keep each refill mixed, but pre-load enough of the next source category that it
+// can still be completed after the refill. The simulation below verifies the plan.
+function buildBalancedSolvableOrder() {
+  const categories = state.level.categories;
+  const transforms = categories.filter(category => category.transformsOnComplete);
+  const entry = (category, word) => ({ categoryId: category.id, word: clone(word) });
+  if (!transforms.length) {
+    return { visible: interleaveByCategory(categories.flatMap(category => category.words.map(word => entry(category, word)))), queue: [] };
+  }
+
+  const transformOrder = getTransformCompletionOrder(transforms);
+  if (!transformOrder.length) return null;
+  const generatedWords = new Set(transforms.map(category => category.transformResult.text.toLowerCase()));
+  const baseWords = new Map(categories.map(category => [
+    category.id,
+    category.words.filter(word => !generatedWords.has(word.text.toLowerCase()))
+  ]));
+  const incomingCount = new Map(categories.map(category => [
+    category.id,
+    transforms.filter(source => source.transformResultCategoryId === category.id).length
+  ]));
+  const transformIds = new Set(transforms.map(category => category.id));
+  const initialCounts = new Map(categories.map(category => [category.id, 0]));
+  const root = transformOrder[0];
+  const rootWords = baseWords.get(root.id) || [];
+  if (rootWords.length !== 4) return null;
+  initialCounts.set(root.id, rootWords.length);
+
+  // Every later source is deliberately one base word short. That one word is
+  // delivered in a mixed refill after its dependencies have produced their result.
+  for (const category of transformOrder.slice(1)) {
+    const words = baseWords.get(category.id) || [];
+    if (!words.length) return null;
+    initialCounts.set(category.id, Math.max(0, words.length - 1));
+  }
+
+  const visibleSlots = state.level.visibleRowCount * 4;
+  let slotsLeft = visibleSlots - [...initialCounts.values()].reduce((sum, count) => sum + count, 0);
+  if (slotsLeft < 0) return null;
+
+  // Fill remaining visible slots one at a time across categories. Result targets
+  // are capped at two visible base words, so their three companions never appear
+  // as an obvious ready-made set when a transformation happens.
+  const fillVisible = relaxTargetCap => {
+    let added = true;
+    while (slotsLeft > 0 && added) {
+      added = false;
+      for (const category of categories) {
+        const words = baseWords.get(category.id) || [];
+        const current = initialCounts.get(category.id) || 0;
+        const isTransformSource = transformIds.has(category.id);
+        const isResultTarget = (incomingCount.get(category.id) || 0) > 0;
+        const cap = isTransformSource
+          ? current
+          : isResultTarget && !relaxTargetCap
+            ? Math.min(words.length, 2)
+            : words.length;
+        if (slotsLeft > 0 && current < cap) {
+          initialCounts.set(category.id, current + 1);
+          slotsLeft--;
+          added = true;
+        }
+      }
+    }
+  };
+  fillVisible(false);
+  fillVisible(true);
+  if (slotsLeft !== 0) return null;
+
+  const visible = [];
+  const queuedWordsByCategory = new Map();
+  for (const category of categories) {
+    const words = baseWords.get(category.id) || [];
+    const initialCount = initialCounts.get(category.id) || 0;
+    visible.push(...words.slice(0, initialCount).map(word => entry(category, word)));
+    queuedWordsByCategory.set(category.id, words.slice(initialCount).map(word => entry(category, word)));
+  }
+
+  const queueCount = [...queuedWordsByCategory.values()].reduce((sum, words) => sum + words.length, 0);
+  if (queueCount !== transforms.length * 3) return null;
+  const requiredCategoryIds = transformOrder.map((category, index) => index < transformOrder.length - 1 ? transformOrder[index + 1].id : "");
+  const forbiddenCategoryIds = transformOrder.map(category => category.transformResultCategoryId || "");
+  const batches = createMixedQueueBatches(queuedWordsByCategory, requiredCategoryIds, forbiddenCategoryIds);
+  if (!batches) return null;
+  const queue = batches.flat();
+  const mixedVisible = interleaveByCategory(visible);
+  return isOrderSolvable(mixedVisible, queue, transforms) ? { visible: mixedVisible, queue } : null;
+}
+
+function getTransformCompletionOrder(transforms) {
+  const remaining = [...transforms];
+  const completed = new Set();
+  const order = [];
+  while (remaining.length) {
+    const nextIndex = remaining.findIndex(category => transforms
+      .filter(source => source.transformResultCategoryId === category.id)
+      .every(source => completed.has(source.id)));
+    if (nextIndex < 0) return [];
+    const [next] = remaining.splice(nextIndex, 1);
+    order.push(next);
+    completed.add(next.id);
+  }
+  return order;
+}
+
+function createMixedQueueBatches(queuedWordsByCategory, requiredCategoryIds, forbiddenCategoryIds) {
+  const categoryIds = [...queuedWordsByCategory.keys()];
+  const counts = new Map(categoryIds.map(id => [id, (queuedWordsByCategory.get(id) || []).length]));
+  const memo = new Map();
+  const search = step => {
+    if (step === requiredCategoryIds.length)
+      return [...counts.values()].every(count => count === 0) ? [] : null;
+    const memoKey = `${step}|${categoryIds.map(id => counts.get(id)).join(",")}`;
+    if (memo.has(memoKey)) return null;
+    const required = requiredCategoryIds[step];
+    const forbidden = forbiddenCategoryIds[step];
+    const available = categoryIds.filter(id => (counts.get(id) || 0) > 0)
+      .sort((a, b) => (counts.get(b) || 0) - (counts.get(a) || 0));
+    for (let first = 0; first < available.length; first++) for (let second = first + 1; second < available.length; second++) for (let third = second + 1; third < available.length; third++) {
+      const batchIds = [available[first], available[second], available[third]];
+      if (required && !batchIds.includes(required)) continue;
+      if (forbidden && forbidden !== required && batchIds.includes(forbidden)) continue;
+      batchIds.forEach(id => counts.set(id, counts.get(id) - 1));
+      const remainingBatches = requiredCategoryIds.length - step - 1;
+      const canFinish = [...counts.values()].every(count => count <= remainingBatches);
+      const tail = canFinish ? search(step + 1) : null;
+      batchIds.forEach(id => counts.set(id, counts.get(id) + 1));
+      if (tail) return [batchIds, ...tail];
+    }
+    memo.set(memoKey, true);
+    return null;
+  };
+  const batchIds = search(0);
+  if (!batchIds) return null;
+  const remainingWords = new Map(categoryIds.map(id => [id, [...(queuedWordsByCategory.get(id) || [])]]));
+  return batchIds.map(batch => batch.map(id => remainingWords.get(id).shift()));
+}
+
+function isOrderSolvable(visible, queue, transforms) {
+  const categoriesById = new Map(state.level.categories.map(category => [category.id, category]));
+  const wordKey = (categoryId, wordText) => `${categoryId}::${wordText.toLowerCase()}`;
+  const initialActive = new Set(visible.map(item => wordKey(item.categoryId, item.word.text)));
+  const memo = new Set();
+  const search = (step, active, completed) => {
+    if (step === transforms.length) return true;
+    const memoKey = `${step}|${[...completed].sort().join(",")}`;
+    if (memo.has(memoKey)) return false;
+    for (const category of transforms) {
+      if (completed.has(category.id)) continue;
+      const isReady = category.words.every(word => active.has(wordKey(category.id, word.text)));
+      if (!isReady) continue;
+      const nextActive = new Set(active);
+      category.words.forEach(word => nextActive.delete(wordKey(category.id, word.text)));
+      nextActive.add(wordKey(category.transformResultCategoryId, category.transformResult.text));
+      queue.slice(step * 3, step * 3 + 3).forEach(item => nextActive.add(wordKey(item.categoryId, item.word.text)));
+      const nextCompleted = new Set(completed);
+      nextCompleted.add(category.id);
+      if (search(step + 1, nextActive, nextCompleted)) return true;
+    }
+    memo.add(memoKey);
+    return false;
+  };
+  return search(0, initialActive, new Set());
 }
 
 function interleaveByCategory(entries) {
