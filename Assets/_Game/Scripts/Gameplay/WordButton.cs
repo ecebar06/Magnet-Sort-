@@ -163,7 +163,14 @@ public class WordButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     public void SetMatched(bool matched)
     {
         IsMatched = matched;
-        background.color = matched ? new Color(0.55f, 0.88f, 0.68f, 1f) : defaultColor;
+        // The fridge artwork communicates a completed row through its holder and
+        // category sticker, so keep the illustrated word magnets untinted.
+        bool usesIllustratedMagnet = Mathf.Approximately(defaultColor.r, 1f) &&
+                                     Mathf.Approximately(defaultColor.g, 1f) &&
+                                     Mathf.Approximately(defaultColor.b, 1f);
+        background.color = matched && !usesIllustratedMagnet
+            ? new Color(0.55f, 0.88f, 0.68f, 1f)
+            : defaultColor;
         Button button = GetComponent<Button>();
         if (button != null) button.interactable = !matched;
     }

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 [InitializeOnLoad]
 public static class GameSceneEditModeCleanup
 {
-    private static Sprite pastelPreviewSprite;
+    private static Sprite backgroundPreviewSprite;
 
     static GameSceneEditModeCleanup()
     {
@@ -53,19 +53,21 @@ public static class GameSceneEditModeCleanup
                 Image background = backgroundTransform == null ? null : backgroundTransform.GetComponent<Image>();
                 if (background != null)
                 {
-                    Sprite pastel = AssetDatabase.LoadAssetAtPath<Sprite>("Assets/_Game/Resources/Textures/PastelBackground.png");
-                    if (pastel == null)
+                    const string fridgeBackgroundPath =
+                        "Assets/_Game/Resources/Art/Fridge/Background/fridge_gradient.png";
+                    Sprite preview = AssetDatabase.LoadAssetAtPath<Sprite>(fridgeBackgroundPath);
+                    if (preview == null)
                     {
-                        Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/_Game/Resources/Textures/PastelBackground.png");
-                        if (texture != null && pastelPreviewSprite == null)
+                        Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(fridgeBackgroundPath);
+                        if (texture != null && backgroundPreviewSprite == null)
                         {
-                            pastelPreviewSprite = Sprite.Create(texture,
+                            backgroundPreviewSprite = Sprite.Create(texture,
                                 new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100f);
-                            pastelPreviewSprite.hideFlags = HideFlags.HideAndDontSave;
+                            backgroundPreviewSprite.hideFlags = HideFlags.HideAndDontSave;
                         }
-                        pastel = pastelPreviewSprite;
+                        preview = backgroundPreviewSprite;
                     }
-                    if (pastel != null) background.sprite = pastel;
+                    if (preview != null) background.sprite = preview;
                     background.color = Color.white;
                     background.enabled = true;
                     background.gameObject.SetActive(true);

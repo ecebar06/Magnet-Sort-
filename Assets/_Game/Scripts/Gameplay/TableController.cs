@@ -43,6 +43,8 @@ public class TableController : MonoBehaviour
     [SerializeField] private Button spendGoldContinueButton;
     [SerializeField] private Button viewBoardButton;
     [SerializeField] private TextMeshProUGUI loseExplanationText;
+    [SerializeField, Min(0f)] private float winResultDelay = 1.6f;
+    [SerializeField, Min(0f)] private float loseResultDelay = 1.2f;
 
     private readonly List<Image> progressDots = new List<Image>();
     private readonly Dictionary<string, string> categoryNames = new Dictionary<string, string>();
@@ -57,14 +59,32 @@ public class TableController : MonoBehaviour
     private bool rewardDoubled;
     private int paidReviveCount;
     private bool transformationInProgress;
+    private bool fridgeHudActive;
+    private Coroutine endGameRoutine;
     private static Sprite roundedPanelSprite;
     private static Sprite roundedButtonSprite;
+    private static Sprite fridgePlainBackgroundSprite;
+    private static Sprite fridgeBackgroundSprite;
+    private static Sprite fridgeShineFrameSprite;
+    private static Sprite fridgeShineLinesSprite;
+    private static Sprite fridgeHandleSprite;
+    private static Sprite fridgePaperSprite;
+    private static Sprite fridgeEggSprite;
+    private static Sprite fridgeOrangeSprite;
+    private static Sprite fridgeRowSprite;
+    private static Sprite fridgeCompletedRowSprite;
+    private static Sprite fridgeCategoryStickerSprite;
+    private static Sprite fridgeWordSprite;
+    private static Sprite fridgeProgressTrackSprite;
+    private static Sprite fridgeProgressFillSprite;
+    private static Sprite fridgeProgressOrangeSprite;
     private static Sprite bulbIconSprite;
     private static Sprite gearIconSprite;
     private static Sprite lockIconSprite;
     private static readonly Color PastelButtonColor = new Color(1.00f, 0.96f, 0.84f, 1f);
     private WordIconLibrary iconLibrary;
     private TMP_FontAsset gameFont;
+    private TMP_FontAsset displayFont;
     private LevelDatabase levelDatabase;
     private int currentLevelNumber = 1;
     private int totalCategoryCount;
@@ -98,12 +118,20 @@ public class TableController : MonoBehaviour
         // Always restore it when gameplay starts.
         if (wordContainer != null) wordContainer.gameObject.SetActive(true);
         playerSaveData = SaveSystem.Load();
+        LoadGameFont();
+        ApplyGameFontToScene();
         CreateScreenChrome();
         LoadLevel(Mathf.Max(startingLevelIndex, playerSaveData.currentLevelIndex));
     }
 
     public void LoadLevel(int levelIndex)
     {
+        if (endGameRoutine != null)
+        {
+            StopCoroutine(endGameRoutine);
+            endGameRoutine = null;
+        }
+
         if (buttonPrefab == null || rowPrefab == null || wordContainer == null)
         {
             Debug.LogError("TableController references are not fully assigned.", this);
@@ -112,8 +140,7 @@ public class TableController : MonoBehaviour
 
         levelDatabase = LevelDatabase.LoadFromResources();
         iconLibrary = Resources.Load<WordIconLibrary>("Data/MainWordIconLibrary");
-        if (gameFont == null)
-            gameFont = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+        LoadGameFont();
         activeLevelIndex = levelDatabase == null || levelDatabase.levels.Count == 0
             ? 0
             : Mathf.Clamp(levelIndex, 0, levelDatabase.levels.Count - 1);
@@ -203,15 +230,26 @@ public class TableController : MonoBehaviour
                     new Color(0.22f, 0.82f, 0.67f, 1f),
                     new Color(0.98f, 0.42f, 0.58f, 1f)
                 };
-                rowBackground.sprite = GetRoundedPanelSprite();
-                rowBackground.type = Image.Type.Sliced;
-                rowBackground.color = rowColors[rowIndex % rowColors.Length];
-                AddShadow(newRow, new Color(0.12f, 0.08f, 0.30f, 0.34f), new Vector2(0f, -7f));
-                Outline rowOutline = newRow.GetComponent<Outline>();
-                if (rowOutline == null) rowOutline = newRow.AddComponent<Outline>();
-                rowOutline.effectColor = new Color(0.08f, 0.10f, 0.28f, 0.82f);
-                rowOutline.effectDistance = new Vector2(3f, -3f);
-                rowOutline.useGraphicAlpha = true;
+                Sprite fridgeRow = GetFridgeRowSprite();
+                if (fridgeRow != null)
+                {
+                    ConfigureFridgeRowLayout(newRow);
+                    rowBackground.sprite = fridgeRow;
+                    rowBackground.type = Image.Type.Simple;
+                    rowBackground.color = new Color(0.78f, 1f, 1f, 1f);
+                }
+                else
+                {
+                    rowBackground.sprite = GetRoundedPanelSprite();
+                    rowBackground.type = Image.Type.Sliced;
+                    rowBackground.color = rowColors[rowIndex % rowColors.Length];
+                    AddShadow(newRow, new Color(0.12f, 0.08f, 0.30f, 0.34f), new Vector2(0f, -7f));
+                    Outline rowOutline = newRow.GetComponent<Outline>();
+                    if (rowOutline == null) rowOutline = newRow.AddComponent<Outline>();
+                    rowOutline.effectColor = new Color(0.08f, 0.10f, 0.28f, 0.82f);
+                    rowOutline.effectDistance = new Vector2(3f, -3f);
+                    rowOutline.useGraphicAlpha = true;
+                }
             }
 
             for (int columnIndex = 0; columnIndex < columns; columnIndex++)
@@ -224,15 +262,26 @@ public class TableController : MonoBehaviour
                 Image buttonImage = newButton.GetComponent<Image>();
                 if (buttonImage != null)
                 {
-                    buttonImage.sprite = GetRoundedButtonSprite();
-                    buttonImage.type = Image.Type.Sliced;
-                    buttonImage.color = PastelButtonColor;
-                    AddShadow(newButton, new Color(0.08f, 0.08f, 0.22f, 0.48f), new Vector2(0f, -7f));
-                    Outline outline = newButton.GetComponent<Outline>();
-                    if (outline == null) outline = newButton.AddComponent<Outline>();
-                    outline.effectColor = new Color(0.08f, 0.10f, 0.24f, 0.82f);
-                    outline.effectDistance = new Vector2(2f, -2f);
-                    outline.useGraphicAlpha = true;
+                    Sprite fridgeWord = GetFridgeWordSprite();
+                    if (fridgeWord != null)
+                    {
+                        ConfigureFridgeWordLayout(newButton);
+                        buttonImage.sprite = fridgeWord;
+                        buttonImage.type = Image.Type.Simple;
+                        buttonImage.color = Color.white;
+                    }
+                    else
+                    {
+                        buttonImage.sprite = GetRoundedButtonSprite();
+                        buttonImage.type = Image.Type.Sliced;
+                        buttonImage.color = PastelButtonColor;
+                        AddShadow(newButton, new Color(0.08f, 0.08f, 0.22f, 0.48f), new Vector2(0f, -7f));
+                        Outline outline = newButton.GetComponent<Outline>();
+                        if (outline == null) outline = newButton.AddComponent<Outline>();
+                        outline.effectColor = new Color(0.08f, 0.10f, 0.24f, 0.82f);
+                        outline.effectDistance = new Vector2(2f, -2f);
+                        outline.useGraphicAlpha = true;
+                    }
                 }
 
                 TextMeshProUGUI label = newButton.GetComponentInChildren<TextMeshProUGUI>();
@@ -242,11 +291,11 @@ public class TableController : MonoBehaviour
                 label.fontSizeMax = 32;
                 label.alignment = TextAlignmentOptions.Center;
                 label.margin = new Vector4(8f, 4f, 8f, 4f);
-                label.fontStyle = FontStyles.Bold;
+                label.fontStyle = GetFridgeWordSprite() != null ? FontStyles.Normal : FontStyles.Bold;
                 label.color = new Color(0.16f, 0.12f, 0.28f, 1f);
                 if (gameFont != null) label.font = gameFont;
                 label.outlineColor = new Color(0.06f, 0.08f, 0.20f, 0.55f);
-                label.outlineWidth = 0.08f;
+                label.outlineWidth = GetFridgeWordSprite() != null ? 0f : 0.08f;
 
                 Sprite wordIcon = null;
                 if (word.useIcon && iconLibrary != null)
@@ -256,12 +305,52 @@ public class TableController : MonoBehaviour
                     Debug.LogWarning($"Icon not found for key '{word.spriteKey}'. Falling back to text.", this);
 
                 WordButton wordButton = newButton.GetComponent<WordButton>();
-                wordButton.Initialize(this, word.text, boardWord.categoryId, PastelButtonColor, wordIcon);
+                wordButton.Initialize(this, word.text, boardWord.categoryId,
+                    GetFridgeWordSprite() != null ? Color.white : PastelButtonColor, wordIcon);
             }
         }
 
         ResizeBoard(currentLevelRows);
         RefreshIndicators();
+    }
+
+    private void LoadGameFont()
+    {
+        if (gameFont != null) return;
+
+        Font fredoka = Resources.Load<Font>("Fonts/Fredoka-Medium");
+        if (fredoka != null)
+        {
+            gameFont = TMP_FontAsset.CreateFontAsset(fredoka);
+            gameFont.name = "Fredoka Medium Runtime";
+        }
+        else
+        {
+            gameFont = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
+        }
+
+        Font fredokaBold = Resources.Load<Font>("Fonts/FredokaOne-Regular");
+        if (fredokaBold == null)
+            fredokaBold = Resources.Load<Font>("Fonts/Fredoka-Bold");
+        if (fredokaBold != null)
+        {
+            displayFont = TMP_FontAsset.CreateFontAsset(fredokaBold);
+            displayFont.name = "Fredoka One Runtime";
+        }
+        else
+        {
+            displayFont = gameFont;
+        }
+    }
+
+    private void ApplyGameFontToScene()
+    {
+        if (gameFont == null) return;
+
+        Canvas canvas = wordContainer == null ? null : wordContainer.GetComponentInParent<Canvas>();
+        if (canvas == null) return;
+        foreach (TextMeshProUGUI text in canvas.GetComponentsInChildren<TextMeshProUGUI>(true))
+            text.font = gameFont;
     }
 
     public void OnWordClicked(WordButton word)
@@ -347,6 +436,12 @@ public class TableController : MonoBehaviour
         {
             first.transform.SetSiblingIndex(secondIndex);
             second.transform.SetSiblingIndex(firstIndex);
+        }
+
+        if (GetFridgeRowSprite() != null)
+        {
+            AlignFridgeRowSlots(firstRow);
+            if (secondRow != firstRow) AlignFridgeRowSlots(secondRow);
         }
 
         Canvas.ForceUpdateCanvases();
@@ -507,6 +602,8 @@ public class TableController : MonoBehaviour
             droppedWords.Add(droppedWord);
         }
 
+        if (GetFridgeRowSprite() != null) AlignFridgeRowSlots(row);
+
         Canvas.ForceUpdateCanvases();
         yield return transformed.transform.DOScale(1f, 0.34f).SetEase(Ease.OutBack).WaitForCompletion();
         for (int i = 0; i < droppedWords.Count; i++)
@@ -544,10 +641,13 @@ public class TableController : MonoBehaviour
         Image buttonImage = newButton.GetComponent<Image>();
         if (buttonImage != null)
         {
-            buttonImage.sprite = GetRoundedButtonSprite();
-            buttonImage.type = Image.Type.Sliced;
-            buttonImage.color = PastelButtonColor;
-            AddShadow(newButton, new Color(0.08f, 0.08f, 0.22f, 0.48f), new Vector2(0f, -7f));
+            Sprite fridgeWord = GetFridgeWordSprite();
+            if (fridgeWord != null) ConfigureFridgeWordLayout(newButton);
+            buttonImage.sprite = fridgeWord != null ? fridgeWord : GetRoundedButtonSprite();
+            buttonImage.type = fridgeWord != null ? Image.Type.Simple : Image.Type.Sliced;
+            buttonImage.color = fridgeWord != null ? Color.white : PastelButtonColor;
+            if (fridgeWord == null)
+                AddShadow(newButton, new Color(0.08f, 0.08f, 0.22f, 0.48f), new Vector2(0f, -7f));
         }
 
         TextMeshProUGUI label = newButton.GetComponentInChildren<TextMeshProUGUI>();
@@ -558,22 +658,25 @@ public class TableController : MonoBehaviour
             label.fontSizeMin = 22;
             label.fontSizeMax = 32;
             label.alignment = TextAlignmentOptions.Center;
-            label.fontStyle = FontStyles.Bold;
+            label.fontStyle = GetFridgeWordSprite() != null ? FontStyles.Normal : FontStyles.Bold;
             label.color = new Color(0.16f, 0.12f, 0.28f, 1f);
             if (gameFont != null) label.font = gameFont;
+            label.outlineWidth = 0f;
         }
 
         Sprite wordIcon = null;
         if (word.useIcon && iconLibrary != null)
             iconLibrary.TryGetIcon(word.spriteKey, out wordIcon);
         newButton.GetComponent<WordButton>().Initialize(this, word.text, boardWord.categoryId,
-            PastelButtonColor, wordIcon);
+            GetFridgeWordSprite() != null ? Color.white : PastelButtonColor, wordIcon);
         return newButton;
     }
 
     private void ShowCompletedCategoryName(Transform row, string categoryId)
     {
         if (row == null || row.Find("CompletedCategoryLabel") != null) return;
+
+        bool usesFridgeArt = ApplyCompletedRowArt(row);
 
         GameObject labelObject = new GameObject("CompletedCategoryLabel",
             typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI), typeof(LayoutElement));
@@ -583,24 +686,39 @@ public class TableController : MonoBehaviour
         layoutElement.ignoreLayout = true;
 
         RectTransform rect = labelObject.GetComponent<RectTransform>();
-        rect.anchorMin = new Vector2(0.08f, 1f);
-        rect.anchorMax = new Vector2(0.92f, 1f);
-        rect.pivot = new Vector2(0.5f, 0f);
-        rect.anchoredPosition = new Vector2(0f, 5f);
-        rect.sizeDelta = new Vector2(0f, 34f);
+        if (usesFridgeArt)
+        {
+            // Match the small label area painted into category_orange.png.
+            rect.anchorMin = new Vector2(0f, 0f);
+            rect.anchorMax = new Vector2(0f, 0f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = new Vector2(140f, 187f);
+            rect.sizeDelta = new Vector2(100f, 32f);
+        }
+        else
+        {
+            rect.anchorMin = new Vector2(0.08f, 1f);
+            rect.anchorMax = new Vector2(0.92f, 1f);
+            rect.pivot = new Vector2(0.5f, 0f);
+            rect.anchoredPosition = new Vector2(0f, 5f);
+            rect.sizeDelta = new Vector2(0f, 34f);
+        }
 
         TextMeshProUGUI label = labelObject.GetComponent<TextMeshProUGUI>();
         label.text = categoryNames.TryGetValue(categoryId, out string categoryName)
-            ? categoryName.ToUpperInvariant()
-            : categoryId.ToUpperInvariant();
+            ? categoryName.ToLowerInvariant()
+            : categoryId.ToLowerInvariant();
         label.alignment = TextAlignmentOptions.Center;
-        label.fontSize = 25f;
+        label.enableAutoSizing = usesFridgeArt;
+        label.fontSizeMin = 13f;
+        label.fontSizeMax = usesFridgeArt ? 19f : 25f;
+        label.fontSize = usesFridgeArt ? 19f : 25f;
         label.fontStyle = FontStyles.Bold;
         label.color = new Color(0.12f, 0.09f, 0.28f, 1f);
         label.raycastTarget = false;
         if (gameFont != null) label.font = gameFont;
         label.outlineColor = new Color(1f, 1f, 1f, 0.72f);
-        label.outlineWidth = 0.12f;
+        label.outlineWidth = usesFridgeArt ? 0f : 0.12f;
 
         labelObject.transform.localScale = Vector3.one * 0.7f;
         CanvasGroup group = labelObject.AddComponent<CanvasGroup>();
@@ -609,9 +727,82 @@ public class TableController : MonoBehaviour
         group.DOFade(1f, 0.18f);
     }
 
+    private bool ApplyCompletedRowArt(Transform row)
+    {
+        Sprite completedArt = GetFridgeCompletedRowSprite();
+        RectTransform rowRect = row as RectTransform;
+        if (completedArt == null || rowRect == null) return false;
+
+        Image rowBackground = row.GetComponent<Image>();
+        if (rowBackground != null) rowBackground.color = Color.clear;
+
+        GameObject artObject = new GameObject("CompletedHolderArt",
+            typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(LayoutElement));
+        artObject.transform.SetParent(row, false);
+        artObject.transform.SetAsFirstSibling();
+
+        artObject.GetComponent<LayoutElement>().ignoreLayout = true;
+        Image artImage = artObject.GetComponent<Image>();
+        artImage.sprite = completedArt;
+        artImage.type = Image.Type.Simple;
+        artImage.color = Color.white;
+        artImage.raycastTarget = false;
+
+        RectTransform artRect = artObject.GetComponent<RectTransform>();
+        artRect.anchorMin = new Vector2(0f, 0f);
+        artRect.anchorMax = new Vector2(1f, 0f);
+        artRect.pivot = new Vector2(0.5f, 0f);
+        artRect.anchoredPosition = Vector2.zero;
+        float width = rowRect.rect.width > 1f ? rowRect.rect.width : 913f;
+        artRect.sizeDelta = new Vector2(0f, width * 255f / 1024f);
+
+        Sprite stickerSprite = GetFridgeCategoryStickerSprite();
+        if (stickerSprite != null)
+        {
+            GameObject stickerObject = new GameObject("CategorySticker",
+                typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(LayoutElement), typeof(CanvasGroup));
+            stickerObject.transform.SetParent(row, false);
+            stickerObject.transform.SetSiblingIndex(1);
+            stickerObject.GetComponent<LayoutElement>().ignoreLayout = true;
+
+            Image stickerImage = stickerObject.GetComponent<Image>();
+            stickerImage.sprite = stickerSprite;
+            stickerImage.type = Image.Type.Simple;
+            stickerImage.color = Color.white;
+            stickerImage.raycastTarget = false;
+
+            RectTransform stickerRect = stickerObject.GetComponent<RectTransform>();
+            stickerRect.anchorMin = new Vector2(0f, 0f);
+            stickerRect.anchorMax = new Vector2(0f, 0f);
+            stickerRect.pivot = new Vector2(0f, 0.5f);
+            stickerRect.anchoredPosition = new Vector2(28f, 187f);
+            stickerRect.sizeDelta = new Vector2(180f, 75f);
+
+            CanvasGroup stickerGroup = stickerObject.GetComponent<CanvasGroup>();
+            stickerGroup.alpha = 0f;
+            stickerRect.localScale = Vector3.one * 0.72f;
+            stickerRect.DOScale(1f, 0.24f).SetEase(Ease.OutBack);
+            stickerGroup.DOFade(1f, 0.18f);
+        }
+        return true;
+    }
+
     private void EndGame(bool won)
     {
+        if (gameEnded || endGameRoutine != null) return;
+
         gameEnded = true;
+        inputLocked = true;
+        float delay = won ? winResultDelay : loseResultDelay;
+        endGameRoutine = StartCoroutine(ShowEndGameAfterDelay(won, delay));
+    }
+
+    private IEnumerator ShowEndGameAfterDelay(bool won, float delay)
+    {
+        if (delay > 0f)
+            yield return new WaitForSecondsRealtime(delay);
+
+        endGameRoutine = null;
         if (won)
         {
             int lastLevelIndex = levelDatabase == null || levelDatabase.levels == null
@@ -737,15 +928,183 @@ public class TableController : MonoBehaviour
 
         Transform backgroundTransform = wordContainer.parent.Find("background");
         Image backgroundImage = backgroundTransform == null ? null : backgroundTransform.GetComponent<Image>();
-        Texture2D pastelTexture = Resources.Load<Texture2D>("Textures/PastelBackground");
-        if (backgroundImage != null && pastelTexture != null)
+        Sprite fridgeBackground = GetFridgePlainBackgroundSprite();
+        Texture2D pastelTexture = fridgeBackground == null
+            ? Resources.Load<Texture2D>("Textures/PastelBackground")
+            : null;
+        if (backgroundImage != null && (fridgeBackground != null || pastelTexture != null))
         {
-            backgroundImage.sprite = Sprite.Create(pastelTexture,
-                new Rect(0f, 0f, pastelTexture.width, pastelTexture.height),
-                new Vector2(0.5f, 0.5f), 100f);
+            backgroundImage.sprite = fridgeBackground != null
+                ? fridgeBackground
+                : Sprite.Create(pastelTexture,
+                    new Rect(0f, 0f, pastelTexture.width, pastelTexture.height),
+                    new Vector2(0.5f, 0.5f), 100f);
             backgroundImage.type = Image.Type.Simple;
             backgroundImage.color = Color.white;
+            backgroundImage.raycastTarget = false;
+            if (fridgeBackground != null) ApplyFridgeBackgroundLayers(backgroundImage);
         }
+    }
+
+    private static void ConfigureFridgeRowLayout(GameObject row)
+    {
+        HorizontalLayoutGroup layout = row.GetComponent<HorizontalLayoutGroup>();
+        if (layout != null)
+        {
+            // The painted holder already defines the four exact slot positions.
+            // A HorizontalLayoutGroup compresses them depending on parent width,
+            // so fridge rows use the source artwork coordinates instead.
+            layout.enabled = false;
+        }
+
+        ContentSizeFitter fitter = row.GetComponent<ContentSizeFitter>();
+        if (fitter != null) fitter.enabled = false;
+
+        RectTransform rect = row.transform as RectTransform;
+        if (rect != null) rect.sizeDelta = new Vector2(900f, 160f);
+    }
+
+    private static void AlignFridgeRowSlots(Transform row)
+    {
+        if (row == null) return;
+
+        RectTransform rowRect = row as RectTransform;
+        if (rowRect == null) return;
+        rowRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 900f);
+        rowRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 160f);
+
+        // Exact centers of the four gray slots in magnet_holder.png (1024 px).
+        float[] sourceCenters = { 137f, 383f, 629f, 875f };
+        List<RectTransform> wordRects = new List<RectTransform>(4);
+        for (int i = 0; i < row.childCount; i++)
+        {
+            Transform child = row.GetChild(i);
+            if (!child.gameObject.activeSelf || child.GetComponent<WordButton>() == null) continue;
+            if (child is RectTransform childRect) wordRects.Add(childRect);
+        }
+
+        for (int i = 0; i < wordRects.Count && i < sourceCenters.Length; i++)
+        {
+            RectTransform child = wordRects[i];
+            child.anchorMin = new Vector2(0.5f, 0.5f);
+            child.anchorMax = new Vector2(0.5f, 0.5f);
+            child.pivot = new Vector2(0.5f, 0.5f);
+            child.sizeDelta = new Vector2(215f, 140f);
+            child.anchoredPosition = new Vector2(
+                (sourceCenters[i] / 1024f - 0.5f) * 900f,
+                0f);
+        }
+    }
+
+    private static void ConfigureFridgeWordLayout(GameObject button)
+    {
+        RectTransform rect = button.transform as RectTransform;
+        if (rect != null) rect.sizeDelta = new Vector2(215f, 140f);
+
+        LayoutElement layoutElement = button.GetComponent<LayoutElement>();
+        if (layoutElement != null)
+        {
+            layoutElement.preferredWidth = 215f;
+            layoutElement.preferredHeight = 140f;
+        }
+    }
+
+    private void ApplyFridgeBackgroundLayers(Image backgroundImage)
+    {
+        Transform root = backgroundImage.transform;
+        AddStretchBackgroundLayer(root, "FridgeGradient", GetFridgeBackgroundSprite(), 0);
+        AddStretchBackgroundLayer(root, "FridgeShineLines", GetFridgeShineLinesSprite(), 1);
+        AddStretchBackgroundLayer(root, "FridgeShineFrame", GetFridgeShineFrameSprite(), 2);
+
+        AddDecorativeBackgroundLayer(root, "FridgeHandle", GetFridgeHandleSprite(),
+            new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f),
+            new Vector2(30f, 70f), new Vector2(480f, 88f), 3);
+        AddDecorativeBackgroundLayer(root, "EggMagnet", GetFridgeEggSprite(),
+            new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0.5f, 0.5f),
+            new Vector2(175f, 270f), new Vector2(120f, 151f), 4);
+        CreateBottomRightDecoration(root);
+    }
+
+    private static void CreateBottomRightDecoration(Transform root)
+    {
+        Transform existing = root.Find("BottomRightDecoration");
+        GameObject group = existing == null
+            ? new GameObject("BottomRightDecoration", typeof(RectTransform))
+            : existing.gameObject;
+        if (existing == null) group.transform.SetParent(root, false);
+
+        RectTransform groupRect = group.GetComponent<RectTransform>();
+        groupRect.anchorMin = groupRect.anchorMax = new Vector2(1f, 0f);
+        groupRect.pivot = new Vector2(1f, 0f);
+        groupRect.anchoredPosition = new Vector2(-35f, 190f);
+        groupRect.sizeDelta = new Vector2(200f, 180f);
+        group.transform.SetSiblingIndex(Mathf.Min(5, root.childCount - 1));
+
+        Image paper = GetOrCreateBackgroundImage(group.transform, "Paper");
+        paper.sprite = GetFridgePaperSprite();
+        paper.type = Image.Type.Simple;
+        paper.preserveAspect = true;
+        paper.color = Color.white;
+        RectTransform paperRect = paper.rectTransform;
+        paperRect.anchorMin = paperRect.anchorMax = new Vector2(0f, 0f);
+        paperRect.pivot = new Vector2(0.5f, 0.5f);
+        paperRect.anchoredPosition = new Vector2(60f, 60f);
+        paperRect.sizeDelta = new Vector2(118f, 118f);
+        paper.transform.SetAsFirstSibling();
+
+        Image orange = GetOrCreateBackgroundImage(group.transform, "Orange");
+        orange.sprite = GetFridgeOrangeSprite();
+        orange.type = Image.Type.Simple;
+        orange.preserveAspect = true;
+        orange.color = Color.white;
+        RectTransform orangeRect = orange.rectTransform;
+        orangeRect.anchorMin = orangeRect.anchorMax = new Vector2(0f, 0f);
+        orangeRect.pivot = new Vector2(0.5f, 0.5f);
+        orangeRect.anchoredPosition = new Vector2(99f, 115f);
+        orangeRect.sizeDelta = new Vector2(112f, 132f);
+        orange.transform.SetAsLastSibling();
+    }
+
+    private static void AddStretchBackgroundLayer(Transform parent, string name, Sprite sprite, int siblingIndex)
+    {
+        if (sprite == null) return;
+        Image image = GetOrCreateBackgroundImage(parent, name);
+        image.sprite = sprite;
+        image.type = Image.Type.Simple;
+        image.color = Color.white;
+        RectTransform rect = image.rectTransform;
+        Stretch(rect);
+        rect.SetSiblingIndex(Mathf.Min(siblingIndex, parent.childCount - 1));
+    }
+
+    private static void AddDecorativeBackgroundLayer(Transform parent, string name, Sprite sprite,
+        Vector2 anchorMin, Vector2 anchorMax, Vector2 pivot, Vector2 position, Vector2 size, int siblingIndex)
+    {
+        if (sprite == null) return;
+        Image image = GetOrCreateBackgroundImage(parent, name);
+        image.sprite = sprite;
+        image.type = Image.Type.Simple;
+        image.preserveAspect = true;
+        image.color = Color.white;
+        RectTransform rect = image.rectTransform;
+        rect.anchorMin = anchorMin;
+        rect.anchorMax = anchorMax;
+        rect.pivot = pivot;
+        rect.anchoredPosition = position;
+        rect.sizeDelta = size;
+        rect.SetSiblingIndex(Mathf.Min(siblingIndex, parent.childCount - 1));
+    }
+
+    private static Image GetOrCreateBackgroundImage(Transform parent, string name)
+    {
+        Transform existing = parent.Find(name);
+        GameObject layer = existing == null
+            ? new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image))
+            : existing.gameObject;
+        if (existing == null) layer.transform.SetParent(parent, false);
+        Image image = layer.GetComponent<Image>();
+        image.raycastTarget = false;
+        return image;
     }
 
     private void ClearBoard()
@@ -766,13 +1125,39 @@ public class TableController : MonoBehaviour
             // Keep the dark WordContainer visible above and below the rows.
             layout.padding = new RectOffset(18, 18, 50, 50);
             layout.childAlignment = TextAnchor.UpperCenter;
+            // Keep the holder's own aspect ratio; do not stretch rows to the
+            // WordContainer width because the four painted slots then drift.
+            layout.childControlWidth = false;
+            layout.childForceExpandWidth = false;
+            layout.childControlHeight = false;
+            layout.childForceExpandHeight = false;
         }
 
-        // Four 210px buttons + gaps + panel padding require this width.
+        bool usesFridgeArt = GetFridgeRowSprite() != null;
+        // Four buttons + gaps + panel padding require this width.
         // Applying it at runtime also overrides stale values from an open scene.
-        boardRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 1010f);
-        float targetBoardHeight = GetBoardHeightForRows(rowCount);
-        float boardCenterY = rowCount <= 4 ? 75f : rowCount == 5 ? 10f : -55f;
+        boardRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, usesFridgeArt ? 950f : 1010f);
+        if (usesFridgeArt)
+        {
+            // The parent layout may already have stretched newly instantiated
+            // rows before we disable width control above. Reset the live row
+            // instances afterwards so the holder remains inset and its slots
+            // stay aligned with the four word magnets.
+            for (int i = 0; i < wordContainer.childCount; i++)
+            {
+                Transform liveRow = wordContainer.GetChild(i);
+                ConfigureFridgeRowLayout(liveRow.gameObject);
+                AlignFridgeRowSlots(liveRow);
+            }
+        }
+
+        float rowHeight = usesFridgeArt ? 160f : rowRect.rect.height;
+        float targetBoardHeight = usesFridgeArt
+            ? GetFridgeBoardHeightForRows(rowCount)
+            : GetBoardHeightForRows(rowCount);
+        float boardCenterY = usesFridgeArt
+            ? (rowCount <= 4 ? 100f : rowCount == 5 ? 55f : 10f)
+            : (rowCount <= 4 ? 75f : rowCount == 5 ? 10f : -55f);
         boardRect.anchoredPosition = new Vector2(boardRect.anchoredPosition.x, boardCenterY);
         float padding = layout == null ? 0f : layout.padding.vertical;
         float minimumSpacing = 18f;
@@ -780,14 +1165,24 @@ public class TableController : MonoBehaviour
 
         if (layout != null && rowCount > 1)
         {
-            float freeSpace = targetBoardHeight - padding - rowCount * rowRect.rect.height;
+            float freeSpace = targetBoardHeight - padding - rowCount * rowHeight;
             spacing = Mathf.Max(minimumSpacing, freeSpace / (rowCount - 1));
             layout.spacing = spacing;
         }
 
-        float contentHeight = rowCount * rowRect.rect.height + Mathf.Max(0, rowCount - 1) * spacing + padding;
+        float contentHeight = rowCount * rowHeight + Mathf.Max(0, rowCount - 1) * spacing + padding;
         float height = Mathf.Max(targetBoardHeight, contentHeight);
         boardRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+
+        if (usesFridgeArt)
+        {
+            for (int i = 0; i < wordContainer.childCount; i++)
+            {
+                RectTransform liveRow = wordContainer.GetChild(i) as RectTransform;
+                if (liveRow != null) LayoutRebuilder.ForceRebuildLayoutImmediate(liveRow);
+            }
+            LayoutRebuilder.ForceRebuildLayoutImmediate(boardRect);
+        }
     }
 
     private static float GetBoardHeightForRows(int rowCount)
@@ -837,6 +1232,7 @@ public class TableController : MonoBehaviour
         if (goldText == null) goldText = gameHud.Find("TopBar/ProgressCard/GoldDisplay/GoldText")?.GetComponent<TextMeshProUGUI>();
         if (levelLabel == null) levelLabel = gameHud.Find("LevelRibbon/LevelLabel")?.GetComponent<TextMeshProUGUI>();
         if (hintCountText == null) hintCountText = gameHud.Find("BoosterArea/HintButton/CountBadge/Count")?.GetComponent<TextMeshProUGUI>();
+        if (GetFridgeRowSprite() != null) CreateFridgeTopHud();
         if (hintCountText != null)
             hintCountText.text = (playerSaveData ?? SaveSystem.Current).hintCount.ToString();
         if (goldText != null)
@@ -884,7 +1280,189 @@ public class TableController : MonoBehaviour
         }
         if (winScreen != null) winScreen.SetActive(false);
         if (loseScreen != null) loseScreen.SetActive(false);
+        ApplyFridgeProgressArt();
         gameHud.SetAsLastSibling();
+    }
+
+    private void CreateFridgeTopHud()
+    {
+        Transform oldTopBar = gameHud.Find("TopBar");
+        if (oldTopBar != null) oldTopBar.gameObject.SetActive(false);
+        SetHudObjectActive("RibbonLeft", false);
+        SetHudObjectActive("RibbonRight", false);
+        SetHudObjectActive("LevelRibbon", false);
+        SetHudObjectActive("BoosterArea", false);
+
+        Transform existing = gameHud.Find("FridgeTopHud");
+        GameObject hudObject = existing == null ? CreateRect("FridgeTopHud", gameHud) : existing.gameObject;
+        RectTransform hudRect = hudObject.GetComponent<RectTransform>();
+        hudRect.anchorMin = new Vector2(0f, 1f);
+        hudRect.anchorMax = new Vector2(1f, 1f);
+        hudRect.pivot = new Vector2(0.5f, 1f);
+        hudRect.anchoredPosition = Vector2.zero;
+        hudRect.sizeDelta = new Vector2(0f, 285f);
+
+        TextMeshProUGUI movesTitle = CreateLabel("MovesTitle", hudRect, "moves", TextAlignmentOptions.Center);
+        SetAbsoluteTopRect(movesTitle.rectTransform, new Vector2(38f, -8f), new Vector2(190f, 58f), new Vector2(0f, 1f));
+        StyleFridgeTitle(movesTitle, 48f);
+        movesTitle.color = new Color(0.52f, 0.31f, 0.66f, 1f);
+
+        GameObject movesCardObject = CreatePanel("MovesMagnet", hudRect, Color.white);
+        Image movesCard = movesCardObject.GetComponent<Image>();
+        movesCard.sprite = GetFridgeWordSprite();
+        movesCard.type = Image.Type.Simple;
+        movesCard.color = Color.white;
+        SetAbsoluteTopRect(movesCard.rectTransform, new Vector2(55f, -73f), new Vector2(145f, 92f), new Vector2(0f, 1f));
+        moveCountText = CreateLabel("MoveCount", movesCard.transform, "0", TextAlignmentOptions.Center);
+        moveCountText.fontSize = 48f;
+        moveCountText.color = new Color(0.42f, 0.30f, 0.14f, 1f);
+        if (displayFont != null) moveCountText.font = displayFont;
+        Stretch(moveCountText.rectTransform);
+
+        levelLabel = CreateLabel("LevelLabel", hudRect, "Level <color=#D69535>1</color>", TextAlignmentOptions.Center);
+        levelLabel.rectTransform.anchorMin = new Vector2(0.27f, 1f);
+        levelLabel.rectTransform.anchorMax = new Vector2(0.73f, 1f);
+        levelLabel.rectTransform.pivot = new Vector2(0.5f, 1f);
+        levelLabel.rectTransform.anchoredPosition = new Vector2(0f, -4f);
+        levelLabel.rectTransform.sizeDelta = new Vector2(0f, 70f);
+        StyleFridgeTitle(levelLabel, 64f);
+
+        GameObject progressCardObject = CreatePanel(
+            "ProgressCard",
+            hudRect,
+            new Color(0.94f, 0.94f, 0.90f, 1f));
+        RectTransform progressCardRect = progressCardObject.GetComponent<RectTransform>();
+        progressCardRect.anchorMin = progressCardRect.anchorMax = new Vector2(0.5f, 1f);
+        progressCardRect.pivot = new Vector2(0.5f, 1f);
+        progressCardRect.anchoredPosition = new Vector2(0f, -108f);
+        progressCardRect.sizeDelta = new Vector2(455f, 80f);
+        progressCardObject.GetComponent<Image>().raycastTarget = false;
+        AddShadow(progressCardObject, new Color(0f, 0f, 0f, 0.24f), new Vector2(0f, -5f));
+
+        GameObject trackObject = CreateRect("ProgressTrack", progressCardRect);
+        Image trackImage = trackObject.AddComponent<Image>();
+        trackImage.sprite = GetFridgeProgressTrackSprite();
+        trackImage.type = Image.Type.Simple;
+        trackImage.color = Color.white;
+        trackImage.raycastTarget = false;
+        RectTransform trackRect = trackObject.GetComponent<RectTransform>();
+        trackRect.anchorMin = trackRect.anchorMax = new Vector2(0.5f, 0.5f);
+        trackRect.pivot = new Vector2(0.5f, 0.5f);
+        trackRect.anchoredPosition = new Vector2(0f, -1f);
+        trackRect.sizeDelta = new Vector2(405f, 50f);
+
+        GameObject fillObject = CreateRect("Fill", trackRect);
+        progressFill = fillObject.AddComponent<Image>();
+        progressFill.sprite = GetFridgeProgressFillSprite();
+        progressFill.type = Image.Type.Filled;
+        progressFill.fillMethod = Image.FillMethod.Horizontal;
+        progressFill.fillOrigin = (int)Image.OriginHorizontal.Left;
+        progressFill.color = Color.white;
+        progressFill.raycastTarget = false;
+        Stretch(progressFill.rectTransform);
+
+        GameObject knobObject = CreateRect("Knob", trackRect);
+        Image knobImage = knobObject.AddComponent<Image>();
+        knobImage.sprite = GetFridgeProgressOrangeSprite();
+        knobImage.type = Image.Type.Simple;
+        knobImage.preserveAspect = true;
+        knobImage.raycastTarget = false;
+        progressKnob = knobObject.GetComponent<RectTransform>();
+        progressKnob.anchorMin = progressKnob.anchorMax = new Vector2(0f, 0.5f);
+        progressKnob.pivot = new Vector2(0.5f, 0.5f);
+        progressKnob.anchoredPosition = Vector2.zero;
+        progressKnob.sizeDelta = new Vector2(58f, 64f);
+        progressKnobText = CreateLabel("Value", progressKnob, "0", TextAlignmentOptions.Center);
+        progressKnobText.fontSize = 22f;
+        progressKnobText.color = Color.white;
+        if (displayFont != null) progressKnobText.font = displayFont;
+        SetAnchors(progressKnobText.rectTransform, new Vector2(0.22f, 0.13f), new Vector2(0.78f, 0.70f));
+
+        GameObject settingsObject = CreatePanel("SettingsButton", hudRect, Color.white);
+        RectTransform settingsRect = settingsObject.GetComponent<RectTransform>();
+        SetAbsoluteTopRect(settingsRect, new Vector2(-38f, -25f), new Vector2(135f, 135f), new Vector2(1f, 1f));
+        settingsRect.pivot = new Vector2(1f, 1f);
+        Button settingsButton = settingsObject.AddComponent<Button>();
+        settingsButton.targetGraphic = settingsObject.GetComponent<Image>();
+        AddShadow(settingsObject, new Color(0f, 0f, 0f, 0.28f), new Vector2(0f, -6f));
+        GameObject gearObject = CreateRect("Gear", settingsRect);
+        Image gear = gearObject.AddComponent<Image>();
+        gear.sprite = GetGearIconSprite();
+        gear.preserveAspect = true;
+        gear.color = new Color(0.28f, 0.31f, 0.34f, 1f);
+        gear.raycastTarget = false;
+        SetAnchors(gear.rectTransform, new Vector2(0.20f, 0.18f), new Vector2(0.80f, 0.82f));
+
+        progressText = null;
+        goldText = null;
+        fridgeHudActive = true;
+        hudObject.transform.SetAsLastSibling();
+    }
+
+    private void SetHudObjectActive(string objectName, bool active)
+    {
+        Transform item = gameHud.Find(objectName);
+        if (item != null) item.gameObject.SetActive(active);
+    }
+
+    private void StyleFridgeTitle(TextMeshProUGUI label, float fontSize)
+    {
+        label.fontSize = fontSize;
+        label.fontStyle = FontStyles.Normal;
+        label.color = new Color(0.72f, 0.25f, 0.62f, 1f);
+        label.outlineWidth = 0f;
+        if (displayFont != null) label.font = displayFont;
+        Shadow shadow = label.GetComponent<Shadow>();
+        if (shadow == null) shadow = label.gameObject.AddComponent<Shadow>();
+        shadow.effectColor = new Color(0.20f, 0.18f, 0.30f, 0.48f);
+        shadow.effectDistance = new Vector2(2f, -4f);
+        shadow.useGraphicAlpha = true;
+    }
+
+    private static void SetAbsoluteTopRect(RectTransform rect, Vector2 position, Vector2 size, Vector2 anchor)
+    {
+        rect.anchorMin = rect.anchorMax = anchor;
+        rect.pivot = anchor;
+        rect.anchoredPosition = position;
+        rect.sizeDelta = size;
+    }
+
+    private void ApplyFridgeProgressArt()
+    {
+        Sprite trackSprite = GetFridgeProgressTrackSprite();
+        Sprite fillSprite = GetFridgeProgressFillSprite();
+        Transform trackTransform = gameHud == null ? null : gameHud.Find("TopBar/ProgressCard/ProgressTrack");
+        Image trackImage = trackTransform == null ? null : trackTransform.GetComponent<Image>();
+
+        if (trackImage != null && trackSprite != null)
+        {
+            trackImage.sprite = trackSprite;
+            trackImage.type = Image.Type.Simple;
+            trackImage.color = Color.white;
+        }
+
+        if (progressFill != null && fillSprite != null)
+        {
+            progressFill.sprite = fillSprite;
+            progressFill.type = Image.Type.Filled;
+            progressFill.fillMethod = Image.FillMethod.Horizontal;
+            progressFill.fillOrigin = (int)Image.OriginHorizontal.Left;
+            progressFill.color = Color.white;
+        }
+    }
+
+    private static float GetFridgeBoardHeightForRows(int rowCount)
+    {
+        switch (rowCount)
+        {
+            case 1: return 320f;
+            case 2: return 560f;
+            case 3: return 800f;
+            case 4: return 1040f;
+            case 5: return 1230f;
+            case 6: return 1430f;
+            default: return 1430f + (rowCount - 6) * 180f;
+        }
     }
 
     private void RefreshIndicators()
@@ -898,9 +1476,12 @@ public class TableController : MonoBehaviour
             progressKnob.anchoredPosition = Vector2.zero;
         }
         if (progressKnobText != null) progressKnobText.text = categoriesCompleted.ToString();
-        if (moveCountText != null) moveCountText.text = $"MOVES\n{moveCount}";
+        if (moveCountText != null) moveCountText.text = fridgeHudActive ? moveCount.ToString() : $"MOVES\n{moveCount}";
         if (goldText != null) goldText.text = SaveSystem.Current.gold.ToString();
-        if (levelLabel != null) levelLabel.text = $"LEVEL {currentLevelNumber}";
+        if (levelLabel != null)
+            levelLabel.text = fridgeHudActive
+                ? $"Level <color=#D69535>{currentLevelNumber}</color>"
+                : $"LEVEL {currentLevelNumber}";
         if (progressDotsParent != null && progressDots.Count != currentLevelRows)
             CreateProgressDots(progressDotsParent, currentLevelRows);
         for (int i = 0; i < progressDots.Count; i++)
@@ -1100,6 +1681,111 @@ public class TableController : MonoBehaviour
     {
         if (roundedButtonSprite == null) roundedButtonSprite = CreateRoundedSprite(64, 18);
         return roundedButtonSprite;
+    }
+
+    private static Sprite GetFridgeBackgroundSprite()
+    {
+        if (fridgeBackgroundSprite == null)
+            fridgeBackgroundSprite = Resources.Load<Sprite>("Art/Fridge/Background/fridge_gradient");
+        return fridgeBackgroundSprite;
+    }
+
+    private static Sprite GetFridgePlainBackgroundSprite()
+    {
+        if (fridgePlainBackgroundSprite == null)
+            fridgePlainBackgroundSprite = Resources.Load<Sprite>("Art/Fridge/Background/fridge_plain_bg");
+        return fridgePlainBackgroundSprite;
+    }
+
+    private static Sprite GetFridgeShineFrameSprite()
+    {
+        if (fridgeShineFrameSprite == null)
+            fridgeShineFrameSprite = Resources.Load<Sprite>("Art/Fridge/Background/fridge_shine_frame");
+        return fridgeShineFrameSprite;
+    }
+
+    private static Sprite GetFridgeShineLinesSprite()
+    {
+        if (fridgeShineLinesSprite == null)
+            fridgeShineLinesSprite = Resources.Load<Sprite>("Art/Fridge/Background/fridge_shine_lines");
+        return fridgeShineLinesSprite;
+    }
+
+    private static Sprite GetFridgeHandleSprite()
+    {
+        if (fridgeHandleSprite == null)
+            fridgeHandleSprite = Resources.Load<Sprite>("Art/Fridge/Background/fridge_handle");
+        return fridgeHandleSprite;
+    }
+
+    private static Sprite GetFridgePaperSprite()
+    {
+        if (fridgePaperSprite == null)
+            fridgePaperSprite = Resources.Load<Sprite>("Art/Fridge/UI/paper");
+        return fridgePaperSprite;
+    }
+
+    private static Sprite GetFridgeEggSprite()
+    {
+        if (fridgeEggSprite == null)
+            fridgeEggSprite = Resources.Load<Sprite>("Art/Fridge/Magnets/magnet_egg");
+        return fridgeEggSprite;
+    }
+
+    private static Sprite GetFridgeOrangeSprite()
+    {
+        if (fridgeOrangeSprite == null)
+            fridgeOrangeSprite = Resources.Load<Sprite>("Art/Fridge/Magnets/magnet_orange");
+        return fridgeOrangeSprite;
+    }
+
+    private static Sprite GetFridgeRowSprite()
+    {
+        if (fridgeRowSprite == null)
+            fridgeRowSprite = Resources.Load<Sprite>("Art/Fridge/Rows/magnet_holder");
+        return fridgeRowSprite;
+    }
+
+    private static Sprite GetFridgeCompletedRowSprite()
+    {
+        if (fridgeCompletedRowSprite == null)
+            fridgeCompletedRowSprite = Resources.Load<Sprite>("Art/Fridge/Rows/magnet_holder_category");
+        return fridgeCompletedRowSprite;
+    }
+
+    private static Sprite GetFridgeCategoryStickerSprite()
+    {
+        if (fridgeCategoryStickerSprite == null)
+            fridgeCategoryStickerSprite = Resources.Load<Sprite>("Art/Fridge/Rows/category_orange");
+        return fridgeCategoryStickerSprite;
+    }
+
+    private static Sprite GetFridgeWordSprite()
+    {
+        if (fridgeWordSprite == null)
+            fridgeWordSprite = Resources.Load<Sprite>("Art/Fridge/Magnets/magnet_word");
+        return fridgeWordSprite;
+    }
+
+    private static Sprite GetFridgeProgressTrackSprite()
+    {
+        if (fridgeProgressTrackSprite == null)
+            fridgeProgressTrackSprite = Resources.Load<Sprite>("Art/Fridge/UI/progress_dark");
+        return fridgeProgressTrackSprite;
+    }
+
+    private static Sprite GetFridgeProgressFillSprite()
+    {
+        if (fridgeProgressFillSprite == null)
+            fridgeProgressFillSprite = Resources.Load<Sprite>("Art/Fridge/UI/progress_green");
+        return fridgeProgressFillSprite;
+    }
+
+    private static Sprite GetFridgeProgressOrangeSprite()
+    {
+        if (fridgeProgressOrangeSprite == null)
+            fridgeProgressOrangeSprite = Resources.Load<Sprite>("Art/Fridge/UI/progress_orange");
+        return fridgeProgressOrangeSprite;
     }
 
     private static Sprite GetBulbIconSprite()
