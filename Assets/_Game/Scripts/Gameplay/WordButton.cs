@@ -5,64 +5,133 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Image), typeof(Button), typeof(CanvasGroup))]
 public class WordButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public string CategoryId { get; private set; }
     public bool IsMatched { get; private set; }
+    public RowController Row { get; private set; }
+    public RectTransform RectTransform => transform as RectTransform;
+
+    [Header("Prefab References")]
+    [SerializeField] private Image background;
+    [SerializeField] private TextMeshProUGUI label;
+    [SerializeField] private Image iconImage;
+    [SerializeField] private Button button;
+    [SerializeField] private CanvasGroup canvasGroup;
 
     private TableController controller;
-    private Image background;
-    private TextMeshProUGUI label;
-    private Image iconImage;
     private Canvas rootCanvas;
-    private CanvasGroup canvasGroup;
     private RectTransform dragGhost;
     private Color defaultColor;
     private bool isDragging;
     private bool suppressNextClick;
 
-    private void Awake()
+    public void AssignRow(RowController row, TableController owner)
     {
-        CacheReferences();
-    }
-
-    private void CacheReferences()
-    {
-        background = GetComponent<Image>();
-        label = GetComponentInChildren<TextMeshProUGUI>();
-        rootCanvas = GetComponentInParent<Canvas>();
-        canvasGroup = GetComponent<CanvasGroup>();
-        if (canvasGroup == null) canvasGroup = gameObject.AddComponent<CanvasGroup>();
+        Row = row;
+        controller = owner;
+        rootCanvas = owner == null ? null : owner.GameplayCanvas;
     }
 
     public void Initialize(TableController owner, string text, string categoryId, Color color, Sprite icon = null)
     {
-        if (background == null || label == null) CacheReferences();
+        if (!HasRequiredReferences()) return;
+
         controller = owner;
+        rootCanvas = owner == null ? null : owner.GameplayCanvas;
         CategoryId = categoryId;
+        IsMatched = false;
         defaultColor = color;
         background.color = color;
+        button.interactable = true;
+        canvasGroup.alpha = 1f;
+        gameObject.SetActive(true);
         label.text = text;
+        ShowIcon(icon);
+    }
+
+    public void ClearContent()
+    {
+        transform.DOKill();
+        CategoryId = string.Empty;
+        IsMatched = false;
+        isDragging = false;
+        suppressNextClick = false;
+        if (label != null)
+        {
+            label.text = string.Empty;
+            label.gameObject.SetActive(true);
+        }
+        if (iconImage != null)
+        {
+            iconImage.sprite = null;
+            iconImage.gameObject.SetActive(false);
+        }
+        if (button != null) button.interactable = false;
+        if (canvasGroup != null)
+        {
+            canvasGroup.alpha = 1f;
+            canvasGroup.blocksRaycasts = true;
+        }
+        transform.localScale = Vector3.one;
+        gameObject.SetActive(false);
+    }
+
+    public void SwapContentWith(WordButton other)
+    {
+        if (other == null || other == this || !HasRequiredReferences() || !other.HasRequiredReferences()) return;
+
+        string thisText = label.text;
+        string thisCategory = CategoryId;
+        Sprite thisIcon = iconImage.sprite;
+        bool thisUsesIcon = iconImage.gameObject.activeSelf;
+        Color thisColor = defaultColor;
+
+        string otherText = other.label.text;
+        string otherCategory = other.CategoryId;
+        Sprite otherIcon = other.iconImage.sprite;
+        bool otherUsesIcon = other.iconImage.gameObject.activeSelf;
+        Color otherColor = other.defaultColor;
+
+        ApplyContent(otherText, otherCategory, otherColor, otherUsesIcon ? otherIcon : null);
+        other.ApplyContent(thisText, thisCategory, thisColor, thisUsesIcon ? thisIcon : null);
+    }
+
+    public void ConfigureAsGhost()
+    {
+        enabled = false;
+        if (button != null) button.enabled = false;
+        if (canvasGroup != null)
+        {
+            canvasGroup.alpha = 1f;
+            canvasGroup.blocksRaycasts = false;
+            canvasGroup.interactable = false;
+        }
+    }
+
+    private void ApplyContent(string text, string categoryId, Color color, Sprite icon)
+    {
+        CategoryId = categoryId;
+        IsMatched = false;
+        defaultColor = color;
+        name = $"Word - {text}";
+        label.text = text;
+        background.color = color;
+        button.interactable = true;
         ShowIcon(icon);
     }
 
     private void ShowIcon(Sprite icon)
     {
+        bool hasIcon = icon != null;
         if (iconImage == null)
         {
-            GameObject iconObject = new GameObject("WordIcon", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-            iconObject.transform.SetParent(transform, false);
-            iconImage = iconObject.GetComponent<Image>();
-            iconImage.raycastTarget = false;
-            iconImage.preserveAspect = true;
-            RectTransform rect = iconImage.rectTransform;
-            rect.anchorMin = new Vector2(0.20f, 0.12f);
-            rect.anchorMax = new Vector2(0.80f, 0.88f);
-            rect.offsetMin = Vector2.zero;
-            rect.offsetMax = Vector2.zero;
+            Debug.LogError($"{name} is missing its Icon Image reference. Run Tools > Word Game > Setup Word Button Prefab.", this);
+            label.gameObject.SetActive(true);
+            return;
         }
 
-        bool hasIcon = icon != null;
         iconImage.sprite = icon;
         iconImage.gameObject.SetActive(hasIcon);
         label.gameObject.SetActive(!hasIcon);
@@ -88,7 +157,6 @@ public class WordButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             return;
         }
 
-        rootCanvas = GetComponentInParent<Canvas>();
         if (rootCanvas == null || !controller.BeginWordDrag()) return;
 
         isDragging = true;
@@ -147,8 +215,8 @@ public class WordButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         EventSystem.current.RaycastAll(eventData, results);
         foreach (RaycastResult result in results)
         {
-            WordButton target = result.gameObject.GetComponentInParent<WordButton>();
-            if (target != null && target != this) return target;
+            if (result.gameObject.TryGetComponent(out WordButton target) && target != this)
+                return target;
         }
 
         return null;
@@ -171,13 +239,20 @@ public class WordButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         background.color = matched && !usesIllustratedMagnet
             ? new Color(0.55f, 0.88f, 0.68f, 1f)
             : defaultColor;
-        Button button = GetComponent<Button>();
         if (button != null) button.interactable = !matched;
     }
 
     public void SetVisualAlpha(float alpha)
     {
-        if (canvasGroup == null) CacheReferences();
-        canvasGroup.alpha = alpha;
+        if (canvasGroup != null) canvasGroup.alpha = alpha;
+    }
+
+    private bool HasRequiredReferences()
+    {
+        if (background != null && label != null && iconImage != null && button != null && canvasGroup != null)
+            return true;
+
+        Debug.LogError($"{name} has unassigned WordButton prefab references. Run Tools > Word Game > Setup Word Button Prefab.", this);
+        return false;
     }
 }

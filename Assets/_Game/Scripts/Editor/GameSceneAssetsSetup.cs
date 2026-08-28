@@ -33,20 +33,43 @@ public static class GameSceneAssetsSetup
         bool openedForSetup = !gameScene.IsValid() || !gameScene.isLoaded;
         if (openedForSetup) gameScene = EditorSceneManager.OpenScene(GamePath, OpenSceneMode.Additive);
 
-        TableController controller = gameScene.GetRootGameObjects()
+        TableController[] controllers = gameScene.GetRootGameObjects()
             .SelectMany(root => root.GetComponentsInChildren<TableController>(true))
-            .FirstOrDefault();
+            .ToArray();
+        TableController controller = controllers.FirstOrDefault(item => item.gameObject.name == "TableController")
+                                     ?? controllers.FirstOrDefault();
         Canvas canvas = gameScene.GetRootGameObjects()
             .SelectMany(root => root.GetComponentsInChildren<Canvas>(true))
             .FirstOrDefault();
 
         bool changed = false;
+        foreach (TableController duplicate in controllers.Where(item => item != controller))
+        {
+            Object.DestroyImmediate(duplicate);
+            changed = true;
+        }
+
         Transform existingHud = canvas == null ? null : canvas.transform.Find("GameHUD");
         if (existingHud != null && existingHud.Find("FlatDesignV12") == null)
         {
             Object.DestroyImmediate(existingHud.gameObject);
             existingHud = null;
             changed = true;
+        }
+
+        if (existingHud is RectTransform existingHudRect)
+        {
+            if (controller != null)
+                changed = controller.ApplyEditorPreviewSafeArea() || changed;
+
+            Transform fridgeHud = existingHudRect.Find("FridgeTopHud");
+            if (fridgeHud != null && !fridgeHud.gameObject.activeSelf)
+            {
+                fridgeHud.gameObject.SetActive(true);
+                changed = true;
+            }
+
+            existingHudRect.SetAsLastSibling();
         }
 
         if (controller != null && canvas != null && existingHud == null)
@@ -56,6 +79,17 @@ public static class GameSceneAssetsSetup
         }
         else if (controller != null && canvas != null)
             changed = EnsureGoldDisplay(controller, canvas) || changed;
+
+        // The fridge chrome is static scene content. Bake it once so artists
+        // can move and style it directly in Game.unity instead of waiting for
+        // TableController.Start to generate it in Play Mode.
+        if (controller != null && canvas != null && !controller.HasBakedStaticGameSceneAssets())
+        {
+            controller.BakeStaticGameSceneAssets();
+            EditorUtility.SetDirty(controller);
+            EditorSceneManager.MarkSceneDirty(gameScene);
+            changed = true;
+        }
 
         if (changed) EditorSceneManager.SaveScene(gameScene);
 

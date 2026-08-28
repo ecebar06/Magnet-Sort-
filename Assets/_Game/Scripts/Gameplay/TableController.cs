@@ -10,12 +10,20 @@ public class TableController : MonoBehaviour
 {
     [Header("Board Data")]
     public TextAsset jsonFile;
-    public GameObject buttonPrefab;
-    public GameObject rowPrefab;
     public Transform wordContainer;
+    [Tooltip("Rows authored in Game.unity. Gameplay reuses these objects and never instantiates rows at runtime.")]
+    [SerializeField] private RowController[] rowPool = new RowController[6];
 
     [Header("Level")]
     [Min(0)] public int startingLevelIndex = 0;
+    [Tooltip("Zero-based level index shown in the Game scene while not playing.")]
+    [Min(0)] public int editorPreviewLevelIndex = 0;
+
+    [Header("Editor Scene Preview")]
+    [Tooltip("Normalized safe-area minimum used only while editing Game.unity. Runtime uses the real device safe area.")]
+    public Vector2 editorPreviewSafeAreaMin = new Vector2(0f, 0.02f);
+    [Tooltip("Normalized safe-area maximum used only while editing Game.unity. Lower Y moves the top HUD below a notch/punch hole.")]
+    public Vector2 editorPreviewSafeAreaMax = new Vector2(1f, 0.965f);
 
     [HideInInspector] public int currentLevelRows;
 
@@ -47,6 +55,7 @@ public class TableController : MonoBehaviour
     [SerializeField, Min(0f)] private float loseResultDelay = 1.2f;
 
     private readonly List<Image> progressDots = new List<Image>();
+    private readonly List<RowController> activeRows = new List<RowController>();
     private readonly Dictionary<string, string> categoryNames = new Dictionary<string, string>();
     private readonly Dictionary<string, Category> categoryDefinitions = new Dictionary<string, Category>();
     private readonly Queue<BoardWord> pendingWords = new Queue<BoardWord>();
@@ -72,26 +81,42 @@ public class TableController : MonoBehaviour
     private static Sprite fridgeEggSprite;
     private static Sprite fridgeOrangeSprite;
     private static Sprite fridgeRowSprite;
-    private static Sprite fridgeCompletedRowSprite;
-    private static Sprite fridgeCategoryStickerSprite;
     private static Sprite fridgeWordSprite;
     private static Sprite fridgeProgressTrackSprite;
     private static Sprite fridgeProgressFillSprite;
     private static Sprite fridgeProgressOrangeSprite;
+    private static Sprite fridgeMovesSlotSprite;
+    private static Sprite fridgeProgressSlotSprite;
+    private static Sprite fridgeSettingsSlotSprite;
     private static Sprite bulbIconSprite;
     private static Sprite gearIconSprite;
     private static Sprite lockIconSprite;
-    private static readonly Color PastelButtonColor = new Color(1.00f, 0.96f, 0.84f, 1f);
     private WordIconLibrary iconLibrary;
-    private TMP_FontAsset gameFont;
-    private TMP_FontAsset displayFont;
+    [Header("Font Assets")]
+    [Tooltip("Pre-generated TMP SDF used by words and regular UI text.")]
+    [SerializeField] private TMP_FontAsset gameFont;
+    [Tooltip("Pre-generated TMP SDF used by the fridge header, moves and level text.")]
+    [SerializeField] private TMP_FontAsset displayFont;
     private LevelDatabase levelDatabase;
     private int currentLevelNumber = 1;
     private int totalCategoryCount;
     private int activeLevelIndex;
     private PlayerSaveData playerSaveData;
+    private Canvas gameplayCanvas;
+    private Vector2 progressKnobScenePosition;
+    private float progressKnobSceneAnchorX;
+    private bool progressKnobLayoutCached;
 
     public bool IsInputLocked => inputLocked || gameEnded || transformationInProgress;
+    public Canvas GameplayCanvas
+    {
+        get
+        {
+            if (gameplayCanvas == null && wordContainer != null)
+                gameplayCanvas = wordContainer.GetComponentInParent<Canvas>();
+            return gameplayCanvas;
+        }
+    }
 
     private class BoardWord
     {
@@ -111,6 +136,16 @@ public class TableController : MonoBehaviour
         instance = this;
     }
 
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (!Application.isPlaying && gameObject.scene.IsValid())
+        {
+            ApplyEditorPreviewSafeArea();
+        }
+    }
+#endif
+
     private void Start()
     {
         if (instance != this) return;
@@ -119,8 +154,7 @@ public class TableController : MonoBehaviour
         if (wordContainer != null) wordContainer.gameObject.SetActive(true);
         playerSaveData = SaveSystem.Load();
         LoadGameFont();
-        ApplyGameFontToScene();
-        CreateScreenChrome();
+        BindScreenChrome();
         LoadLevel(Mathf.Max(startingLevelIndex, playerSaveData.currentLevelIndex));
     }
 
@@ -132,9 +166,9 @@ public class TableController : MonoBehaviour
             endGameRoutine = null;
         }
 
-        if (buttonPrefab == null || rowPrefab == null || wordContainer == null)
+        if (wordContainer == null || rowPool == null || rowPool.Length == 0 || rowPool.Any(row => row == null))
         {
-            Debug.LogError("TableController references are not fully assigned.", this);
+            Debug.LogError("TableController needs its scene-authored Row Pool references. Run Tools > Word Game > Bake Rows Into Game Scene.", this);
             return;
         }
 
@@ -206,6 +240,11 @@ public class TableController : MonoBehaviour
 
         int requestedRows = level.visibleRowCount > 0 ? level.visibleRowCount : selectedCategories.Count;
         currentLevelRows = Mathf.Clamp(requestedRows, 1, Mathf.Max(1, allPlayableWords.Count / 4));
+        if (currentLevelRows > rowPool.Length)
+        {
+            Debug.LogError($"Level {level.levelNumber} needs {currentLevelRows} visible rows, but Game.unity contains only {rowPool.Length}. Bake a larger row pool in the scene.", this);
+            return;
+        }
         int visibleWordCount = currentLevelRows * 4;
 
         List<BoardWord> shuffledWords = allPlayableWords.Take(visibleWordCount).ToList();
@@ -217,86 +256,21 @@ public class TableController : MonoBehaviour
         const int columns = 4;
         for (int rowIndex = 0; rowIndex < currentLevelRows; rowIndex++)
         {
-            GameObject newRow = Instantiate(rowPrefab, wordContainer);
-            newRow.name = $"Row {rowIndex + 1}";
-            Image rowBackground = newRow.GetComponent<Image>();
-            if (rowBackground != null)
+            RowController rowController = rowPool[rowIndex];
+            rowController.gameObject.SetActive(true);
+            if (!rowController.HasFourSlots())
             {
-                Color[] rowColors =
-                {
-                    new Color(0.20f, 0.65f, 0.98f, 1f),
-                    new Color(0.52f, 0.34f, 0.88f, 1f),
-                    new Color(1.00f, 0.69f, 0.12f, 1f),
-                    new Color(0.22f, 0.82f, 0.67f, 1f),
-                    new Color(0.98f, 0.42f, 0.58f, 1f)
-                };
-                Sprite fridgeRow = GetFridgeRowSprite();
-                if (fridgeRow != null)
-                {
-                    ConfigureFridgeRowLayout(newRow);
-                    rowBackground.sprite = fridgeRow;
-                    rowBackground.type = Image.Type.Simple;
-                    rowBackground.color = new Color(0.78f, 1f, 1f, 1f);
-                }
-                else
-                {
-                    rowBackground.sprite = GetRoundedPanelSprite();
-                    rowBackground.type = Image.Type.Sliced;
-                    rowBackground.color = rowColors[rowIndex % rowColors.Length];
-                    AddShadow(newRow, new Color(0.12f, 0.08f, 0.30f, 0.34f), new Vector2(0f, -7f));
-                    Outline rowOutline = newRow.GetComponent<Outline>();
-                    if (rowOutline == null) rowOutline = newRow.AddComponent<Outline>();
-                    rowOutline.effectColor = new Color(0.08f, 0.10f, 0.28f, 0.82f);
-                    rowOutline.effectDistance = new Vector2(3f, -3f);
-                    rowOutline.useGraphicAlpha = true;
-                }
+                Debug.LogError($"{rowController.name} needs four assigned WordButton slots. Run Tools > Word Game > Setup Row Prefab, then bake the rows again.", rowController);
+                return;
             }
+
+            rowController.PrepareForLevel(this);
+            activeRows.Add(rowController);
 
             for (int columnIndex = 0; columnIndex < columns; columnIndex++)
             {
                 BoardWord boardWord = shuffledWords[rowIndex * columns + columnIndex];
                 WordItem word = boardWord.word;
-                GameObject newButton = Instantiate(buttonPrefab, newRow.transform);
-                newButton.name = $"Word - {word.text}";
-
-                Image buttonImage = newButton.GetComponent<Image>();
-                if (buttonImage != null)
-                {
-                    Sprite fridgeWord = GetFridgeWordSprite();
-                    if (fridgeWord != null)
-                    {
-                        ConfigureFridgeWordLayout(newButton);
-                        buttonImage.sprite = fridgeWord;
-                        buttonImage.type = Image.Type.Simple;
-                        buttonImage.color = Color.white;
-                    }
-                    else
-                    {
-                        buttonImage.sprite = GetRoundedButtonSprite();
-                        buttonImage.type = Image.Type.Sliced;
-                        buttonImage.color = PastelButtonColor;
-                        AddShadow(newButton, new Color(0.08f, 0.08f, 0.22f, 0.48f), new Vector2(0f, -7f));
-                        Outline outline = newButton.GetComponent<Outline>();
-                        if (outline == null) outline = newButton.AddComponent<Outline>();
-                        outline.effectColor = new Color(0.08f, 0.10f, 0.24f, 0.82f);
-                        outline.effectDistance = new Vector2(2f, -2f);
-                        outline.useGraphicAlpha = true;
-                    }
-                }
-
-                TextMeshProUGUI label = newButton.GetComponentInChildren<TextMeshProUGUI>();
-                label.text = word.text;
-                label.enableAutoSizing = true;
-                label.fontSizeMin = 22;
-                label.fontSizeMax = 32;
-                label.alignment = TextAlignmentOptions.Center;
-                label.margin = new Vector4(8f, 4f, 8f, 4f);
-                label.fontStyle = GetFridgeWordSprite() != null ? FontStyles.Normal : FontStyles.Bold;
-                label.color = new Color(0.16f, 0.12f, 0.28f, 1f);
-                if (gameFont != null) label.font = gameFont;
-                label.outlineColor = new Color(0.06f, 0.08f, 0.20f, 0.55f);
-                label.outlineWidth = GetFridgeWordSprite() != null ? 0f : 0.08f;
-
                 Sprite wordIcon = null;
                 if (word.useIcon && iconLibrary != null)
                     iconLibrary.TryGetIcon(word.spriteKey, out wordIcon);
@@ -304,9 +278,7 @@ public class TableController : MonoBehaviour
                 if (word.useIcon && wordIcon == null)
                     Debug.LogWarning($"Icon not found for key '{word.spriteKey}'. Falling back to text.", this);
 
-                WordButton wordButton = newButton.GetComponent<WordButton>();
-                wordButton.Initialize(this, word.text, boardWord.categoryId,
-                    GetFridgeWordSprite() != null ? Color.white : PastelButtonColor, wordIcon);
+                rowController.SetWord(columnIndex, this, word.text, boardWord.categoryId, Color.white, wordIcon);
             }
         }
 
@@ -316,41 +288,16 @@ public class TableController : MonoBehaviour
 
     private void LoadGameFont()
     {
-        if (gameFont != null) return;
+        // Font atlases are authored once in the Editor and stored as project
+        // assets. Never call TMP_FontAsset.CreateFontAsset at runtime.
+        if (gameFont == null)
+            gameFont = Resources.Load<TMP_FontAsset>("Fonts/Fredoka-Variable SDF");
+        if (displayFont == null)
+            displayFont = Resources.Load<TMP_FontAsset>("Fonts/FredokaOne-Regular SDF");
 
-        Font fredoka = Resources.Load<Font>("Fonts/Fredoka-Medium");
-        if (fredoka != null)
-        {
-            gameFont = TMP_FontAsset.CreateFontAsset(fredoka);
-            gameFont.name = "Fredoka Medium Runtime";
-        }
-        else
-        {
+        if (gameFont == null)
             gameFont = Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
-        }
-
-        Font fredokaBold = Resources.Load<Font>("Fonts/FredokaOne-Regular");
-        if (fredokaBold == null)
-            fredokaBold = Resources.Load<Font>("Fonts/Fredoka-Bold");
-        if (fredokaBold != null)
-        {
-            displayFont = TMP_FontAsset.CreateFontAsset(fredokaBold);
-            displayFont.name = "Fredoka One Runtime";
-        }
-        else
-        {
-            displayFont = gameFont;
-        }
-    }
-
-    private void ApplyGameFontToScene()
-    {
-        if (gameFont == null) return;
-
-        Canvas canvas = wordContainer == null ? null : wordContainer.GetComponentInParent<Canvas>();
-        if (canvas == null) return;
-        foreach (TextMeshProUGUI text in canvas.GetComponentsInChildren<TextMeshProUGUI>(true))
-            text.font = gameFont;
+        if (displayFont == null) displayFont = gameFont;
     }
 
     public void OnWordClicked(WordButton word)
@@ -387,24 +334,16 @@ public class TableController : MonoBehaviour
     public RectTransform CreateWordGhost(WordButton source)
     {
         if (source == null) return null;
-        Canvas canvas = source.GetComponentInParent<Canvas>();
+        Canvas canvas = GameplayCanvas;
         if (canvas == null) return null;
 
-        GameObject ghost = Instantiate(source.gameObject, canvas.transform, true);
+        WordButton ghost = Instantiate(source, canvas.transform, true);
         ghost.name = $"{source.name} Ghost";
-        WordButton ghostWord = ghost.GetComponent<WordButton>();
-        if (ghostWord != null) ghostWord.enabled = false;
-        Button ghostButton = ghost.GetComponent<Button>();
-        if (ghostButton != null) ghostButton.enabled = false;
-        CanvasGroup group = ghost.GetComponent<CanvasGroup>();
-        if (group == null) group = ghost.AddComponent<CanvasGroup>();
-        group.alpha = 1f;
-        group.blocksRaycasts = false;
-        group.interactable = false;
+        ghost.ConfigureAsGhost();
         ghost.transform.SetAsLastSibling();
         ghost.transform.DOKill();
         ghost.transform.DOScale(ghost.transform.localScale * 1.06f, 0.12f).SetEase(Ease.OutCubic);
-        return ghost.GetComponent<RectTransform>();
+        return ghost.RectTransform;
     }
 
     public void TrySwapWords(WordButton first, WordButton second, Vector3? firstVisualStart = null)
@@ -416,37 +355,20 @@ public class TableController : MonoBehaviour
         }
 
         inputLocked = true;
-        Transform firstRow = first.transform.parent;
-        Transform secondRow = second.transform.parent;
-        int firstIndex = first.transform.GetSiblingIndex();
-        int secondIndex = second.transform.GetSiblingIndex();
+        RowController firstRow = first.Row;
+        RowController secondRow = second.Row;
+        if (firstRow == null || secondRow == null)
+        {
+            inputLocked = false;
+            return;
+        }
         bool changedRows = firstRow != secondRow;
 
         Vector3 firstStart = firstVisualStart ?? first.transform.position;
         Vector3 secondStart = second.transform.position;
 
-        if (changedRows)
-        {
-            first.transform.SetParent(secondRow, false);
-            second.transform.SetParent(firstRow, false);
-            first.transform.SetSiblingIndex(secondIndex);
-            second.transform.SetSiblingIndex(firstIndex);
-        }
-        else
-        {
-            first.transform.SetSiblingIndex(secondIndex);
-            second.transform.SetSiblingIndex(firstIndex);
-        }
-
-        if (GetFridgeRowSprite() != null)
-        {
-            AlignFridgeRowSlots(firstRow);
-            if (secondRow != firstRow) AlignFridgeRowSlots(secondRow);
-        }
-
-        Canvas.ForceUpdateCanvases();
-        Vector3 firstTarget = first.transform.position;
-        Vector3 secondTarget = second.transform.position;
+        Vector3 firstTarget = second.transform.position;
+        Vector3 secondTarget = first.transform.position;
         RectTransform firstGhost = CreateWordGhost(first);
         RectTransform secondGhost = CreateWordGhost(second);
         if (firstGhost == null || secondGhost == null)
@@ -467,11 +389,11 @@ public class TableController : MonoBehaviour
         swapSequence.Join(secondGhost.DOMove(secondTarget, 0.28f).SetEase(Ease.OutCubic));
         swapSequence.OnComplete(() =>
         {
-            first.SetVisualAlpha(1f);
-            second.SetVisualAlpha(1f);
             Destroy(firstGhost.gameObject);
             Destroy(secondGhost.gameObject);
             FinishSwap(first, second, firstRow, secondRow, changedRows);
+            first.SetVisualAlpha(1f);
+            second.SetVisualAlpha(1f);
         });
     }
 
@@ -501,13 +423,12 @@ public class TableController : MonoBehaviour
         });
     }
 
-    private void FinishSwap(WordButton first, WordButton second, Transform firstRow, Transform secondRow, bool changedRows)
+    private void FinishSwap(WordButton first, WordButton second, RowController firstRow, RowController secondRow, bool changedRows)
     {
-        if (changedRows)
-        {
-            remainingMoves = Mathf.Max(0, remainingMoves - 1);
-            moveCount = remainingMoves;
-        }
+        first.SwapContentWith(second);
+        // Every successful swap is a move, including swaps within one row.
+        remainingMoves = Mathf.Max(0, remainingMoves - 1);
+        moveCount = remainingMoves;
 
         CheckRow(firstRow);
         if (secondRow != firstRow) CheckRow(secondRow);
@@ -520,10 +441,10 @@ public class TableController : MonoBehaviour
             EndGame(false);
     }
 
-    private void CheckRow(Transform row)
+    private void CheckRow(RowController row)
     {
-        if (transformationInProgress) return;
-        WordButton[] words = row.GetComponentsInChildren<WordButton>();
+        if (transformationInProgress || row == null) return;
+        WordButton[] words = row.GetActiveWords();
         if (words.Length != 4 || words.Any(word => word.IsMatched)) return;
 
         string categoryId = words[0].CategoryId;
@@ -536,20 +457,17 @@ public class TableController : MonoBehaviour
             if (transforms)
                 TransformCompletedCategory(row, words, category);
             else
-            {
-                foreach (WordButton word in words) word.SetMatched(true);
                 ShowCompletedCategoryName(row, categoryId);
-            }
         }
     }
 
-    private void TransformCompletedCategory(Transform row, WordButton[] words, Category category)
+    private void TransformCompletedCategory(RowController row, WordButton[] words, Category category)
     {
         if (category.transformResult == null) return;
         StartCoroutine(AnimateCategoryTransformation(row, words, category));
     }
 
-    private IEnumerator AnimateCategoryTransformation(Transform row, WordButton[] words, Category category)
+    private IEnumerator AnimateCategoryTransformation(RowController row, WordButton[] words, Category category)
     {
         transformationInProgress = true;
         inputLocked = true;
@@ -578,31 +496,33 @@ public class TableController : MonoBehaviour
         yield return mergeSequence.WaitForCompletion();
         foreach (RectTransform ghost in mergeGhosts)
             if (ghost != null) Destroy(ghost.gameObject);
-        foreach (WordButton word in words)
-        {
-            word.gameObject.SetActive(false);
-            Destroy(word.gameObject);
-        }
+        row.ClearWords();
 
         BoardWord result = new BoardWord
         {
             word = category.transformResult,
             categoryId = category.transformResultCategoryId
         };
-        GameObject transformed = CreateRuntimeWordButton(result, row);
+        WordButton transformed = SetRowWord(row, 0, result);
+        if (transformed == null)
+        {
+            transformationInProgress = false;
+            inputLocked = false;
+            yield break;
+        }
         transformed.transform.localScale = Vector3.zero;
 
-        List<GameObject> droppedWords = new List<GameObject>();
-        int openSlots = Mathf.Max(0, 4 - row.GetComponentsInChildren<WordButton>().Length);
+        List<WordButton> droppedWords = new List<WordButton>();
+        int openSlots = Mathf.Max(0, 4 - row.ActiveWordCount);
         for (int slot = 0; slot < openSlots && pendingWords.Count > 0; slot++)
         {
             BoardWord nextWord = pendingWords.Dequeue();
-            GameObject droppedWord = CreateRuntimeWordButton(nextWord, row);
+            int emptySlot = row.GetFirstEmptySlotIndex();
+            WordButton droppedWord = SetRowWord(row, emptySlot, nextWord);
+            if (droppedWord == null) break;
             droppedWord.transform.localScale = Vector3.zero;
             droppedWords.Add(droppedWord);
         }
-
-        if (GetFridgeRowSprite() != null) AlignFridgeRowSlots(row);
 
         Canvas.ForceUpdateCanvases();
         yield return transformed.transform.DOScale(1f, 0.34f).SetEase(Ease.OutBack).WaitForCompletion();
@@ -622,7 +542,7 @@ public class TableController : MonoBehaviour
     {
         yield return null;
         Canvas.ForceUpdateCanvases();
-        foreach (Transform row in wordContainer)
+        foreach (RowController row in activeRows)
             CheckRow(row);
         RefreshIndicators();
 
@@ -632,159 +552,27 @@ public class TableController : MonoBehaviour
             EndGame(false);
     }
 
-    private GameObject CreateRuntimeWordButton(BoardWord boardWord, Transform row)
+    private WordButton SetRowWord(RowController row, int slotIndex, BoardWord boardWord)
     {
+        if (row == null || slotIndex < 0 || boardWord == null || boardWord.word == null) return null;
+
         WordItem word = boardWord.word;
-        GameObject newButton = Instantiate(buttonPrefab, row);
-        newButton.name = $"Word - {word.text}";
-
-        Image buttonImage = newButton.GetComponent<Image>();
-        if (buttonImage != null)
-        {
-            Sprite fridgeWord = GetFridgeWordSprite();
-            if (fridgeWord != null) ConfigureFridgeWordLayout(newButton);
-            buttonImage.sprite = fridgeWord != null ? fridgeWord : GetRoundedButtonSprite();
-            buttonImage.type = fridgeWord != null ? Image.Type.Simple : Image.Type.Sliced;
-            buttonImage.color = fridgeWord != null ? Color.white : PastelButtonColor;
-            if (fridgeWord == null)
-                AddShadow(newButton, new Color(0.08f, 0.08f, 0.22f, 0.48f), new Vector2(0f, -7f));
-        }
-
-        TextMeshProUGUI label = newButton.GetComponentInChildren<TextMeshProUGUI>();
-        if (label != null)
-        {
-            label.text = word.text;
-            label.enableAutoSizing = true;
-            label.fontSizeMin = 22;
-            label.fontSizeMax = 32;
-            label.alignment = TextAlignmentOptions.Center;
-            label.fontStyle = GetFridgeWordSprite() != null ? FontStyles.Normal : FontStyles.Bold;
-            label.color = new Color(0.16f, 0.12f, 0.28f, 1f);
-            if (gameFont != null) label.font = gameFont;
-            label.outlineWidth = 0f;
-        }
-
         Sprite wordIcon = null;
         if (word.useIcon && iconLibrary != null)
             iconLibrary.TryGetIcon(word.spriteKey, out wordIcon);
-        newButton.GetComponent<WordButton>().Initialize(this, word.text, boardWord.categoryId,
-            GetFridgeWordSprite() != null ? Color.white : PastelButtonColor, wordIcon);
-        return newButton;
+        if (word.useIcon && wordIcon == null)
+            Debug.LogWarning($"Icon not found for key '{word.spriteKey}'. Falling back to text.", this);
+
+        return row.SetWord(slotIndex, this, word.text, boardWord.categoryId, Color.white, wordIcon);
     }
 
-    private void ShowCompletedCategoryName(Transform row, string categoryId)
+    private void ShowCompletedCategoryName(RowController row, string categoryId)
     {
-        if (row == null || row.Find("CompletedCategoryLabel") != null) return;
-
-        bool usesFridgeArt = ApplyCompletedRowArt(row);
-
-        GameObject labelObject = new GameObject("CompletedCategoryLabel",
-            typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI), typeof(LayoutElement));
-        labelObject.transform.SetParent(row, false);
-
-        LayoutElement layoutElement = labelObject.GetComponent<LayoutElement>();
-        layoutElement.ignoreLayout = true;
-
-        RectTransform rect = labelObject.GetComponent<RectTransform>();
-        if (usesFridgeArt)
-        {
-            // Match the small label area painted into category_orange.png.
-            rect.anchorMin = new Vector2(0f, 0f);
-            rect.anchorMax = new Vector2(0f, 0f);
-            rect.pivot = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = new Vector2(140f, 187f);
-            rect.sizeDelta = new Vector2(100f, 32f);
-        }
-        else
-        {
-            rect.anchorMin = new Vector2(0.08f, 1f);
-            rect.anchorMax = new Vector2(0.92f, 1f);
-            rect.pivot = new Vector2(0.5f, 0f);
-            rect.anchoredPosition = new Vector2(0f, 5f);
-            rect.sizeDelta = new Vector2(0f, 34f);
-        }
-
-        TextMeshProUGUI label = labelObject.GetComponent<TextMeshProUGUI>();
-        label.text = categoryNames.TryGetValue(categoryId, out string categoryName)
-            ? categoryName.ToLowerInvariant()
-            : categoryId.ToLowerInvariant();
-        label.alignment = TextAlignmentOptions.Center;
-        label.enableAutoSizing = usesFridgeArt;
-        label.fontSizeMin = 13f;
-        label.fontSizeMax = usesFridgeArt ? 19f : 25f;
-        label.fontSize = usesFridgeArt ? 19f : 25f;
-        label.fontStyle = FontStyles.Bold;
-        label.color = new Color(0.12f, 0.09f, 0.28f, 1f);
-        label.raycastTarget = false;
-        if (gameFont != null) label.font = gameFont;
-        label.outlineColor = new Color(1f, 1f, 1f, 0.72f);
-        label.outlineWidth = usesFridgeArt ? 0f : 0.12f;
-
-        labelObject.transform.localScale = Vector3.one * 0.7f;
-        CanvasGroup group = labelObject.AddComponent<CanvasGroup>();
-        group.alpha = 0f;
-        labelObject.transform.DOScale(1f, 0.24f).SetEase(Ease.OutBack);
-        group.DOFade(1f, 0.18f);
-    }
-
-    private bool ApplyCompletedRowArt(Transform row)
-    {
-        Sprite completedArt = GetFridgeCompletedRowSprite();
-        RectTransform rowRect = row as RectTransform;
-        if (completedArt == null || rowRect == null) return false;
-
-        Image rowBackground = row.GetComponent<Image>();
-        if (rowBackground != null) rowBackground.color = Color.clear;
-
-        GameObject artObject = new GameObject("CompletedHolderArt",
-            typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(LayoutElement));
-        artObject.transform.SetParent(row, false);
-        artObject.transform.SetAsFirstSibling();
-
-        artObject.GetComponent<LayoutElement>().ignoreLayout = true;
-        Image artImage = artObject.GetComponent<Image>();
-        artImage.sprite = completedArt;
-        artImage.type = Image.Type.Simple;
-        artImage.color = Color.white;
-        artImage.raycastTarget = false;
-
-        RectTransform artRect = artObject.GetComponent<RectTransform>();
-        artRect.anchorMin = new Vector2(0f, 0f);
-        artRect.anchorMax = new Vector2(1f, 0f);
-        artRect.pivot = new Vector2(0.5f, 0f);
-        artRect.anchoredPosition = Vector2.zero;
-        float width = rowRect.rect.width > 1f ? rowRect.rect.width : 913f;
-        artRect.sizeDelta = new Vector2(0f, width * 255f / 1024f);
-
-        Sprite stickerSprite = GetFridgeCategoryStickerSprite();
-        if (stickerSprite != null)
-        {
-            GameObject stickerObject = new GameObject("CategorySticker",
-                typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(LayoutElement), typeof(CanvasGroup));
-            stickerObject.transform.SetParent(row, false);
-            stickerObject.transform.SetSiblingIndex(1);
-            stickerObject.GetComponent<LayoutElement>().ignoreLayout = true;
-
-            Image stickerImage = stickerObject.GetComponent<Image>();
-            stickerImage.sprite = stickerSprite;
-            stickerImage.type = Image.Type.Simple;
-            stickerImage.color = Color.white;
-            stickerImage.raycastTarget = false;
-
-            RectTransform stickerRect = stickerObject.GetComponent<RectTransform>();
-            stickerRect.anchorMin = new Vector2(0f, 0f);
-            stickerRect.anchorMax = new Vector2(0f, 0f);
-            stickerRect.pivot = new Vector2(0f, 0.5f);
-            stickerRect.anchoredPosition = new Vector2(28f, 187f);
-            stickerRect.sizeDelta = new Vector2(180f, 75f);
-
-            CanvasGroup stickerGroup = stickerObject.GetComponent<CanvasGroup>();
-            stickerGroup.alpha = 0f;
-            stickerRect.localScale = Vector3.one * 0.72f;
-            stickerRect.DOScale(1f, 0.24f).SetEase(Ease.OutBack);
-            stickerGroup.DOFade(1f, 0.18f);
-        }
-        return true;
+        if (row == null) return;
+        string categoryName = categoryNames.TryGetValue(categoryId, out string name)
+            ? name
+            : categoryId;
+        row.CompleteCategory(categoryName);
     }
 
     private void EndGame(bool won)
@@ -942,72 +730,144 @@ public class TableController : MonoBehaviour
             backgroundImage.type = Image.Type.Simple;
             backgroundImage.color = Color.white;
             backgroundImage.raycastTarget = false;
-            if (fridgeBackground != null) ApplyFridgeBackgroundLayers(backgroundImage);
         }
     }
 
-    private static void ConfigureFridgeRowLayout(GameObject row)
+#if UNITY_EDITOR
+    /// <summary>
+    /// Creates the non-dynamic fridge UI in Game.unity so it can be edited in
+    /// the Inspector. Gameplay rows and completed-category visuals remain
+    /// runtime generated because their count/content changes per level.
+    /// </summary>
+    public void BakeStaticGameSceneAssets()
     {
-        HorizontalLayoutGroup layout = row.GetComponent<HorizontalLayoutGroup>();
-        if (layout != null)
+        if (wordContainer == null) return;
+
+        Canvas canvas = wordContainer.GetComponentInParent<Canvas>(true);
+        if (canvas == null) return;
+
+        if (gameHud == null)
+            gameHud = canvas.transform.Find("GameHUD") as RectTransform;
+        if (gameHud == null) return;
+
+        ApplyEditorPreviewSafeArea();
+
+        CanvasScaler scaler = canvas.GetComponent<CanvasScaler>();
+        if (scaler != null)
         {
-            // The painted holder already defines the four exact slot positions.
-            // A HorizontalLayoutGroup compresses them depending on parent width,
-            // so fridge rows use the source artwork coordinates instead.
-            layout.enabled = false;
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1080f, 1920f);
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+            scaler.matchWidthOrHeight = 0.5f;
         }
 
-        ContentSizeFitter fitter = row.GetComponent<ContentSizeFitter>();
-        if (fitter != null) fitter.enabled = false;
+        LoadGameFont();
 
-        RectTransform rect = row.transform as RectTransform;
-        if (rect != null) rect.sizeDelta = new Vector2(900f, 160f);
+        Transform backgroundTransform = wordContainer.parent.Find("background");
+        Image backgroundImage = backgroundTransform == null
+            ? null
+            : backgroundTransform.GetComponent<Image>();
+        if (backgroundImage != null)
+        {
+            Sprite fridgeBackground = GetFridgePlainBackgroundSprite();
+            if (fridgeBackground != null)
+            {
+                backgroundImage.sprite = fridgeBackground;
+                backgroundImage.type = Image.Type.Simple;
+                backgroundImage.color = Color.white;
+                backgroundImage.raycastTarget = false;
+                ApplyFridgeBackgroundLayers(backgroundImage);
+            }
+        }
+
+        Transform previousHud = gameHud.Find("FridgeTopHud");
+        if (previousHud != null) DestroyImmediate(previousHud.gameObject);
+        CreateFridgeTopHud();
+        Transform fridgeHud = gameHud.Find("FridgeTopHud");
+        if (fridgeHud != null) fridgeHud.gameObject.SetActive(true);
+        GameObject bakeMarker = new GameObject("StaticFridgeSceneV2");
+        bakeMarker.transform.SetParent(gameHud, false);
+        bakeMarker.SetActive(false);
+        BindSceneUiReferences();
     }
 
-    private static void AlignFridgeRowSlots(Transform row)
+    [ContextMenu("Refresh Editor Level Preview")]
+    public void BakeEditorLevelPreview()
     {
-        if (row == null) return;
+        if (Application.isPlaying || wordContainer == null) return;
 
-        RectTransform rowRect = row as RectTransform;
-        if (rowRect == null) return;
-        rowRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 900f);
-        rowRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 160f);
-
-        // Exact centers of the four gray slots in magnet_holder.png (1024 px).
-        float[] sourceCenters = { 137f, 383f, 629f, 875f };
-        List<RectTransform> wordRects = new List<RectTransform>(4);
-        for (int i = 0; i < row.childCount; i++)
+        playerSaveData = SaveSystem.Current;
+        wordContainer.gameObject.SetActive(true);
+        if (gameHud == null)
         {
-            Transform child = row.GetChild(i);
-            if (!child.gameObject.activeSelf || child.GetComponent<WordButton>() == null) continue;
-            if (child is RectTransform childRect) wordRects.Add(childRect);
+            Canvas canvas = wordContainer.GetComponentInParent<Canvas>(true);
+            gameHud = canvas == null ? null : canvas.transform.Find("GameHUD") as RectTransform;
         }
-
-        for (int i = 0; i < wordRects.Count && i < sourceCenters.Length; i++)
+        if (gameHud != null)
         {
-            RectTransform child = wordRects[i];
-            child.anchorMin = new Vector2(0.5f, 0.5f);
-            child.anchorMax = new Vector2(0.5f, 0.5f);
-            child.pivot = new Vector2(0.5f, 0.5f);
-            child.sizeDelta = new Vector2(215f, 140f);
-            child.anchoredPosition = new Vector2(
-                (sourceCenters[i] / 1024f - 0.5f) * 900f,
-                0f);
+            ApplyEditorPreviewSafeArea();
+            Transform fridgeHud = gameHud.Find("FridgeTopHud");
+            if (fridgeHud != null) fridgeHud.gameObject.SetActive(true);
         }
+        BindSceneUiReferences();
+        LoadLevel(Mathf.Max(0, editorPreviewLevelIndex));
     }
 
-    private static void ConfigureFridgeWordLayout(GameObject button)
+    public bool HasBakedStaticGameSceneAssets()
     {
-        RectTransform rect = button.transform as RectTransform;
-        if (rect != null) rect.sizeDelta = new Vector2(215f, 140f);
-
-        LayoutElement layoutElement = button.GetComponent<LayoutElement>();
-        if (layoutElement != null)
-        {
-            layoutElement.preferredWidth = 215f;
-            layoutElement.preferredHeight = 140f;
-        }
+        if (wordContainer == null) return false;
+        Canvas canvas = wordContainer.GetComponentInParent<Canvas>(true);
+        Transform background = canvas == null ? null : canvas.transform.Find("background");
+        Transform hud = canvas == null ? null : canvas.transform.Find("GameHUD/FridgeTopHud");
+        Transform bakeMarker = canvas == null ? null : canvas.transform.Find("GameHUD/StaticFridgeSceneV2");
+        Transform gameHudRoot = canvas == null ? null : canvas.transform.Find("GameHUD");
+        return gameHudRoot != null &&
+               gameHudRoot.gameObject.activeSelf &&
+               hud != null &&
+               hud.gameObject.activeSelf &&
+               bakeMarker != null &&
+               background != null &&
+               background.Find("FridgeGradient") != null &&
+               background.Find("FridgeShineLines") != null &&
+               background.Find("FridgeShineFrame") != null &&
+               background.Find("FridgeHandle") != null &&
+               background.Find("EggMagnet") != null &&
+               background.Find("BottomRightDecoration") != null;
     }
+
+    /// <summary>
+    /// Applies a stable, editable safe-area preview to Game.unity. This avoids
+    /// serializing transient Device Simulator values while keeping Edit Mode
+    /// visually aligned with the selected phone profile.
+    /// </summary>
+    public bool ApplyEditorPreviewSafeArea()
+    {
+        if (gameHud == null && wordContainer != null)
+        {
+            Canvas canvas = wordContainer.GetComponentInParent<Canvas>(true);
+            gameHud = canvas == null ? null : canvas.transform.Find("GameHUD") as RectTransform;
+        }
+        if (gameHud == null) return false;
+
+        Vector2 min = new Vector2(
+            Mathf.Clamp01(editorPreviewSafeAreaMin.x),
+            Mathf.Clamp01(editorPreviewSafeAreaMin.y));
+        Vector2 max = new Vector2(
+            Mathf.Clamp(editorPreviewSafeAreaMax.x, min.x + 0.01f, 1f),
+            Mathf.Clamp(editorPreviewSafeAreaMax.y, min.y + 0.01f, 1f));
+
+        bool changed = gameHud.anchorMin != min ||
+                       gameHud.anchorMax != max ||
+                       gameHud.offsetMin != Vector2.zero ||
+                       gameHud.offsetMax != Vector2.zero ||
+                       !gameHud.gameObject.activeSelf;
+
+        SetAnchors(gameHud, min, max);
+        gameHud.gameObject.SetActive(true);
+        gameHud.SetAsLastSibling();
+        return changed;
+    }
+#endif
 
     private void ApplyFridgeBackgroundLayers(Image backgroundImage)
     {
@@ -1109,14 +969,22 @@ public class TableController : MonoBehaviour
 
     private void ClearBoard()
     {
-        for (int i = wordContainer.childCount - 1; i >= 0; i--)
-            DestroyGeneratedObject(wordContainer.GetChild(i).gameObject);
+        activeRows.Clear();
+        if (rowPool == null) return;
+        foreach (RowController row in rowPool)
+        {
+            if (row == null) continue;
+            row.ClearWords();
+            row.gameObject.SetActive(false);
+        }
     }
 
     private void ResizeBoard(int rowCount)
     {
         RectTransform boardRect = wordContainer as RectTransform;
-        RectTransform rowRect = rowPrefab.GetComponent<RectTransform>();
+        RectTransform rowRect = rowPool != null && rowPool.Length > 0 && rowPool[0] != null
+            ? rowPool[0].transform as RectTransform
+            : null;
         VerticalLayoutGroup layout = wordContainer.GetComponent<VerticalLayoutGroup>();
         if (boardRect == null || rowRect == null) return;
 
@@ -1137,20 +1005,6 @@ public class TableController : MonoBehaviour
         // Four buttons + gaps + panel padding require this width.
         // Applying it at runtime also overrides stale values from an open scene.
         boardRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, usesFridgeArt ? 950f : 1010f);
-        if (usesFridgeArt)
-        {
-            // The parent layout may already have stretched newly instantiated
-            // rows before we disable width control above. Reset the live row
-            // instances afterwards so the holder remains inset and its slots
-            // stay aligned with the four word magnets.
-            for (int i = 0; i < wordContainer.childCount; i++)
-            {
-                Transform liveRow = wordContainer.GetChild(i);
-                ConfigureFridgeRowLayout(liveRow.gameObject);
-                AlignFridgeRowSlots(liveRow);
-            }
-        }
-
         float rowHeight = usesFridgeArt ? 160f : rowRect.rect.height;
         float targetBoardHeight = usesFridgeArt
             ? GetFridgeBoardHeightForRows(rowCount)
@@ -1176,11 +1030,9 @@ public class TableController : MonoBehaviour
 
         if (usesFridgeArt)
         {
-            for (int i = 0; i < wordContainer.childCount; i++)
-            {
-                RectTransform liveRow = wordContainer.GetChild(i) as RectTransform;
-                if (liveRow != null) LayoutRebuilder.ForceRebuildLayoutImmediate(liveRow);
-            }
+            foreach (RowController liveRow in activeRows)
+                if (liveRow != null && liveRow.transform is RectTransform rowTransform)
+                    LayoutRebuilder.ForceRebuildLayoutImmediate(rowTransform);
             LayoutRebuilder.ForceRebuildLayoutImmediate(boardRect);
         }
     }
@@ -1199,20 +1051,10 @@ public class TableController : MonoBehaviour
         }
     }
 
-    private void CreateScreenChrome()
+    private void BindScreenChrome()
     {
         Canvas canvas = wordContainer.GetComponentInParent<Canvas>();
         if (canvas == null) return;
-
-        canvas.transform.localScale = Vector3.one;
-        CanvasScaler scaler = canvas.GetComponent<CanvasScaler>();
-        if (scaler != null)
-        {
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1080f, 1920f);
-            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-            scaler.matchWidthOrHeight = 0.5f;
-        }
 
         if (gameHud == null)
             gameHud = canvas.transform.Find("GameHUD") as RectTransform;
@@ -1223,20 +1065,41 @@ public class TableController : MonoBehaviour
         }
 
         gameHud.gameObject.SetActive(true);
-        ApplySafeArea(gameHud);
-        if (progressText == null) progressText = gameHud.Find("TopBar/ProgressCard/Progress")?.GetComponent<TextMeshProUGUI>();
-        if (progressFill == null) progressFill = gameHud.Find("TopBar/ProgressCard/ProgressTrack/Fill")?.GetComponent<Image>();
-        if (progressKnob == null) progressKnob = gameHud.Find("TopBar/ProgressCard/ProgressTrack/Knob") as RectTransform;
-        if (progressKnobText == null) progressKnobText = gameHud.Find("TopBar/ProgressCard/ProgressTrack/Knob/Value")?.GetComponent<TextMeshProUGUI>();
-        if (moveCountText == null) moveCountText = gameHud.Find("TopBar/MovesCard/MoveCount")?.GetComponent<TextMeshProUGUI>();
-        if (goldText == null) goldText = gameHud.Find("TopBar/ProgressCard/GoldDisplay/GoldText")?.GetComponent<TextMeshProUGUI>();
-        if (levelLabel == null) levelLabel = gameHud.Find("LevelRibbon/LevelLabel")?.GetComponent<TextMeshProUGUI>();
-        if (hintCountText == null) hintCountText = gameHud.Find("BoosterArea/HintButton/CountBadge/Count")?.GetComponent<TextMeshProUGUI>();
-        if (GetFridgeRowSprite() != null) CreateFridgeTopHud();
+        BindSceneUiReferences();
+        if (gameHud.Find("FridgeTopHud") == null)
+        {
+            Debug.LogError("FridgeTopHud is missing from Game.unity. Run Tools > Word Game > Setup Game Scene Assets.", this);
+            return;
+        }
+        fridgeHudActive = true;
+        WireSceneButtons();
         if (hintCountText != null)
             hintCountText.text = (playerSaveData ?? SaveSystem.Current).hintCount.ToString();
         if (goldText != null)
             goldText.text = (playerSaveData ?? SaveSystem.Current).gold.ToString();
+        if (winScreen != null) winScreen.SetActive(false);
+        if (loseScreen != null) loseScreen.SetActive(false);
+    }
+
+    private void BindSceneUiReferences()
+    {
+        if (progressText == null) progressText = gameHud.Find("TopBar/ProgressCard/Progress")?.GetComponent<TextMeshProUGUI>();
+        // Always prefer the visible fridge HUD. Older Game scenes can still
+        // contain serialized references to the hidden legacy TopBar, which
+        // makes the correct values update off-screen.
+        Image visibleProgressFill = gameHud.Find("FridgeTopHud/ProgressCard/ProgressTrack/Fill")?.GetComponent<Image>();
+        RectTransform visibleProgressKnob = gameHud.Find("FridgeTopHud/ProgressCard/ProgressTrack/Knob") as RectTransform;
+        TextMeshProUGUI visibleProgressKnobText = gameHud.Find("FridgeTopHud/ProgressCard/ProgressTrack/Knob/Value")?.GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI visibleMoveCount = gameHud.Find("FridgeTopHud/MovesMagnet/MoveCount")?.GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI visibleLevelLabel = gameHud.Find("FridgeTopHud/LevelLabel")?.GetComponent<TextMeshProUGUI>();
+        if (visibleProgressFill != null) progressFill = visibleProgressFill;
+        if (visibleProgressKnob != null) progressKnob = visibleProgressKnob;
+        if (visibleProgressKnobText != null) progressKnobText = visibleProgressKnobText;
+        if (visibleMoveCount != null) moveCountText = visibleMoveCount;
+        if (visibleLevelLabel != null) levelLabel = visibleLevelLabel;
+        CacheProgressKnobSceneLayout();
+        if (goldText == null) goldText = gameHud.Find("TopBar/ProgressCard/GoldDisplay/GoldText")?.GetComponent<TextMeshProUGUI>();
+        if (hintCountText == null) hintCountText = gameHud.Find("BoosterArea/HintButton/CountBadge/Count")?.GetComponent<TextMeshProUGUI>();
         if (winScreen == null) winScreen = gameHud.Find("WinScreen")?.gameObject;
         if (loseScreen == null) loseScreen = gameHud.Find("LoseScreen")?.gameObject;
         if (winGoldText == null) winGoldText = gameHud.Find("WinScreen/Panel/Gold/Value")?.GetComponent<TextMeshProUGUI>();
@@ -1248,6 +1111,10 @@ public class TableController : MonoBehaviour
         if (spendGoldContinueButton == null) spendGoldContinueButton = gameHud.Find("LoseScreen/Panel/SpendGoldContinueButton")?.GetComponent<Button>();
         if (viewBoardButton == null) viewBoardButton = gameHud.Find("LoseScreen/ViewBoardButton")?.GetComponent<Button>();
         if (loseExplanationText == null) loseExplanationText = gameHud.Find("LoseScreen/Panel/Explanation")?.GetComponent<TextMeshProUGUI>();
+    }
+
+    private void WireSceneButtons()
+    {
         if (doubleRewardButton != null)
         {
             doubleRewardButton.onClick.RemoveListener(DoubleWinReward);
@@ -1278,10 +1145,14 @@ public class TableController : MonoBehaviour
             viewBoardButton.onClick.RemoveListener(ViewBoardTemporarily);
             viewBoardButton.onClick.AddListener(ViewBoardTemporarily);
         }
-        if (winScreen != null) winScreen.SetActive(false);
-        if (loseScreen != null) loseScreen.SetActive(false);
-        ApplyFridgeProgressArt();
-        gameHud.SetAsLastSibling();
+    }
+
+    private void CacheProgressKnobSceneLayout()
+    {
+        if (progressKnobLayoutCached || progressKnob == null) return;
+        progressKnobScenePosition = progressKnob.anchoredPosition;
+        progressKnobSceneAnchorX = progressKnob.anchorMin.x;
+        progressKnobLayoutCached = true;
     }
 
     private void CreateFridgeTopHud()
@@ -1309,7 +1180,7 @@ public class TableController : MonoBehaviour
 
         GameObject movesCardObject = CreatePanel("MovesMagnet", hudRect, Color.white);
         Image movesCard = movesCardObject.GetComponent<Image>();
-        movesCard.sprite = GetFridgeWordSprite();
+        movesCard.sprite = GetFridgeMovesSlotSprite();
         movesCard.type = Image.Type.Simple;
         movesCard.color = Color.white;
         SetAbsoluteTopRect(movesCard.rectTransform, new Vector2(55f, -73f), new Vector2(145f, 92f), new Vector2(0f, 1f));
@@ -1330,14 +1201,15 @@ public class TableController : MonoBehaviour
         GameObject progressCardObject = CreatePanel(
             "ProgressCard",
             hudRect,
-            new Color(0.94f, 0.94f, 0.90f, 1f));
+            Color.white);
+        progressCardObject.GetComponent<Image>().sprite = GetFridgeProgressSlotSprite();
+        progressCardObject.GetComponent<Image>().type = Image.Type.Simple;
         RectTransform progressCardRect = progressCardObject.GetComponent<RectTransform>();
         progressCardRect.anchorMin = progressCardRect.anchorMax = new Vector2(0.5f, 1f);
         progressCardRect.pivot = new Vector2(0.5f, 1f);
         progressCardRect.anchoredPosition = new Vector2(0f, -108f);
-        progressCardRect.sizeDelta = new Vector2(455f, 80f);
+        progressCardRect.sizeDelta = new Vector2(472f, 105f);
         progressCardObject.GetComponent<Image>().raycastTarget = false;
-        AddShadow(progressCardObject, new Color(0f, 0f, 0f, 0.24f), new Vector2(0f, -5f));
 
         GameObject trackObject = CreateRect("ProgressTrack", progressCardRect);
         Image trackImage = trackObject.AddComponent<Image>();
@@ -1348,7 +1220,7 @@ public class TableController : MonoBehaviour
         RectTransform trackRect = trackObject.GetComponent<RectTransform>();
         trackRect.anchorMin = trackRect.anchorMax = new Vector2(0.5f, 0.5f);
         trackRect.pivot = new Vector2(0.5f, 0.5f);
-        trackRect.anchoredPosition = new Vector2(0f, -1f);
+        trackRect.anchoredPosition = new Vector2(0f, -2f);
         trackRect.sizeDelta = new Vector2(405f, 50f);
 
         GameObject fillObject = CreateRect("Fill", trackRect);
@@ -1360,6 +1232,10 @@ public class TableController : MonoBehaviour
         progressFill.color = Color.white;
         progressFill.raycastTarget = false;
         Stretch(progressFill.rectTransform);
+        // Extend the green fill beneath the orange so the track sprite's dark
+        // left cap never peeks through as the orange moves away.
+        progressFill.rectTransform.offsetMin = new Vector2(-12f, 0f);
+        progressFill.rectTransform.offsetMax = Vector2.zero;
 
         GameObject knobObject = CreateRect("Knob", trackRect);
         Image knobImage = knobObject.AddComponent<Image>();
@@ -1379,6 +1255,8 @@ public class TableController : MonoBehaviour
         SetAnchors(progressKnobText.rectTransform, new Vector2(0.22f, 0.13f), new Vector2(0.78f, 0.70f));
 
         GameObject settingsObject = CreatePanel("SettingsButton", hudRect, Color.white);
+        settingsObject.GetComponent<Image>().sprite = GetFridgeSettingsSlotSprite();
+        settingsObject.GetComponent<Image>().type = Image.Type.Simple;
         RectTransform settingsRect = settingsObject.GetComponent<RectTransform>();
         SetAbsoluteTopRect(settingsRect, new Vector2(-38f, -25f), new Vector2(135f, 135f), new Vector2(1f, 1f));
         settingsRect.pivot = new Vector2(1f, 1f);
@@ -1470,17 +1348,22 @@ public class TableController : MonoBehaviour
         if (progressText != null) progressText.text = $"{categoriesCompleted} COMPLETE • {totalCategoryCount} TOTAL";
         float progressRatio = totalCategoryCount <= 0 ? 0f : (float)categoriesCompleted / totalCategoryCount;
         if (progressFill != null) progressFill.fillAmount = progressRatio;
-        if (progressKnob != null)
+        // Move only along the authored track. Size, anchors, vertical position
+        // and the Scene-authored starting offset remain untouched.
+        if (progressKnob != null && progressKnob.parent is RectTransform progressTrack)
         {
-            progressKnob.anchorMin = progressKnob.anchorMax = new Vector2(progressRatio, 0.5f);
-            progressKnob.anchoredPosition = Vector2.zero;
+            CacheProgressKnobSceneLayout();
+            float travel = (progressRatio - progressKnobSceneAnchorX) * progressTrack.rect.width;
+            progressKnob.anchoredPosition = new Vector2(
+                progressKnobScenePosition.x + travel,
+                progressKnobScenePosition.y);
         }
         if (progressKnobText != null) progressKnobText.text = categoriesCompleted.ToString();
         if (moveCountText != null) moveCountText.text = fridgeHudActive ? moveCount.ToString() : $"MOVES\n{moveCount}";
         if (goldText != null) goldText.text = SaveSystem.Current.gold.ToString();
         if (levelLabel != null)
             levelLabel.text = fridgeHudActive
-                ? $"Level <color=#D69535>{currentLevelNumber}</color>"
+                ? $"level <color=#D69535>{currentLevelNumber}</color>"
                 : $"LEVEL {currentLevelNumber}";
         if (progressDotsParent != null && progressDots.Count != currentLevelRows)
             CreateProgressDots(progressDotsParent, currentLevelRows);
@@ -1630,6 +1513,13 @@ public class TableController : MonoBehaviour
 
     private static void ApplySafeArea(RectTransform rect)
     {
+        if (rect == null) return;
+        if (Screen.width <= 0 || Screen.height <= 0)
+        {
+            Stretch(rect);
+            return;
+        }
+
         Rect safe = Screen.safeArea;
         Vector2 min = safe.position;
         Vector2 max = safe.position + safe.size;
@@ -1637,6 +1527,17 @@ public class TableController : MonoBehaviour
         min.y /= Screen.height;
         max.x /= Screen.width;
         max.y /= Screen.height;
+
+        min.x = Mathf.Clamp01(min.x);
+        min.y = Mathf.Clamp01(min.y);
+        max.x = Mathf.Clamp01(max.x);
+        max.y = Mathf.Clamp01(max.y);
+        if (max.x <= min.x || max.y <= min.y)
+        {
+            Stretch(rect);
+            return;
+        }
+
         SetAnchors(rect, min, max);
     }
 
@@ -1647,15 +1548,6 @@ public class TableController : MonoBehaviour
         shadow.effectColor = color;
         shadow.effectDistance = distance;
         shadow.useGraphicAlpha = true;
-    }
-
-    private static void DestroyGeneratedObject(GameObject target)
-    {
-        if (target == null) return;
-        if (Application.isPlaying)
-            Destroy(target);
-        else
-            DestroyImmediate(target);
     }
 
     private static void SetAnchors(RectTransform rect, Vector2 min, Vector2 max)
@@ -1746,20 +1638,6 @@ public class TableController : MonoBehaviour
         return fridgeRowSprite;
     }
 
-    private static Sprite GetFridgeCompletedRowSprite()
-    {
-        if (fridgeCompletedRowSprite == null)
-            fridgeCompletedRowSprite = Resources.Load<Sprite>("Art/Fridge/Rows/magnet_holder_category");
-        return fridgeCompletedRowSprite;
-    }
-
-    private static Sprite GetFridgeCategoryStickerSprite()
-    {
-        if (fridgeCategoryStickerSprite == null)
-            fridgeCategoryStickerSprite = Resources.Load<Sprite>("Art/Fridge/Rows/category_orange");
-        return fridgeCategoryStickerSprite;
-    }
-
     private static Sprite GetFridgeWordSprite()
     {
         if (fridgeWordSprite == null)
@@ -1786,6 +1664,27 @@ public class TableController : MonoBehaviour
         if (fridgeProgressOrangeSprite == null)
             fridgeProgressOrangeSprite = Resources.Load<Sprite>("Art/Fridge/UI/progress_orange");
         return fridgeProgressOrangeSprite;
+    }
+
+    private static Sprite GetFridgeMovesSlotSprite()
+    {
+        if (fridgeMovesSlotSprite == null)
+            fridgeMovesSlotSprite = Resources.Load<Sprite>("Art/Fridge/UI/moves_slot");
+        return fridgeMovesSlotSprite;
+    }
+
+    private static Sprite GetFridgeProgressSlotSprite()
+    {
+        if (fridgeProgressSlotSprite == null)
+            fridgeProgressSlotSprite = Resources.Load<Sprite>("Art/Fridge/UI/progressbar_slot");
+        return fridgeProgressSlotSprite;
+    }
+
+    private static Sprite GetFridgeSettingsSlotSprite()
+    {
+        if (fridgeSettingsSlotSprite == null)
+            fridgeSettingsSlotSprite = Resources.Load<Sprite>("Art/Fridge/UI/settings_slot");
+        return fridgeSettingsSlotSprite;
     }
 
     private static Sprite GetBulbIconSprite()
