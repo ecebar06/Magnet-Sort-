@@ -106,6 +106,11 @@ public class TableController : MonoBehaviour
     private Vector2 progressKnobScenePosition;
     private float progressKnobSceneAnchorX;
     private bool progressKnobLayoutCached;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+    private TextMeshProUGUI debugLevelLabel;
+    private Button debugPreviousButton;
+    private Button debugNextButton;
+#endif
 
     public bool IsInputLocked => inputLocked || gameEnded || transformationInProgress;
     public Canvas GameplayCanvas
@@ -156,6 +161,9 @@ public class TableController : MonoBehaviour
         LoadGameFont();
         BindScreenChrome();
         LoadLevel(Mathf.Max(startingLevelIndex, playerSaveData.currentLevelIndex));
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        CreateDebugLevelNavigator();
+#endif
     }
 
     public void LoadLevel(int levelIndex)
@@ -292,7 +300,88 @@ public class TableController : MonoBehaviour
         ResizeBoard(currentLevelRows);
         foreach (RowController row in activeRows) row.ApplyMatchingWordStyle();
         RefreshIndicators();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        RefreshDebugLevelNavigator();
+#endif
     }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+    private void CreateDebugLevelNavigator()
+    {
+        Canvas canvas = GameplayCanvas;
+        Transform parent = gameHud != null ? gameHud : canvas == null ? null : canvas.transform;
+        if (parent == null || parent.Find("DebugLevelNavigator") != null) return;
+
+        GameObject panel = CreatePanel("DebugLevelNavigator", parent, new Color(0.10f, 0.13f, 0.18f, 0.88f));
+        panel.transform.SetAsLastSibling();
+        RectTransform panelRect = panel.GetComponent<RectTransform>();
+        panelRect.anchorMin = panelRect.anchorMax = new Vector2(1f, 1f);
+        panelRect.pivot = new Vector2(1f, 1f);
+        panelRect.anchoredPosition = new Vector2(-18f, -182f);
+        panelRect.sizeDelta = new Vector2(310f, 66f);
+        AddShadow(panel, new Color(0f, 0f, 0f, 0.28f), new Vector2(0f, -4f));
+
+        HorizontalLayoutGroup layout = panel.AddComponent<HorizontalLayoutGroup>();
+        layout.padding = new RectOffset(7, 7, 7, 7);
+        layout.spacing = 6f;
+        layout.childAlignment = TextAnchor.MiddleCenter;
+        layout.childControlWidth = true;
+        layout.childControlHeight = true;
+        layout.childForceExpandWidth = false;
+        layout.childForceExpandHeight = true;
+
+        debugPreviousButton = CreateDebugLevelButton("Previous", panel.transform, "<", 54f);
+        debugPreviousButton.onClick.AddListener(() => LoadLevel(activeLevelIndex - 1));
+
+        debugLevelLabel = CreateLabel("CurrentLevel", panel.transform, "LEVEL 1", TextAlignmentOptions.Center);
+        debugLevelLabel.font = displayFont != null ? displayFont : gameFont;
+        debugLevelLabel.fontSize = 25f;
+        debugLevelLabel.color = Color.white;
+        debugLevelLabel.enableAutoSizing = true;
+        debugLevelLabel.fontSizeMin = 17f;
+        debugLevelLabel.fontSizeMax = 25f;
+        LayoutElement labelLayout = debugLevelLabel.gameObject.AddComponent<LayoutElement>();
+        labelLayout.preferredWidth = 105f;
+        labelLayout.flexibleWidth = 1f;
+
+        debugNextButton = CreateDebugLevelButton("Next", panel.transform, ">", 54f);
+        debugNextButton.onClick.AddListener(() => LoadLevel(activeLevelIndex + 1));
+
+        Button restartButton = CreateDebugLevelButton("Restart", panel.transform, "R", 54f);
+        restartButton.onClick.AddListener(() => LoadLevel(activeLevelIndex));
+
+        RefreshDebugLevelNavigator();
+    }
+
+    private Button CreateDebugLevelButton(string objectName, Transform parent, string text, float width)
+    {
+        GameObject buttonObject = CreatePanel(objectName, parent, new Color(0.96f, 0.76f, 0.27f, 1f));
+        Image image = buttonObject.GetComponent<Image>();
+        image.sprite = GetRoundedButtonSprite();
+        image.type = Image.Type.Sliced;
+        Button result = buttonObject.AddComponent<Button>();
+        result.targetGraphic = image;
+
+        LayoutElement element = buttonObject.AddComponent<LayoutElement>();
+        element.preferredWidth = width;
+        element.minWidth = width;
+
+        TextMeshProUGUI label = CreateLabel("Label", buttonObject.transform, text, TextAlignmentOptions.Center);
+        label.font = displayFont != null ? displayFont : gameFont;
+        label.fontSize = 29f;
+        label.color = new Color(0.16f, 0.11f, 0.16f, 1f);
+        Stretch(label.rectTransform);
+        return result;
+    }
+
+    private void RefreshDebugLevelNavigator()
+    {
+        if (debugLevelLabel != null) debugLevelLabel.text = $"LEVEL {currentLevelNumber}";
+        int levelCount = levelDatabase == null ? 0 : levelDatabase.levels.Count;
+        if (debugPreviousButton != null) debugPreviousButton.interactable = activeLevelIndex > 0;
+        if (debugNextButton != null) debugNextButton.interactable = activeLevelIndex + 1 < levelCount;
+    }
+#endif
 
     private void LoadGameFont()
     {

@@ -27,7 +27,7 @@ public class WordButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
     private TableController controller;
     private Canvas rootCanvas;
     private RectTransform dragGhost;
-    private Tween dragMoveTween;
+    private Vector3 dragPointerOffset;
     private Vector3 pressRestPosition;
     private bool isPressed;
     private Color defaultColor;
@@ -227,7 +227,10 @@ public class WordButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         SetBacklight(true);
         transform.DOKill();
         float duration = Style == null ? 0.12f : Mathf.Min(0.12f, Style.animationDuration);
-        transform.DOScale(1.07f, duration).SetEase(Ease.OutBack);
+        float pressScale = Style == null ? 1.15f : Style.dragScale;
+        // Grow as soon as the pointer goes down, before the player has moved
+        // far enough for Unity to start a drag.
+        transform.DOScale(pressScale, duration).SetEase(Ease.OutBack);
         transform.DOLocalMoveY(pressRestPosition.y + 8f, duration).SetEase(Ease.OutCubic);
     }
 
@@ -264,6 +267,11 @@ public class WordButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         {
             dragGhost.DOKill();
             float dragScale = Style == null ? 1.15f : Style.dragScale;
+            float currentScale = Mathf.Max(0.01f, dragGhost.localScale.x);
+            if (TryGetPointerWorldPosition(eventData, out Vector3 pointerWorld))
+                dragPointerOffset = (dragGhost.position - pointerWorld) * (dragScale / currentScale);
+            else
+                dragPointerOffset = Vector3.zero;
             dragGhost.localScale = Vector3.one * dragScale;
             MoveGhostToPointer(eventData);
         }
@@ -295,8 +303,6 @@ public class WordButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         Vector3 releasePosition = dragGhost == null ? transform.position : dragGhost.position;
         if (dragGhost != null)
         {
-            dragMoveTween?.Kill();
-            dragMoveTween = null;
             dragGhost.DOKill();
             Destroy(dragGhost.gameObject);
         }
@@ -310,19 +316,27 @@ public class WordButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
 
     private void MoveGhostToPointer(PointerEventData eventData)
     {
-        RectTransform canvasRect = rootCanvas.transform as RectTransform;
-        Camera eventCamera = rootCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : rootCanvas.worldCamera;
-        if (canvasRect != null && RectTransformUtility.ScreenPointToWorldPointInRectangle(
-                canvasRect, eventData.position, eventCamera, out Vector3 worldPoint))
+        if (TryGetPointerWorldPosition(eventData, out Vector3 worldPoint))
         {
-            // Only replace the pointer-follow tween. Killing every tween on the
-            // ghost here also killed its detach/grow animation each frame.
-            dragMoveTween?.Kill();
             float lift = Style == null ? 10f : Style.dragLift;
             float scaleFactor = Mathf.Max(0.01f, rootCanvas.scaleFactor);
-            worldPoint += Vector3.up * (lift / scaleFactor);
-            dragMoveTween = dragGhost.DOMove(worldPoint, 0.10f).SetEase(Ease.OutQuad);
+            worldPoint += dragPointerOffset + Vector3.up * (lift / scaleFactor);
+            // Pointer-following must be immediate. A short DOMove tween looked
+            // smooth in the Editor but made the card trail behind the finger
+            // on an actual touch device.
+            dragGhost.position = worldPoint;
         }
+    }
+
+    private bool TryGetPointerWorldPosition(PointerEventData eventData, out Vector3 worldPoint)
+    {
+        worldPoint = Vector3.zero;
+        if (rootCanvas == null) return false;
+
+        RectTransform canvasRect = rootCanvas.transform as RectTransform;
+        Camera eventCamera = rootCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : rootCanvas.worldCamera;
+        return canvasRect != null && RectTransformUtility.ScreenPointToWorldPointInRectangle(
+            canvasRect, eventData.position, eventCamera, out worldPoint);
     }
 
     private WordButton FindDropTarget(PointerEventData eventData)
@@ -346,7 +360,14 @@ public class WordButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
         float targetScale = selected && Style != null ? Style.selectedScale : 1f;
         float duration = Style == null ? 0.14f : Style.animationDuration;
         transform.DOKill();
-        transform.DOScale(targetScale, duration).SetEase(Ease.OutBack);
+        // OnPointerUp starts the return-to-slot tween, but the click callback
+        // reaches here immediately afterwards. DOKill used to stop that move
+        // while the button was still lifted, so repeated clicks accumulated
+        // another lift each time. Selection only scales the card; keep it in
+        // its recorded slot position.
+        transform.localPosition = pressRestPosition;
+        transform.DOScale(targetScale, duration)
+            .SetEase(selected ? Ease.OutBack : Ease.OutCubic);
     }
 
     public void SetMatched(bool matched)
