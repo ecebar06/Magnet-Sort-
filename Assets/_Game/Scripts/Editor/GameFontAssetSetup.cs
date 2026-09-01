@@ -56,7 +56,14 @@ public static class GameFontAssetSetup
 
         try
         {
-            GenerateAndAssignFonts();
+            // Opening the Editor may create missing assets, but must not reassign
+            // scene/prefab fonts or rewrite an authored font's weight table.
+            CreatePersistentSdf(VariableSource, VariableAsset, "Fredoka-Variable SDF");
+            CreatePersistentSdf(MediumSource, MediumAsset, "Fredoka-Medium SDF");
+            CreatePersistentSdf(SemiBoldSource, SemiBoldAsset, "Fredoka-SemiBold SDF");
+            CreatePersistentSdf(BoldSource, BoldAsset, "Fredoka-Bold SDF");
+            CreatePersistentSdf(DisplaySource, DisplayAsset, "FredokaOne-Regular SDF");
+            AssetDatabase.SaveAssets();
         }
         catch (Exception exception)
         {

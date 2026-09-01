@@ -25,9 +25,14 @@ public static class WordIconLibrarySetup
             AssetDatabase.CreateAsset(library, LibraryAssetPath);
         }
 
-        library.SetIcon("fruits__apple", appleSprite);
-        EditorUtility.SetDirty(library);
-        AssetDatabase.SaveAssets();
+        // This is only a fallback for a brand-new library. Never overwrite an
+        // icon that was assigned by the artist when Unity/editor reloads.
+        if (!library.TryGetIcon("fruits__apple", out Sprite assignedSprite) || assignedSprite == null)
+        {
+            library.SetIcon("fruits__apple", appleSprite);
+            EditorUtility.SetDirty(library);
+            AssetDatabase.SaveAssets();
+        }
     }
 
     private static Sprite LoadOrCreateAppleSprite()

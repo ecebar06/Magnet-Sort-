@@ -95,12 +95,21 @@ public static class SplashSceneSetup
 
         GameObject backgroundObject = CreateUI("Pastel Background", canvas.transform);
         RawImage background = backgroundObject.AddComponent<RawImage>();
-        background.texture = Resources.Load<Texture2D>("Textures/PastelBackground");
+        Texture2D splashArt = AssetDatabase.LoadAssetAtPath<Texture2D>(
+            "Assets/_Game/Textures/Branding/WordSort-Splash-v1.png");
+        background.texture = splashArt != null ? splashArt : Resources.Load<Texture2D>("Textures/PastelBackground");
         background.color = background.texture == null ? new Color(0.67f, 0.55f, 1f) : Color.white;
         Stretch(background.rectTransform);
+        if (splashArt != null)
+        {
+            AspectRatioFitter fitter = backgroundObject.AddComponent<AspectRatioFitter>();
+            fitter.aspectMode = AspectRatioFitter.AspectMode.EnvelopeParent;
+            fitter.aspectRatio = (float)splashArt.width / splashArt.height;
+        }
 
         Image tint = CreateImage("Soft Tint", canvas.transform, new Color(0.48f, 0.29f, 0.78f, 0.10f));
         Stretch(tint.rectTransform);
+        if (splashArt != null) tint.gameObject.SetActive(false);
 
         GameObject contentObject = CreateUI("Animated Content", canvas.transform);
         CanvasGroup content = contentObject.AddComponent<CanvasGroup>();
@@ -112,6 +121,7 @@ public static class SplashSceneSetup
         logoCard.anchorMin = logoCard.anchorMax = new Vector2(0.5f, 0.56f);
         logoCard.sizeDelta = new Vector2(730f, 520f);
         logoCard.anchoredPosition = Vector2.zero;
+        if (splashArt != null) card.gameObject.SetActive(false);
 
         Text title = CreateText("Title", card.transform, "WORD GAME", font, 108, FontStyle.Bold, Color.white);
         title.alignment = TextAnchor.MiddleCenter;

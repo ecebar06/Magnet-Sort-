@@ -50,7 +50,8 @@ public static class GameSceneAssetsSetup
         }
 
         Transform existingHud = canvas == null ? null : canvas.transform.Find("GameHUD");
-        if (existingHud != null && existingHud.Find("FlatDesignV12") == null)
+        if (existingHud != null && existingHud.Find("FlatDesignV12") == null &&
+            existingHud.Find("FridgeTopHud") == null)
         {
             Object.DestroyImmediate(existingHud.gameObject);
             existingHud = null;

@@ -15,6 +15,7 @@ public class SplashController : MonoBehaviour
     [SerializeField] private RectTransform[] wordTiles = new RectTransform[0];
     [SerializeField] private Text loadingText;
     [SerializeField] private Image loadingFill;
+    [SerializeField] private RectTransform loadingKnob;
 
     private IEnumerator Start()
     {
@@ -80,6 +81,13 @@ public class SplashController : MonoBehaviour
     {
         float normalizedProgress = Mathf.Clamp01(rawProgress / 0.9f);
         loadingFill.fillAmount = normalizedProgress;
+        if (loadingKnob != null)
+        {
+            RectTransform fillRect = loadingFill.rectTransform;
+            Vector3 edge = new Vector3(Mathf.Lerp(fillRect.rect.xMin, fillRect.rect.xMax,
+                normalizedProgress), fillRect.rect.center.y, 0f);
+            loadingKnob.position = fillRect.TransformPoint(edge);
+        }
         loadingText.text = $"LOADING... {Mathf.RoundToInt(normalizedProgress * 100f)}%";
     }
 

@@ -118,7 +118,7 @@ public static class RowPrefabSetup
             // Anchored to the parent's bottom-left. Keep the sticker fully
             // above the word magnets, matching the reference composition.
             cardRect.anchoredPosition = new Vector2(72f, 200f);
-            cardRect.sizeDelta = new Vector2(116f, 50f);
+            cardRect.sizeDelta = new Vector2(150f, 50f);
             CanvasGroup cardGroup = categoryCard.GetComponent<CanvasGroup>();
             if (cardGroup == null) cardGroup = categoryCard.gameObject.AddComponent<CanvasGroup>();
             Outline cardOutline = categoryCard.GetComponent<Outline>();
@@ -140,7 +140,7 @@ public static class RowPrefabSetup
 
             TextMeshProUGUI categoryLabel = FindOrCreateLabel(categoryCard.transform);
             if (font != null) categoryLabel.font = font;
-            categoryLabel.fontSize = 19f;
+            categoryLabel.fontSize = 26f;
             categoryLabel.enableAutoSizing = false;
             categoryLabel.fontStyle = FontStyles.Normal;
             categoryLabel.alignment = TextAlignmentOptions.Center;

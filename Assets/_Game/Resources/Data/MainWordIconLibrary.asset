@@ -14,25 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WordIconLibrary
   icons:
   - key: pets__dog
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: 8b3740f95662a91428fdb5c4554eae13, type: 3}
   - key: clothes__hat
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: 18eeeaab78923964086ff1071d20f12d, type: 3}
   - key: toys__ball
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: 4a3f695660a162045ae643a58150c109, type: 3}
   - key: furniture__chair
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: d18e50ac0c224e04292595f74120ffb5, type: 3}
   - key: school__book
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: 91c1ed948b48b8947b935946756237ea, type: 3}
   - key: meals__breakfast
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: b3a5a04ad621a03489682d8302373ea4, type: 3}
   - key: vehicles__car
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: f0985eb272bce6f46adb1e745b10829c, type: 3}
   - key: vehicles__ship
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: d9fbb74ac7c5d8541981355fe86dc5ac, type: 3}
   - key: music__guitar
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: 6902586f4b9022d40b89d84df68facc2, type: 3}
   - key: garden__flower
-    sprite: {fileID: 0}
+    sprite: {fileID: 21300000, guid: 2f8c6115f6d8c70498e442440902e07c, type: 3}
   - key: space__moon
     sprite: {fileID: 0}
   - key: smart_machines__robot
@@ -106,7 +106,7 @@ MonoBehaviour:
   - key: landscapes__grassland
     sprite: {fileID: 0}
   - key: fruits__apple
-    sprite: {fileID: -1600582579191142780, guid: 07f9c0abbfe3c3740b62d9d073ae0314, type: 2}
+    sprite: {fileID: 21300000, guid: e27cabf2175d4b4d87b3e528e8557581, type: 3}
   - key: fruits__banana
     sprite: {fileID: 0}
   - key: colors__red

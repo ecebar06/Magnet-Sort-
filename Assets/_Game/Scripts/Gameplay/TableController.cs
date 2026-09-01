@@ -264,7 +264,14 @@ public class TableController : MonoBehaviour
                 return;
             }
 
-            rowController.PrepareForLevel(this);
+            WordButtonStyleSettings matchStyle = WordButtonStyleSettings.LoadDefault();
+            Color rowMatchColor = matchStyle == null
+                ? new Color(0.05f, 0.82f, 0.43f, 1f)
+                : matchStyle.GetRowMatchColor(rowIndex);
+            Color secondaryColor = matchStyle == null
+                ? Color.HSVToRGB(((rowIndex + 7) * 0.618034f) % 1f, 0.55f, 0.9f)
+                : matchStyle.GetRowMatchColor(rowIndex, true);
+            rowController.PrepareForLevel(this, rowMatchColor, secondaryColor);
             activeRows.Add(rowController);
 
             for (int columnIndex = 0; columnIndex < columns; columnIndex++)
@@ -283,6 +290,7 @@ public class TableController : MonoBehaviour
         }
 
         ResizeBoard(currentLevelRows);
+        foreach (RowController row in activeRows) row.ApplyMatchingWordStyle();
         RefreshIndicators();
     }
 
@@ -340,9 +348,12 @@ public class TableController : MonoBehaviour
         WordButton ghost = Instantiate(source, canvas.transform, true);
         ghost.name = $"{source.name} Ghost";
         ghost.ConfigureAsGhost();
+        Shadow liftShadow = ghost.gameObject.AddComponent<Shadow>();
+        liftShadow.effectColor = new Color(0.08f, 0.07f, 0.12f, 0.42f);
+        liftShadow.effectDistance = new Vector2(0f, -8f);
+        liftShadow.useGraphicAlpha = true;
         ghost.transform.SetAsLastSibling();
         ghost.transform.DOKill();
-        ghost.transform.DOScale(ghost.transform.localScale * 1.06f, 0.12f).SetEase(Ease.OutCubic);
         return ghost.RectTransform;
     }
 
@@ -426,10 +437,15 @@ public class TableController : MonoBehaviour
     private void FinishSwap(WordButton first, WordButton second, RowController firstRow, RowController secondRow, bool changedRows)
     {
         first.SwapContentWith(second);
+        firstRow.LastArrivedWord = first;
+        secondRow.LastArrivedWord = second;
         // Every successful swap is a move, including swaps within one row.
         remainingMoves = Mathf.Max(0, remainingMoves - 1);
         moveCount = remainingMoves;
 
+        // Refresh both sides before completion can start a blocking transformation.
+        firstRow.ApplyMatchingWordStyle();
+        if (secondRow != firstRow) secondRow.ApplyMatchingWordStyle();
         CheckRow(firstRow);
         if (secondRow != firstRow) CheckRow(secondRow);
         RefreshIndicators();
@@ -443,9 +459,9 @@ public class TableController : MonoBehaviour
 
     private void CheckRow(RowController row)
     {
-        if (transformationInProgress || row == null) return;
+        if (transformationInProgress || row == null || row.IsCompleted) return;
         WordButton[] words = row.GetActiveWords();
-        if (words.Length != 4 || words.Any(word => word.IsMatched)) return;
+        if (words.Length != 4) return;
 
         string categoryId = words[0].CategoryId;
         if (words.All(word => word.CategoryId == categoryId))
@@ -458,7 +474,10 @@ public class TableController : MonoBehaviour
                 TransformCompletedCategory(row, words, category);
             else
                 ShowCompletedCategoryName(row, categoryId);
+            return;
         }
+
+        row.ApplyMatchingWordStyle();
     }
 
     private void TransformCompletedCategory(RowController row, WordButton[] words, Category category)
@@ -472,30 +491,68 @@ public class TableController : MonoBehaviour
         transformationInProgress = true;
         inputLocked = true;
 
-        Vector3 mergePoint = Vector3.zero;
-        foreach (WordButton word in words) mergePoint += word.transform.position;
-        mergePoint /= words.Length;
+        // Complete the left-to-right row cascade before starting the merge.
+        Canvas.ForceUpdateCanvases();
+        yield return row.AnimateCompletedStyle(colorHolder: false);
+
+        WordButton survivor = words.Contains(row.LastArrivedWord) ? row.LastArrivedWord : words[words.Length - 1];
+        int resultSlot = System.Array.IndexOf(row.WordSlots.ToArray(), survivor);
+        Vector3 mergePoint = survivor.transform.position;
+        // Use the authored button's local height, so the visible stack scales
+        // consistently with the Canvas and device resolution.
+        Vector3 stackStep = survivor.transform.TransformVector(
+            Vector3.up * survivor.RectTransform.rect.height * 0.085f);
+        Vector3 stackTop = mergePoint + stackStep * 2f;
 
         List<RectTransform> mergeGhosts = new List<RectTransform>();
         Sequence mergeSequence = DOTween.Sequence();
         foreach (WordButton word in words)
         {
+            if (word == survivor) continue;
             RectTransform ghost = CreateWordGhost(word);
             if (ghost != null)
             {
                 ghost.DOKill();
                 mergeGhosts.Add(ghost);
-                mergeSequence.Join(ghost.DOMove(mergePoint, 0.38f).SetEase(Ease.InCubic));
-                mergeSequence.Join(ghost.DOScale(0.18f, 0.38f).SetEase(Ease.InBack));
-                mergeSequence.Join(ghost.DORotate(new Vector3(0f, 0f, Random.Range(-12f, 12f)), 0.38f));
+                Vector3 layerPosition = stackTop - stackStep * mergeGhosts.Count;
+                mergeSequence.Insert((mergeGhosts.Count - 1) * 0.07f,
+                    ghost.DOMove(layerPosition, 0.36f).SetEase(Ease.InOutCubic));
             }
-            word.SetVisualAlpha(0f);
-            word.SetMatched(true);
+            word.SetTileVisualVisible(false);
+        }
+
+        // The last-arrived card must remain readable ON TOP of the other
+        // cards; a real slot would render behind ghosts on the overlay Canvas.
+        for (int index = mergeGhosts.Count - 1; index >= 0; index--)
+            mergeGhosts[index].SetAsLastSibling();
+        RectTransform topGhost = CreateWordGhost(survivor);
+        if (topGhost != null)
+        {
+            topGhost.DOKill();
+            topGhost.SetAsLastSibling();
+            mergeSequence.Insert(0f, topGhost.DOMove(stackTop, 0.18f).SetEase(Ease.OutCubic));
+            survivor.SetTileVisualVisible(false);
         }
 
         yield return mergeSequence.WaitForCompletion();
-        foreach (RectTransform ghost in mergeGhosts)
-            if (ghost != null) Destroy(ghost.gameObject);
+        yield return new WaitForSeconds(0.18f);
+        // Collapse the bottom layers into the top card one by one, rather
+        // than making all four overlap perfectly and vanish in one frame.
+        for (int index = mergeGhosts.Count - 1; index >= 0; index--)
+        {
+            RectTransform ghost = mergeGhosts[index];
+            if (ghost == null) continue;
+            yield return ghost.DOMove(stackTop, 0.09f).SetEase(Ease.InCubic).WaitForCompletion();
+            Destroy(ghost.gameObject);
+        }
+        if (topGhost != null)
+        {
+            yield return topGhost.DOMove(mergePoint, 0.12f).SetEase(Ease.InOutCubic).WaitForCompletion();
+            Vector3 restingScale = topGhost.localScale;
+            yield return topGhost.DOScale(restingScale * 0.86f, 0.10f)
+                .SetEase(Ease.InCubic).WaitForCompletion();
+            Destroy(topGhost.gameObject);
+        }
         row.ClearWords();
 
         BoardWord result = new BoardWord
@@ -503,14 +560,15 @@ public class TableController : MonoBehaviour
             word = category.transformResult,
             categoryId = category.transformResultCategoryId
         };
-        WordButton transformed = SetRowWord(row, 0, result);
+        WordButton transformed = SetRowWord(row, resultSlot, result);
         if (transformed == null)
         {
             transformationInProgress = false;
             inputLocked = false;
             yield break;
         }
-        transformed.transform.localScale = Vector3.zero;
+        transformed.transform.localScale = Vector3.one * 0.86f;
+        row.LastArrivedWord = transformed;
 
         List<WordButton> droppedWords = new List<WordButton>();
         int openSlots = Mathf.Max(0, 4 - row.ActiveWordCount);
@@ -520,6 +578,7 @@ public class TableController : MonoBehaviour
             int emptySlot = row.GetFirstEmptySlotIndex();
             WordButton droppedWord = SetRowWord(row, emptySlot, nextWord);
             if (droppedWord == null) break;
+            row.LastArrivedWord = droppedWord;
             droppedWord.transform.localScale = Vector3.zero;
             droppedWords.Add(droppedWord);
         }
@@ -781,8 +840,8 @@ public class TableController : MonoBehaviour
         }
 
         Transform previousHud = gameHud.Find("FridgeTopHud");
-        if (previousHud != null) DestroyImmediate(previousHud.gameObject);
-        CreateFridgeTopHud();
+        // Missing background decorations must never replace the artist-authored HUD.
+        if (previousHud == null) CreateFridgeTopHud();
         Transform fridgeHud = gameHud.Find("FridgeTopHud");
         if (fridgeHud != null) fridgeHud.gameObject.SetActive(true);
         GameObject bakeMarker = new GameObject("StaticFridgeSceneV2");
@@ -831,7 +890,6 @@ public class TableController : MonoBehaviour
                background.Find("FridgeShineLines") != null &&
                background.Find("FridgeShineFrame") != null &&
                background.Find("FridgeHandle") != null &&
-               background.Find("EggMagnet") != null &&
                background.Find("BottomRightDecoration") != null;
     }
 
@@ -879,9 +937,8 @@ public class TableController : MonoBehaviour
         AddDecorativeBackgroundLayer(root, "FridgeHandle", GetFridgeHandleSprite(),
             new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f),
             new Vector2(30f, 70f), new Vector2(480f, 88f), 3);
-        AddDecorativeBackgroundLayer(root, "EggMagnet", GetFridgeEggSprite(),
-            new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0.5f, 0.5f),
-            new Vector2(175f, 270f), new Vector2(120f, 151f), 4);
+        Transform eggDecoration = root.Find("EggMagnet");
+        if (eggDecoration != null) eggDecoration.gameObject.SetActive(false);
         CreateBottomRightDecoration(root);
     }
 
@@ -1187,7 +1244,6 @@ public class TableController : MonoBehaviour
         moveCountText = CreateLabel("MoveCount", movesCard.transform, "0", TextAlignmentOptions.Center);
         moveCountText.fontSize = 48f;
         moveCountText.color = new Color(0.42f, 0.30f, 0.14f, 1f);
-        if (displayFont != null) moveCountText.font = displayFont;
         Stretch(moveCountText.rectTransform);
 
         levelLabel = CreateLabel("LevelLabel", hudRect, "Level <color=#D69535>1</color>", TextAlignmentOptions.Center);
@@ -1251,7 +1307,6 @@ public class TableController : MonoBehaviour
         progressKnobText = CreateLabel("Value", progressKnob, "0", TextAlignmentOptions.Center);
         progressKnobText.fontSize = 22f;
         progressKnobText.color = Color.white;
-        if (displayFont != null) progressKnobText.font = displayFont;
         SetAnchors(progressKnobText.rectTransform, new Vector2(0.22f, 0.13f), new Vector2(0.78f, 0.70f));
 
         GameObject settingsObject = CreatePanel("SettingsButton", hudRect, Color.white);
@@ -1285,11 +1340,9 @@ public class TableController : MonoBehaviour
 
     private void StyleFridgeTitle(TextMeshProUGUI label, float fontSize)
     {
-        label.fontSize = fontSize;
-        label.fontStyle = FontStyles.Normal;
         label.color = new Color(0.72f, 0.25f, 0.62f, 1f);
-        label.outlineWidth = 0f;
-        if (displayFont != null) label.font = displayFont;
+        // Font asset and material are authored in the scene. In particular,
+        // preserve its size, weight/style and variable-font shadow material.
         Shadow shadow = label.GetComponent<Shadow>();
         if (shadow == null) shadow = label.gameObject.AddComponent<Shadow>();
         shadow.effectColor = new Color(0.20f, 0.18f, 0.30f, 0.48f);
@@ -1363,7 +1416,7 @@ public class TableController : MonoBehaviour
         if (goldText != null) goldText.text = SaveSystem.Current.gold.ToString();
         if (levelLabel != null)
             levelLabel.text = fridgeHudActive
-                ? $"level <color=#D69535>{currentLevelNumber}</color>"
+                ? $"Level <color=#D69535>{currentLevelNumber}</color>"
                 : $"LEVEL {currentLevelNumber}";
         if (progressDotsParent != null && progressDots.Count != currentLevelRows)
             CreateProgressDots(progressDotsParent, currentLevelRows);
@@ -1375,6 +1428,10 @@ public class TableController : MonoBehaviour
 
     private static GameObject CreateRect(string objectName, Transform parent)
     {
+        Transform existing = parent.Find(objectName);
+        if (existing != null && existing.TryGetComponent(out RectTransform _))
+            return existing.gameObject;
+
         GameObject go = new GameObject(objectName, typeof(RectTransform));
         go.transform.SetParent(parent, false);
         return go;
@@ -1382,6 +1439,10 @@ public class TableController : MonoBehaviour
 
     private static GameObject CreatePanel(string objectName, Transform parent, Color color)
     {
+        Transform existing = parent.Find(objectName);
+        if (existing != null && existing.TryGetComponent(out Image _))
+            return existing.gameObject;
+
         GameObject panel = new GameObject(objectName, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
         panel.transform.SetParent(parent, false);
         Image image = panel.GetComponent<Image>();
@@ -1393,6 +1454,14 @@ public class TableController : MonoBehaviour
 
     private static TextMeshProUGUI CreateLabel(string objectName, Transform parent, string value, TextAlignmentOptions alignment)
     {
+        Transform existing = parent.Find(objectName);
+        if (existing != null && existing.TryGetComponent(out TextMeshProUGUI authoredLabel))
+        {
+            authoredLabel.text = value;
+            authoredLabel.alignment = alignment;
+            return authoredLabel;
+        }
+
         GameObject labelObject = new GameObject(objectName, typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
         labelObject.transform.SetParent(parent, false);
         TextMeshProUGUI label = labelObject.GetComponent<TextMeshProUGUI>();

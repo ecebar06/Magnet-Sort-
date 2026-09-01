@@ -141,7 +141,7 @@
       "transformResult": {
         "text": "Ball",
         "hasSprite": true,
-        "useIcon": false,
+        "useIcon": true,
         "spriteKey": "toys__ball",
         "syllablePartA": "",
         "syllablePartB": ""
@@ -155,7 +155,7 @@
         {
           "text": "Ball",
           "hasSprite": true,
-          "useIcon": false,
+          "useIcon": true,
           "spriteKey": "toys__ball",
           "syllablePartA": "",
           "syllablePartB": ""

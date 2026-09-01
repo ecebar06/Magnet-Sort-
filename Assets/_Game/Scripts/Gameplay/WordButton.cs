@@ -6,7 +6,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Image), typeof(Button), typeof(CanvasGroup))]
-public class WordButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class WordButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,
+    IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public string CategoryId { get; private set; }
     public bool IsMatched { get; private set; }
@@ -19,13 +20,45 @@ public class WordButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     [SerializeField] private Image iconImage;
     [SerializeField] private Button button;
     [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private Image backlight;
+    [SerializeField] private Image matchedOverlay;
+    [SerializeField] private WordButtonStyleSettings styleSettings;
 
     private TableController controller;
     private Canvas rootCanvas;
     private RectTransform dragGhost;
+    private Tween dragMoveTween;
+    private Vector3 pressRestPosition;
+    private bool isPressed;
     private Color defaultColor;
+    private bool tileVisualVisible = true;
+    private Color matchedVisualColor;
+    private bool hasMatchColor;
     private bool isDragging;
     private bool suppressNextClick;
+    private WordButton highlightedDropTarget;
+    private Selectable.Transition defaultButtonTransition = Selectable.Transition.ColorTint;
+
+    private void Awake()
+    {
+        if (button != null) defaultButtonTransition = button.transition;
+    }
+
+    private void LateUpdate()
+    {
+        // Selectable/Layout rebuilds can run after gameplay code. Keep the
+        // completed visual authoritative at the end of every rendered frame.
+        if (hasMatchColor && tileVisualVisible) ApplyMatchedVisual();
+    }
+
+    private WordButtonStyleSettings Style
+    {
+        get
+        {
+            if (styleSettings == null) styleSettings = WordButtonStyleSettings.LoadDefault();
+            return styleSettings;
+        }
+    }
 
     public void AssignRow(RowController row, TableController owner)
     {
@@ -42,13 +75,28 @@ public class WordButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         rootCanvas = owner == null ? null : owner.GameplayCanvas;
         CategoryId = categoryId;
         IsMatched = false;
+        hasMatchColor = false;
+        tileVisualVisible = true;
         defaultColor = color;
+        matchedVisualColor = Style == null ? new Color(0.05f, 0.82f, 0.43f, 1f) : Style.matchedWordAndRowColor;
+        button.targetGraphic = background;
         background.color = color;
+        background.CrossFadeColor(color, 0f, true, true);
+        background.canvasRenderer.SetColor(color);
+        button.transition = defaultButtonTransition;
         button.interactable = true;
+        ColorBlock buttonColors = button.colors;
+        buttonColors.disabledColor = Color.white;
+        button.colors = buttonColors;
         canvasGroup.alpha = 1f;
+        SetBacklight(false);
+        if (matchedOverlay != null) matchedOverlay.gameObject.SetActive(false);
         gameObject.SetActive(true);
+        SetContentVisible(true);
+        SetVisualAlpha(1f);
         label.text = text;
         ShowIcon(icon);
+        SetTileVisualVisible(true);
     }
 
     public void ClearContent()
@@ -56,16 +104,26 @@ public class WordButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         transform.DOKill();
         CategoryId = string.Empty;
         IsMatched = false;
+        hasMatchColor = false;
         isDragging = false;
         suppressNextClick = false;
+        highlightedDropTarget = null;
+        SetBacklight(false);
+        if (matchedOverlay != null) matchedOverlay.gameObject.SetActive(false);
         if (label != null)
         {
             label.text = string.Empty;
+            label.enabled = true;
+            label.alpha = 1f;
             label.gameObject.SetActive(true);
         }
         if (iconImage != null)
         {
             iconImage.sprite = null;
+            iconImage.enabled = true;
+            Color iconColor = iconImage.color;
+            iconColor.a = 1f;
+            iconImage.color = iconColor;
             iconImage.gameObject.SetActive(false);
         }
         if (button != null) button.interactable = false;
@@ -108,17 +166,27 @@ public class WordButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             canvasGroup.blocksRaycasts = false;
             canvasGroup.interactable = false;
         }
+        SetBacklight(true);
     }
 
     private void ApplyContent(string text, string categoryId, Color color, Sprite icon)
     {
         CategoryId = categoryId;
         IsMatched = false;
+        hasMatchColor = false;
         defaultColor = color;
+        matchedVisualColor = Style == null ? new Color(0.05f, 0.82f, 0.43f, 1f) : Style.matchedWordAndRowColor;
         name = $"Word - {text}";
         label.text = text;
+        button.targetGraphic = background;
         background.color = color;
+        background.CrossFadeColor(color, 0f, true, true);
+        background.canvasRenderer.SetColor(color);
+        button.transition = defaultButtonTransition;
         button.interactable = true;
+        if (matchedOverlay != null) matchedOverlay.gameObject.SetActive(false);
+        SetContentVisible(true);
+        SetVisualAlpha(1f);
         ShowIcon(icon);
     }
 
@@ -149,6 +217,32 @@ public class WordButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             controller.OnWordClicked(this);
     }
 
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if (IsMatched || controller == null || controller.IsInputLocked) return;
+
+        HapticFeedback.Play(HapticFeedback.Strength.Light);
+        isPressed = true;
+        pressRestPosition = transform.localPosition;
+        SetBacklight(true);
+        transform.DOKill();
+        float duration = Style == null ? 0.12f : Mathf.Min(0.12f, Style.animationDuration);
+        transform.DOScale(1.07f, duration).SetEase(Ease.OutBack);
+        transform.DOLocalMoveY(pressRestPosition.y + 8f, duration).SetEase(Ease.OutCubic);
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (!isPressed) return;
+        isPressed = false;
+        if (isDragging) return;
+
+        SetBacklight(false);
+        transform.DOKill();
+        transform.DOScale(1f, 0.10f).SetEase(Ease.OutCubic);
+        transform.DOLocalMove(pressRestPosition, 0.10f).SetEase(Ease.OutCubic);
+    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (IsMatched || controller == null || controller.IsInputLocked)
@@ -161,17 +255,29 @@ public class WordButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
         isDragging = true;
         suppressNextClick = true;
-        SetSelected(false);
+        SetBacklight(true);
         dragGhost = controller.CreateWordGhost(this);
-        canvasGroup.alpha = 0.25f;
         canvasGroup.blocksRaycasts = false;
-        MoveGhostToPointer(eventData);
+        SetTileVisualVisible(false);
+
+        if (dragGhost != null)
+        {
+            dragGhost.DOKill();
+            float dragScale = Style == null ? 1.15f : Style.dragScale;
+            dragGhost.localScale = Vector3.one * dragScale;
+            MoveGhostToPointer(eventData);
+        }
+
+        transform.DOKill();
+        transform.localPosition = pressRestPosition;
+        transform.localScale = Vector3.one;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
         if (!isDragging || dragGhost == null) return;
         MoveGhostToPointer(eventData);
+        UpdateDropTargetBacklight(eventData);
     }
 
     public void OnEndDrag(PointerEventData eventData)
@@ -179,13 +285,18 @@ public class WordButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         if (!isDragging) return;
 
         isDragging = false;
-        canvasGroup.alpha = 1f;
+        isPressed = false;
         canvasGroup.blocksRaycasts = true;
+        SetTileVisualVisible(true);
+        SetBacklight(false);
 
         WordButton target = FindDropTarget(eventData);
+        ClearDropTargetBacklight();
         Vector3 releasePosition = dragGhost == null ? transform.position : dragGhost.position;
         if (dragGhost != null)
         {
+            dragMoveTween?.Kill();
+            dragMoveTween = null;
             dragGhost.DOKill();
             Destroy(dragGhost.gameObject);
         }
@@ -204,8 +315,13 @@ public class WordButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         if (canvasRect != null && RectTransformUtility.ScreenPointToWorldPointInRectangle(
                 canvasRect, eventData.position, eventCamera, out Vector3 worldPoint))
         {
-            dragGhost.DOKill();
-            dragGhost.DOMove(worldPoint, 0.06f).SetEase(Ease.OutQuad);
+            // Only replace the pointer-follow tween. Killing every tween on the
+            // ghost here also killed its detach/grow animation each frame.
+            dragMoveTween?.Kill();
+            float lift = Style == null ? 10f : Style.dragLift;
+            float scaleFactor = Mathf.Max(0.01f, rootCanvas.scaleFactor);
+            worldPoint += Vector3.up * (lift / scaleFactor);
+            dragMoveTween = dragGhost.DOMove(worldPoint, 0.10f).SetEase(Ease.OutQuad);
         }
     }
 
@@ -215,7 +331,8 @@ public class WordButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         EventSystem.current.RaycastAll(eventData, results);
         foreach (RaycastResult result in results)
         {
-            if (result.gameObject.TryGetComponent(out WordButton target) && target != this)
+            WordButton target = result.gameObject.GetComponentInParent<WordButton>();
+            if (target != null && target != this)
                 return target;
         }
 
@@ -224,32 +341,158 @@ public class WordButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void SetSelected(bool selected)
     {
-        if (!IsMatched)
-            background.color = selected ? new Color(0.55f, 0.43f, 0.86f, 1f) : defaultColor;
+        if (IsMatched) return;
+        SetBacklight(selected);
+        float targetScale = selected && Style != null ? Style.selectedScale : 1f;
+        float duration = Style == null ? 0.14f : Style.animationDuration;
+        transform.DOKill();
+        transform.DOScale(targetScale, duration).SetEase(Ease.OutBack);
     }
 
     public void SetMatched(bool matched)
     {
-        IsMatched = matched;
-        // The fridge artwork communicates a completed row through its holder and
-        // category sticker, so keep the illustrated word magnets untinted.
-        bool usesIllustratedMagnet = Mathf.Approximately(defaultColor.r, 1f) &&
-                                     Mathf.Approximately(defaultColor.g, 1f) &&
-                                     Mathf.Approximately(defaultColor.b, 1f);
-        background.color = matched && !usesIllustratedMagnet
-            ? new Color(0.55f, 0.88f, 0.68f, 1f)
-            : defaultColor;
-        if (button != null) button.interactable = !matched;
+        Color color = Style == null
+            ? new Color(0.05f, 0.82f, 0.43f, 1f)
+            : Style.matchedWordAndRowColor;
+        SetMatched(matched, color);
+    }
+
+    public void SetMatched(bool matched, Color matchedColor)
+    {
+        SetMatchState(matched, matchedColor, matched);
+    }
+
+    public void SetPartialMatch(bool highlighted, Color color)
+    {
+        SetMatchState(highlighted, color, false);
+    }
+
+    private void SetMatchState(bool matched, Color matchedColor, bool locked)
+    {
+        IsMatched = locked;
+        hasMatchColor = matched;
+        if (matched) matchedVisualColor = matchedColor;
+        Color targetColor = matched ? matchedVisualColor : defaultColor;
+        targetColor.a = defaultColor.a;
+        SetBacklight(false);
+        if (button != null)
+        {
+            // A disabled ColorTint transition writes its own color to the
+            // target Graphic. Disable the transition so it cannot overwrite
+            // the completed-row green applied to the WordButton image.
+            button.transition = matched ? Selectable.Transition.None : defaultButtonTransition;
+            button.targetGraphic = matched ? null : background;
+            button.interactable = !locked;
+        }
+        if (matched) ApplyMatchedVisual();
+        else
+        {
+            background.color = targetColor;
+            background.CrossFadeColor(targetColor, 0f, true, true);
+            if (matchedOverlay != null) matchedOverlay.gameObject.SetActive(false);
+        }
+    }
+
+    private void ApplyMatchedVisual()
+    {
+        Color matchedColor = matchedVisualColor;
+        matchedColor.a = 1f;
+
+        background.enabled = true;
+        background.color = matchedColor;
+        background.CrossFadeColor(matchedColor, 0f, true, true);
+
+        if (matchedOverlay == null) return;
+        matchedOverlay.enabled = true;
+        matchedOverlay.color = matchedColor;
+        matchedOverlay.rectTransform.anchorMin = Vector2.zero;
+        matchedOverlay.rectTransform.anchorMax = Vector2.one;
+        matchedOverlay.rectTransform.offsetMin = Vector2.zero;
+        matchedOverlay.rectTransform.offsetMax = Vector2.zero;
+        matchedOverlay.gameObject.SetActive(true);
+        // Keep the overlay above the button art and below label/icon content.
+        matchedOverlay.transform.SetAsLastSibling();
+        if (label != null) label.transform.SetAsLastSibling();
+        if (iconImage != null) iconImage.transform.SetAsLastSibling();
+    }
+
+    public void SetContentVisible(bool visible)
+    {
+        if (label != null) label.enabled = visible;
+        if (iconImage != null) iconImage.enabled = visible;
+    }
+
+    public void SetTileVisualVisible(bool visible)
+    {
+        tileVisualVisible = visible;
+        if (background != null) background.enabled = visible;
+        if (matchedOverlay != null && hasMatchColor) matchedOverlay.enabled = visible;
+        SetContentVisible(visible);
+    }
+
+    private void SetBacklight(bool visible)
+    {
+        if (backlight != null && Style != null)
+        {
+            Color lightColor = Style.backlightColor;
+            // The task allows an empty placeholder until the light texture is
+            // supplied. A sprite-less UI Image would otherwise draw a solid box.
+            if (backlight.sprite == null) lightColor.a = 0f;
+            backlight.color = lightColor;
+        }
+        if (backlight != null) backlight.gameObject.SetActive(visible);
+    }
+
+    private void UpdateDropTargetBacklight(PointerEventData eventData)
+    {
+        WordButton target = FindDropTarget(eventData);
+        if (target == this || (target != null && target.IsMatched)) target = null;
+        if (target == highlightedDropTarget) return;
+        ClearDropTargetBacklight();
+        highlightedDropTarget = target;
+        if (highlightedDropTarget != null)
+        {
+            highlightedDropTarget.SetDropTargetHighlighted(true);
+            HapticFeedback.Play(HapticFeedback.Strength.Light);
+        }
+    }
+
+    private void ClearDropTargetBacklight()
+    {
+        if (highlightedDropTarget != null) highlightedDropTarget.SetDropTargetHighlighted(false);
+        highlightedDropTarget = null;
+    }
+
+    private void SetDropTargetHighlighted(bool highlighted)
+    {
+        if (IsMatched) return;
+
+        SetBacklight(highlighted);
+        float scale = highlighted
+            ? (Style == null ? 1.08f : Style.dropTargetScale)
+            : 1f;
+        float duration = Style == null ? 0.12f : Style.animationDuration;
+        transform.DOKill();
+        transform.DOScale(scale, duration).SetEase(highlighted ? Ease.OutBack : Ease.OutCubic);
     }
 
     public void SetVisualAlpha(float alpha)
     {
-        if (canvasGroup != null) canvasGroup.alpha = alpha;
+        // Keep the authored magnet/background fully opaque. Only its content
+        // disappears while the animated drag/swap copy is moving.
+        if (label != null) label.alpha = alpha;
+        if (iconImage != null)
+        {
+            Color iconColor = iconImage.color;
+            iconColor.a = alpha;
+            iconImage.color = iconColor;
+        }
     }
 
     private bool HasRequiredReferences()
     {
-        if (background != null && label != null && iconImage != null && button != null && canvasGroup != null)
+        if (background != null && label != null && iconImage != null && button != null && canvasGroup != null &&
+            backlight != null && matchedOverlay != null)
             return true;
 
         Debug.LogError($"{name} has unassigned WordButton prefab references. Run Tools > Word Game > Setup Word Button Prefab.", this);

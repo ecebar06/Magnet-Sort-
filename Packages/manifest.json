@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.unity.device-simulator.devices": "1.0.1",
     "com.unity.ide.visualstudio": "2.0.27",
     "com.unity.multiplayer.center": "1.0.1",
     "com.unity.render-pipelines.universal": "17.5.0",
