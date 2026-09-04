@@ -51,6 +51,7 @@ public class TableController : MonoBehaviour
     [SerializeField] private Button spendGoldContinueButton;
     [SerializeField] private Button viewBoardButton;
     [SerializeField] private TextMeshProUGUI loseExplanationText;
+    private MagnetPopupUI magnetPopupUi;
     [SerializeField, Min(0f)] private float winResultDelay = 1.6f;
     [SerializeField, Min(0f)] private float loseResultDelay = 1.2f;
 
@@ -813,9 +814,13 @@ public class TableController : MonoBehaviour
     private void UpdateGoldContinueButton()
     {
         if (spendGoldContinueButton == null) return;
-        TextMeshProUGUI label = spendGoldContinueButton.GetComponentInChildren<TextMeshProUGUI>(true);
+        TextMeshProUGUI label = magnetPopupUi != null && magnetPopupUi.GoldPriceText != null
+            ? magnetPopupUi.GoldPriceText
+            : spendGoldContinueButton.GetComponentInChildren<TextMeshProUGUI>(true);
         if (label != null)
-            label.text = $"SPEND {GetPaidReviveCost()} GOLD\nCONTINUE";
+            label.text = magnetPopupUi != null
+                ? GetPaidReviveCost().ToString()
+                : $"SPEND {GetPaidReviveCost()} GOLD\nCONTINUE";
     }
 
     private void ResumeAfterLoss(int extraMoves)
@@ -1218,6 +1223,17 @@ public class TableController : MonoBehaviour
             return;
         }
         fridgeHudActive = true;
+        magnetPopupUi = gameHud.GetComponentInChildren<MagnetPopupUI>(true);
+        if (magnetPopupUi == null)
+        {
+            Debug.LogError("MagnetPopupUI is missing from Game.unity. Run Tools > Word Game > Build Magnet Popups.", this);
+            return;
+        }
+        loseScreen = magnetPopupUi.TimeUpScreen;
+        watchAdContinueButton = magnetPopupUi.WatchAdButton;
+        spendGoldContinueButton = magnetPopupUi.SpendGoldButton;
+        retryButton = magnetPopupUi.RestartButton;
+        loseExplanationText = magnetPopupUi.ExplanationText;
         WireSceneButtons();
         if (hintCountText != null)
             hintCountText.text = (playerSaveData ?? SaveSystem.Current).hintCount.ToString();
@@ -1261,6 +1277,17 @@ public class TableController : MonoBehaviour
 
     private void WireSceneButtons()
     {
+        Button settingsButton = gameHud.Find("FridgeTopHud/SettingsButton")?.GetComponent<Button>();
+        if (settingsButton != null && magnetPopupUi != null)
+        {
+            settingsButton.onClick.RemoveListener(magnetPopupUi.ShowSettings);
+            settingsButton.onClick.AddListener(magnetPopupUi.ShowSettings);
+        }
+        if (magnetPopupUi != null && magnetPopupUi.RestartButton != null)
+        {
+            magnetPopupUi.RestartButton.onClick.RemoveListener(magnetPopupUi.HideSettings);
+            magnetPopupUi.RestartButton.onClick.AddListener(magnetPopupUi.HideSettings);
+        }
         if (doubleRewardButton != null)
         {
             doubleRewardButton.onClick.RemoveListener(DoubleWinReward);
@@ -1882,7 +1909,7 @@ public class TableController : MonoBehaviour
         return bulbIconSprite;
     }
 
-    private static Sprite GetGearIconSprite()
+    public static Sprite GetGearIconSprite()
     {
         if (gearIconSprite != null) return gearIconSprite;
         const int size = 64;

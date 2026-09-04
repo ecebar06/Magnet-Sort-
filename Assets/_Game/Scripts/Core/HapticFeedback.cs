@@ -103,5 +103,14 @@ public sealed class HapticButtonRelay : MonoBehaviour
         if (button != null) button.onClick.RemoveListener(Play);
     }
 
-    private static void Play() => HapticFeedback.Play(HapticFeedback.Strength.Light);
+    private void Play()
+    {
+        HapticFeedback.Play(HapticFeedback.Strength.Light);
+        if (button == null || button.name != "SettingsButton") return;
+        MagnetPopupUI popup = MagnetPopupUI.Instance;
+        if (popup == null)
+            popup = FindFirstObjectByType<MagnetPopupUI>(FindObjectsInactive.Include);
+        if (popup != null) popup.ShowSettings();
+        else Debug.LogError("SettingsButton tiklandi fakat sahnede MagnetPopupUI bulunamadi.", button);
+    }
 }
